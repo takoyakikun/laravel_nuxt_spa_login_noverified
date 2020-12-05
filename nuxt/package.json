@@ -1,0 +1,48 @@
+{
+  "name": "login",
+  "version": "1.0.0",
+  "description": "ログインテンプレート",
+  "author": "Kouki Uchida",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "build-dev": "NODE_ENV=development nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/dotenv": "^1.4.0",
+    "cross-env": "^7.0.2",
+    "lodash": "^4.17.19",
+    "nuxt": "^2.0.0",
+    "vee-validate": "^3.2.5"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.10.4",
+    "@nuxtjs/vuetify": "^1.0.0",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^26.1.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-require-context-hook": "^1.0.0",
+    "browser-env": "^3.2.5",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^6.1.2",
+    "jest": "^26.1.0",
+    "prettier": "^1.19.1",
+    "require-extension-hooks": "^0.3.3",
+    "require-extension-hooks-babel": "^1.0.0",
+    "require-extension-hooks-vue": "^2.0.0",
+    "vue-jest": "^3.0.6"
+  }
+}

@@ -1,0 +1,104 @@
+<template>
+  <validation-observer ref="registerForm" v-slot="{ invalid }">
+    <v-card class="elevation-12">
+      <v-toolbar color="primary" dark flat>
+        <v-toolbar-title>新規ユーザー登録</v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <UserForm
+          v-model="registerFormValue"
+          form-type="create"
+          myuser
+          @submit="submit"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          data-test="submitButton"
+          :disabled="invalid"
+          :loading="loading"
+          color="primary"
+          @click="submit"
+        >
+          <v-icon left>
+            mdi-account-plus
+          </v-icon>
+          新規登録
+        </v-btn>
+        <v-spacer />
+        <v-btn data-test="topButtonLink" to="/">
+          <v-icon left>
+            mdi-home
+          </v-icon>
+          Top
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </validation-observer>
+</template>
+
+<script>
+import { mapActions } from "vuex"
+import UserForm from "~/components/users/userForm"
+
+export default {
+  components: {
+    UserForm
+  },
+  data() {
+    return {
+      registerFormValue: {
+        email: "",
+        password: ""
+      },
+      loading: false
+    }
+  },
+  methods: {
+    ...mapActions("users", ["registerData"]),
+    ...mapActions("snackbar", ["openSnackbar"]),
+
+    // フォームを送信
+    async submit(event) {
+      if (!this.loading) {
+        this.loading = true
+        await this.$refs.registerForm.validate().then(async result => {
+          if (result) {
+            await this.registerData(this.registerFormValue).then(async res => {
+              if (res.status === 200) {
+                // ユーザー追加した後にログインする
+                await this.$store
+                  .dispatch("auth/login", {
+                    email: this.registerFormValue.email,
+                    password: this.registerFormValue.password
+                  })
+                  .then(res => {
+                    if (res.status === 200) {
+                      this.openSnackbar({
+                        text: "新規ユーザーを作成しました。",
+                        options: { color: "success" }
+                      })
+                      this.$router.push("/resend")
+                    } else {
+                      this.openSnackbar({
+                        text: "認証に失敗しました。",
+                        options: { color: "error" }
+                      })
+                      this.$router.push("/login")
+                    }
+                  })
+              } else {
+                this.openSnackbar({
+                  text: "新規ユーザーの作成に失敗しました。",
+                  options: { color: "error" }
+                })
+              }
+            })
+          }
+        })
+        this.loading = false
+      }
+    }
+  }
+}
+</script>
