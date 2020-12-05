@@ -54,47 +54,6 @@ class MyuserTest extends TestCase
             'email' => $newData['email'],
         ]);
 
-        // 追加したユーザーのメールアドレスに送信されているか確認
-        $user = User::orderBy('id', 'desc')->first();
-        $url = '';
-        Notification::assertSentTo(
-            $user,
-            CustomVerifyEmail::class,
-            function (CustomVerifyEmail $notification) use (&$url, $user) {
-                $mail = $notification->toMail($user);
-                $url = $mail->actionUrl;
-                return true;
-            }
-        );
-
-        // メール認証のアクセス権限のリクエストを送信
-        $response = $this->actingAs($user)->json('GET', route('permission', ['verified']), [], ['X-Requested-With' => 'XMLHttpRequest']);
-
-        // 正しいレスポンスが返ってくることを確認
-        $response->assertStatus(200);
-
-        // この時点ではメール認証されていないのでfalseを返す
-        $response->assertJson([false]);
-
-        // メール認証ボタンを押す
-        $response = $this->actingAs($user)->get($url);
-
-        // Topへリダイレクトすることを確認
-        $response->assertStatus(302)->assertRedirect('/');
-
-        // データベースにメール認証時刻が入っているか確認
-        $verificationUser = User::find($user->id);
-        $this->assertNotNull($verificationUser->email_verified_at);
-
-        // メール認証のアクセス権限のリクエストを送信
-        $response = $this->actingAs($user)->json('GET', route('permission', ['verified']), [], ['X-Requested-With' => 'XMLHttpRequest']);
-
-        // 正しいレスポンスが返ってくることを確認
-        $response->assertStatus(200);
-
-        // メール認証済なのでtrueを返す
-        $response->assertJson([true]);
-
     }
 
     /**

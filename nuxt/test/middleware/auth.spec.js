@@ -24,47 +24,7 @@ describe("auth", () => {
     expect(redirect).toHaveBeenCalledWith("/login")
   })
 
-  test("ログインしているがメール認証をしていない", async () => {
-    // spyOn
-    const axiosGet = jest.spyOn(axios, "get")
-
-    // メール認証アクセス権限レスポンス
-    const response = {
-      status: 200,
-      data: [false]
-    }
-    // axiosのレスポンスをモックする
-    axios.get.mockImplementation(url => {
-      return Promise.resolve(response)
-    })
-    store.$axios = axios
-
-    // ログインユーザーデータをストアに追加
-    store.state.auth.user = {
-      name: "テスト",
-      email: "test@test.com",
-      role: 10
-    }
-
-    // ミドルウェアを実行
-    await Auth({ store: store, redirect: redirect })
-
-    // ログインしているのでtrue
-    expect(store.getters["auth/userExists"]).toBeTruthy()
-
-    // メール認証アクセス権限のAPI送信をした
-    expect(axiosGet).toHaveBeenCalled()
-    expect(axiosGet).toHaveBeenCalledWith("/api/permission/verified")
-
-    // メール認証していないのでfalse
-    expect(store.getters["auth/permission"]("verified")).toBeFalsy()
-
-    // 認証メール再送信ページへリダイレクト
-    expect(redirect).toHaveBeenCalled()
-    expect(redirect).toHaveBeenCalledWith("/resend")
-  })
-
-  test("ログインしていてメール認証もしている", async () => {
+  test("ログインしている", async () => {
     // spyOn
     const axiosGet = jest.spyOn(axios, "get")
 
@@ -83,7 +43,7 @@ describe("auth", () => {
     store.state.auth.user = {
       name: "テスト",
       email: "test@test.com",
-      role: 10
+      role: 3
     }
 
     // ミドルウェアを実行
@@ -91,13 +51,6 @@ describe("auth", () => {
 
     // ログインしているのでtrue
     expect(store.getters["auth/userExists"]).toBeTruthy()
-
-    // メール認証アクセス権限のAPI送信をした
-    expect(axiosGet).toHaveBeenCalled()
-    expect(axiosGet).toHaveBeenCalledWith("/api/permission/verified")
-
-    // メール認証しているのでtrue
-    expect(store.getters["auth/permission"]("verified")).toBeTruthy()
 
     // リダイレクトしない
     expect(redirect).not.toHaveBeenCalled()

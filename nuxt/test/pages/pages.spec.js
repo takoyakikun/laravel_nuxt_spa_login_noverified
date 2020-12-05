@@ -2,12 +2,10 @@ import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
-import axios from "axios"
 import Index from "@/pages/index"
 import Auth from "@/pages/auth"
 import Login from "@/pages/login"
 import Register from "@/pages/register"
-import Resend from "@/pages/resend"
 import Users from "@/pages/users"
 import PasswordReset from "@/pages/passwordReset/index"
 import PasswordResetToken from "@/pages/passwordReset/_token"
@@ -37,10 +35,6 @@ describe("index", () => {
 
   test("is a Vue instance", () => {
     expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("verifiedミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("verified")
   })
 })
 
@@ -86,21 +80,6 @@ describe("register", () => {
 
   test("guestミドルウェアが登録されているか", () => {
     expect(wrapper.vm.$options.middleware).toContain("guest")
-  })
-})
-
-describe("resend", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Resend, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("noVerifiedミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("noVerified")
   })
 })
 

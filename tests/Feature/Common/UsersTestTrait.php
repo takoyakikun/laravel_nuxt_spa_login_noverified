@@ -40,9 +40,6 @@ trait UsersTestTrait
         // 正しいレスポンスが返ってくることを確認
         $response->assertStatus(200);
 
-        // この時点ではメール認証されていないのでfalseを返す
-        $response->assertJson([false]);
-
         // 設定するパスワードデータ
         $newPasswordData = [
             'token'  => $token,
@@ -57,24 +54,8 @@ trait UsersTestTrait
         // 正しいレスポンスが返ってくることを確認
         $response->assertStatus(200);
 
-        // 認証されていることを確認
-        $this->assertTrue(\Auth::check());
-
         // 設定されたパスワードが保存されていることを確認
         $this->assertTrue(\Hash::check($newPasswordData['password'], $user->fresh()->password));
-
-        // データベースにメール認証時刻が入っているか確認
-        $verificationUser = User::find($user->id);
-        $this->assertNotNull($verificationUser->email_verified_at);
-
-        // メール認証のアクセス権限のリクエストを送信
-        $response = $this->actingAs($verificationUser)->json('GET', route('permission', ['verified']), [], ['X-Requested-With' => 'XMLHttpRequest']);
-
-        // 正しいレスポンスが返ってくることを確認
-        $response->assertStatus(200);
-
-        // メール認証済なのでtrueを返す
-        $response->assertJson([true]);
     }
 
 }

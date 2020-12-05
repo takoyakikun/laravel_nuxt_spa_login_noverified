@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 /*
@@ -53,30 +52,21 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
         return response([Gate::allows($category)]);
     })->name('permission');
 
-    // ユーザー認証メール再送信
-    Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+    // ユーザー編集
+    Route::patch('myuser/update', 'MyuserController@update')->name('myuser.update');
 
-    // 認証済
-    Route::group(['middleware' => ['verified']], function () {
-        // ユーザー編集
-        Route::patch('myuser/update', 'MyuserController@update')->name('myuser.update');
-
-        // パスワード変更
-        Route::patch('myuser/passwordChange', 'MyuserController@passwordChange')->name('myuser.passwordChange');
-    });
+    // パスワード変更
+    Route::patch('myuser/passwordChange', 'MyuserController@passwordChange')->name('myuser.passwordChange');
 
 });
 
 // 管理者以上
 Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
-    // 認証済
-    Route::group(['middleware' => ['verified']], function () {
-        // ログインユーザー
-        Route::resource('users', 'UsersController', ['only' => ['index', 'store', 'update', 'destroy']]);
+    // ログインユーザー
+    Route::resource('users', 'UsersController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
-        // 権限の選択オプション
-        Route::get('users/roleOptions', 'UsersController@roleOptions')->name('users.roleOptions');
-    });
+    // 権限の選択オプション
+    Route::get('users/roleOptions', 'UsersController@roleOptions')->name('users.roleOptions');
 
 });
 
