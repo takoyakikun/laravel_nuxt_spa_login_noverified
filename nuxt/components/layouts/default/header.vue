@@ -104,6 +104,7 @@
             data-test="editSubmitButton"
             :disabled="invalid"
             :color="color"
+            :loading="editLoading"
             @click="editSubmit"
           >
             <v-icon left>
@@ -137,6 +138,7 @@
             data-test="passwordChangeSubmitButton"
             :disabled="invalid"
             :color="color"
+            :loading="passwordChangeLoading"
             @click="passwordChangeSubmit"
           >
             <v-icon left>
@@ -171,13 +173,17 @@ export default {
       required: true
     }
   },
-  data: () => ({
-    dataDrawer: false,
-    editDialog: false,
-    editFormValue: {},
-    passwordChangeDialog: false,
-    passwordChangeFormValue: {}
-  }),
+  data() {
+    return {
+      dataDrawer: false,
+      editDialog: false,
+      editLoading: false,
+      editFormValue: {},
+      passwordChangeDialog: false,
+      passwordChangeLoading: false,
+      passwordChangeFormValue: {}
+    }
+  },
   computed: {
     ...mapGetters("auth", [
       "user",
@@ -218,28 +224,32 @@ export default {
     },
     // データを更新
     async editSubmit() {
-      await this.$refs.editFormValidate.validate().then(async result => {
-        if (result) {
-          await this.editData({
-            formValue: this.editFormValue
-          }).then(res => {
-            if (res.status === 200) {
-              this.openSnackbar({
-                text: "ユーザーデータを更新しました。",
-                options: { color: "success" }
-              })
-              this.$refs.editDialog.close()
-              this.$refs.editFormValidate.reset()
-              this.$store.dispatch("auth/setUser")
-            } else {
-              this.openSnackbar({
-                text: "ユーザーデータの更新に失敗しました。",
-                options: { color: "error" }
-              })
-            }
-          })
-        }
-      })
+      if (!this.editLoading) {
+        this.editLoading = true
+        await this.$refs.editFormValidate.validate().then(async result => {
+          if (result) {
+            await this.editData({
+              formValue: this.editFormValue
+            }).then(res => {
+              if (res.status === 200) {
+                this.openSnackbar({
+                  text: "ユーザーデータを更新しました。",
+                  options: { color: "success" }
+                })
+                this.$refs.editDialog.close()
+                this.$refs.editFormValidate.reset()
+                this.$store.dispatch("auth/setUser")
+              } else {
+                this.openSnackbar({
+                  text: "ユーザーデータの更新に失敗しました。",
+                  options: { color: "error" }
+                })
+              }
+            })
+          }
+        })
+        this.editLoading = false
+      }
     },
 
     // パスワード変更ダイアログを開く
@@ -249,33 +259,37 @@ export default {
     },
     // パスワードを変更
     async passwordChangeSubmit() {
-      await this.$refs.passwordChangeFormValidate
-        .validate()
-        .then(async result => {
-          if (result) {
-            await this.passwordChange(this.passwordChangeFormValue).then(
-              res => {
-                if (res.status === 200) {
-                  this.openSnackbar({
-                    text: "パスワードを変更しました。",
-                    options: { color: "success" }
-                  })
-                  this.$refs.passwordChangeDialog.close()
-                  this.$refs.passwordChangeFormValidate.reset()
-                } else {
-                  let text = "パスワードの変更に失敗しました。"
-                  if (res.data.error_message) {
-                    text = res.data.error_message
+      if (!this.passwordChangeLoading) {
+        this.passwordChangeLoading = true
+        await this.$refs.passwordChangeFormValidate
+          .validate()
+          .then(async result => {
+            if (result) {
+              await this.passwordChange(this.passwordChangeFormValue).then(
+                res => {
+                  if (res.status === 200) {
+                    this.openSnackbar({
+                      text: "パスワードを変更しました。",
+                      options: { color: "success" }
+                    })
+                    this.$refs.passwordChangeDialog.close()
+                    this.$refs.passwordChangeFormValidate.reset()
+                  } else {
+                    let text = "パスワードの変更に失敗しました。"
+                    if (res.data.error_message) {
+                      text = res.data.error_message
+                    }
+                    this.openSnackbar({
+                      text: text,
+                      options: { color: "error" }
+                    })
                   }
-                  this.openSnackbar({
-                    text: text,
-                    options: { color: "error" }
-                  })
                 }
-              }
-            )
-          }
-        })
+              )
+            }
+          })
+        this.passwordChangeLoading = false
+      }
     }
   }
 }

@@ -118,6 +118,7 @@
             data-test="createSubmitButton"
             :disabled="invalid"
             :color="color"
+            :loading="createLoading"
             @click="createSubmit"
           >
             <v-icon left>
@@ -153,6 +154,7 @@
             data-test="editSubmitButton"
             :disabled="invalid"
             :color="color"
+            :loading="editLoading"
             @click="editSubmit"
           >
             <v-icon left>
@@ -180,6 +182,7 @@
         <v-btn
           data-test="deleteSubmitButton"
           :color="color"
+          :loading="deleteLoading"
           @click="deleteSubmit"
         >
           <v-icon left>
@@ -207,11 +210,14 @@ export default {
     return {
       search: {},
       createDialog: false,
+      createLoading: false,
       createFormValue: {},
       editDialog: false,
+      editLoading: false,
       editId: null,
       editFormValue: {},
       deleteDialog: false,
+      deleteLoading: false,
       deleteId: null
     }
   },
@@ -298,26 +304,30 @@ export default {
     },
     // データを追加
     async createSubmit() {
-      await this.$refs.createForm.validate().then(async result => {
-        if (result) {
-          await this.createData(this.createFormValue).then(res => {
-            if (res.status === 200) {
-              this.openSnackbar({
-                text: "ユーザーデータを追加しました。",
-                options: { color: "success" }
-              })
-              this.$refs.createDialog.close()
-              this.createFormValue = {}
-              this.$refs.createForm.reset()
-            } else {
-              this.openSnackbar({
-                text: "ユーザーデータの追加に失敗しました。",
-                options: { color: "error" }
-              })
-            }
-          })
-        }
-      })
+      if (!this.createLoading) {
+        this.createLoading = true
+        await this.$refs.createForm.validate().then(async result => {
+          if (result) {
+            await this.createData(this.createFormValue).then(res => {
+              if (res.status === 200) {
+                this.openSnackbar({
+                  text: "ユーザーデータを追加しました。",
+                  options: { color: "success" }
+                })
+                this.$refs.createDialog.close()
+                this.createFormValue = {}
+                this.$refs.createForm.reset()
+              } else {
+                this.openSnackbar({
+                  text: "ユーザーデータの追加に失敗しました。",
+                  options: { color: "error" }
+                })
+              }
+            })
+          }
+        })
+        this.createLoading = false
+      }
     },
     // 編集ダイアログを開く
     openEditDialog(item) {
@@ -327,37 +337,41 @@ export default {
     },
     // データを更新
     async editSubmit() {
-      await this.$refs.editForm.validate().then(async result => {
-        if (result) {
-          const option = {
-            formValue: this.editFormValue
-          }
-          // 自ユーザー以外はidを設定
-          if (!this.myuser) {
-            option.id = this.editId
-          }
-
-          await this.editData(option).then(res => {
-            if (res.status === 200) {
-              this.openSnackbar({
-                text: "ユーザーデータを更新しました。",
-                options: { color: "success" }
-              })
-              this.$refs.editDialog.close()
-              this.$refs.editForm.reset()
-              // 自ユーザーはログインデータを更新
-              if (this.myuser) {
-                this.$store.dispatch("auth/setUser")
-              }
-            } else {
-              this.openSnackbar({
-                text: "ユーザーデータの更新に失敗しました。",
-                options: { color: "error" }
-              })
+      if (!this.editLoading) {
+        this.editLoading = true
+        await this.$refs.editForm.validate().then(async result => {
+          if (result) {
+            const option = {
+              formValue: this.editFormValue
             }
-          })
-        }
-      })
+            // 自ユーザー以外はidを設定
+            if (!this.myuser) {
+              option.id = this.editId
+            }
+
+            await this.editData(option).then(res => {
+              if (res.status === 200) {
+                this.openSnackbar({
+                  text: "ユーザーデータを更新しました。",
+                  options: { color: "success" }
+                })
+                this.$refs.editDialog.close()
+                this.$refs.editForm.reset()
+                // 自ユーザーはログインデータを更新
+                if (this.myuser) {
+                  this.$store.dispatch("auth/setUser")
+                }
+              } else {
+                this.openSnackbar({
+                  text: "ユーザーデータの更新に失敗しました。",
+                  options: { color: "error" }
+                })
+              }
+            })
+          }
+        })
+        this.editLoading = false
+      }
     },
     // 削除ダイアログを開く
     openDeleteDialog(item) {
@@ -366,20 +380,24 @@ export default {
     },
     // データを削除
     async deleteSubmit() {
-      await this.deleteData(this.deleteId).then(res => {
-        if (res.status === 200) {
-          this.openSnackbar({
-            text: "ユーザーデータを削除しました。",
-            options: { color: "success" }
-          })
-          this.$refs.deleteDialog.close()
-        } else {
-          this.openSnackbar({
-            text: "ユーザーデータの削除に失敗しました。",
-            options: { color: "error" }
-          })
-        }
-      })
+      if (!this.deleteLoading) {
+        this.deleteLoading = true
+        await this.deleteData(this.deleteId).then(res => {
+          if (res.status === 200) {
+            this.openSnackbar({
+              text: "ユーザーデータを削除しました。",
+              options: { color: "success" }
+            })
+            this.$refs.deleteDialog.close()
+          } else {
+            this.openSnackbar({
+              text: "ユーザーデータの削除に失敗しました。",
+              options: { color: "error" }
+            })
+          }
+        })
+        this.deleteLoading = false
+      }
     }
   }
 }

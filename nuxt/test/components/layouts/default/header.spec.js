@@ -235,6 +235,31 @@ describe("components/layouts/default/header", () => {
           "success"
         )
       })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          editLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // フォームを入力してユーザー編集処理
+        wrapper.find("input[name='name']").setValue("テスト")
+        wrapper.find("input[name='email']").setValue("test@test.com")
+        await wrapper.vm.editSubmit()
+        jest.runAllTimers()
+
+        // API送信をしない
+        expect(axiosPatch).not.toHaveBeenCalled()
+      })
     })
 
     describe("パスワード変更", () => {
@@ -420,6 +445,34 @@ describe("components/layouts/default/header", () => {
         expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
           "success"
         )
+      })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          passwordChangeLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // フォームを入力してパスワード変更処理
+        wrapper.find("input[name='current_password']").setValue("currentpass")
+        wrapper.find("input[name='password']").setValue("changepass")
+        wrapper
+          .find("input[name='password_confirmation']")
+          .setValue("changepass")
+        await wrapper.vm.passwordChangeSubmit()
+        jest.runAllTimers()
+
+        // API送信をしない
+        expect(axiosPatch).not.toHaveBeenCalled()
       })
     })
   })

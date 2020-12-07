@@ -178,6 +178,32 @@ describe("components/users/userList", () => {
           "success"
         )
       })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          createLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // フォームを入力してユーザー追加処理
+        wrapper.find("input[name='name']").setValue("テスト")
+        wrapper.find("input[name='email']").setValue("test@test.com")
+        wrapper.find("input[name='role'][value='3']").setChecked()
+        await wrapper.vm.createSubmit()
+        jest.runAllTimers()
+
+        // API送信をしない
+        expect(axiosPost).not.toHaveBeenCalled()
+      })
     })
 
     describe("ユーザー編集", () => {
@@ -323,6 +349,32 @@ describe("components/users/userList", () => {
           )
         })
       })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          editLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // フォームを入力してユーザー編集処理
+        wrapper.find("input[name='name']").setValue("テスト")
+        wrapper.find("input[name='email']").setValue("test@test.com")
+        wrapper.find("input[name='role'][value='3']").setChecked()
+        await wrapper.vm.editSubmit()
+        jest.runAllTimers()
+
+        // API送信をしない
+        expect(axiosPatch).not.toHaveBeenCalled()
+      })
     })
 
     describe("ユーザー削除", () => {
@@ -395,6 +447,28 @@ describe("components/users/userList", () => {
         expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
           "success"
         )
+      })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          deleteLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // ユーザー削除処理
+        await wrapper.vm.deleteSubmit()
+
+        // API送信をしない
+        expect(axiosDelete).not.toHaveBeenCalled()
       })
     })
   })
