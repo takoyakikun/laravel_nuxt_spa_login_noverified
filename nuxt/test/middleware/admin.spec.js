@@ -6,7 +6,7 @@ import Admin from "@/middleware/admin"
 let store
 let redirect
 
-describe("auth", () => {
+describe("middleware/admin", () => {
   beforeEach(() => {
     store = new Vuex.Store(storeConfig)
     redirect = jest.fn()
@@ -24,11 +24,18 @@ describe("auth", () => {
     expect(redirect).toHaveBeenCalledWith("/login")
   })
 
-  describe("ログイン", () => {
+  describe("ログインしている", () => {
     let axiosGet
     beforeEach(() => {
       // spyOn
       axiosGet = jest.spyOn(axios, "get")
+
+      // ログインユーザーデータをストアに追加
+      store.state.auth.user = {
+        name: "テスト",
+        email: "test@test.com",
+        role: 3
+      }
     })
 
     test("管理者権限以外", async () => {
@@ -42,13 +49,6 @@ describe("auth", () => {
         return Promise.resolve(responseAdmin)
       })
       store.$axios = axios
-
-      // ログインユーザーデータをストアに追加
-      store.state.auth.user = {
-        name: "テスト",
-        email: "test@test.com",
-        role: 3
-      }
 
       // ミドルウェアを実行
       await Admin({ store: store, redirect: redirect })
@@ -79,13 +79,6 @@ describe("auth", () => {
         return Promise.resolve(responseAdmin)
       })
       store.$axios = axios
-
-      // ログインユーザーデータをストアに追加
-      store.state.auth.user = {
-        name: "テスト",
-        email: "test@test.com",
-        role: 2
-      }
 
       // ミドルウェアを実行
       await Admin({ store: store, redirect: redirect })

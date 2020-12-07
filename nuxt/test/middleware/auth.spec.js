@@ -6,7 +6,7 @@ import Auth from "@/middleware/auth"
 let store
 let redirect
 
-describe("auth", () => {
+describe("middleware/auth", () => {
   beforeEach(() => {
     store = new Vuex.Store(storeConfig)
     redirect = jest.fn()
