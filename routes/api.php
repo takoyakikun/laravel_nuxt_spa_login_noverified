@@ -68,6 +68,9 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     // 権限の選択オプション
     Route::get('users/roleOptions', 'UsersController@roleOptions')->name('users.roleOptions');
 
+    // パスワード設定メール再送信
+    Route::post('users/passwordSetResend/{id}', 'UsersController@passwordSetResend')->name('users.passwordSetResend');
+
 });
 
 // 開発者のみ

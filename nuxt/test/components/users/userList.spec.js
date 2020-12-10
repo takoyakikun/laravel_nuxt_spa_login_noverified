@@ -398,7 +398,7 @@ describe("components/users/userList", () => {
       test("失敗", async () => {
         // エラーレスポンス
         const response = {
-          status: 422
+          status: 403
         }
         // axiosのレスポンスをモックする
         axios.delete.mockImplementation(url => {
@@ -422,7 +422,7 @@ describe("components/users/userList", () => {
         )
       })
 
-      test("ユーザー削除成功", async () => {
+      test("成功", async () => {
         // 正常なレスポンス
         const response = {
           status: 200
@@ -459,7 +459,7 @@ describe("components/users/userList", () => {
           status: 200
         }
         // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
+        axios.delete.mockImplementation(url => {
           return Promise.resolve(response)
         })
         wrapper.vm.$store.$axios = axios
@@ -469,6 +469,98 @@ describe("components/users/userList", () => {
 
         // API送信をしない
         expect(axiosDelete).not.toHaveBeenCalled()
+      })
+    })
+    describe("パスワード設定メール再送信", () => {
+      const passwordSetResendUser = {
+        id: 1,
+        name: "テスト",
+        email: "test@test.com",
+        role: 3,
+        password_set_flg: 0
+      }
+
+      let axiosPost
+      beforeEach(() => {
+        // spyOn
+        axiosPost = jest.spyOn(axios, "post")
+
+        // ダイアログを開く
+        wrapper.vm.openPasswordSetResendDialog(passwordSetResendUser)
+      })
+
+      test("失敗", async () => {
+        // エラーレスポンス
+        const response = {
+          status: 403
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // パスワード設定メール再送信
+        await wrapper.vm.passwordSetResendSubmit()
+
+        // API送信をした
+        expect(axiosPost).toHaveBeenCalled()
+
+        // snackbarのエラー表示
+        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          "パスワード設定メールの再送信に失敗しました。"
+        )
+        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
+          "error"
+        )
+      })
+
+      test("成功", async () => {
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // パスワード設定メール再送信
+        await wrapper.vm.passwordSetResendSubmit()
+
+        // API送信をした
+        expect(axiosPost).toHaveBeenCalled()
+
+        // snackbarの完了表示
+        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          "パスワード設定メールを再送信しました。"
+        )
+        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
+          "success"
+        )
+      })
+
+      test("loading中は処理不可", async () => {
+        // loading中の設定
+        wrapper.setData({
+          passwordSetResendLoading: true
+        })
+        // 正常なレスポンス
+        const response = {
+          status: 200
+        }
+        // axiosのレスポンスをモックする
+        axios.post.mockImplementation(url => {
+          return Promise.resolve(response)
+        })
+        wrapper.vm.$store.$axios = axios
+
+        // パスワード設定メール再送信
+        await wrapper.vm.passwordSetResendSubmit()
+
+        // API送信をしない
+        expect(axiosPost).not.toHaveBeenCalled()
       })
     })
   })

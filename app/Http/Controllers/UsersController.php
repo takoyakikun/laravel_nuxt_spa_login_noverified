@@ -136,6 +136,33 @@ class UsersController extends Controller
     }
 
     /**
+     * パスワード設定メールを再送信する
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function passwordSetResend($id)
+    {
+        $user = resolve(User::class)->find($id);
+
+        if ((int)$user->password_set_flg !== 0) {
+            return response([], 403);
+        }
+
+        // パスワードリセットメールをパスワード設定メールに切り替えるフラグ
+        \Config::set('temporary.passwordSet', true);
+
+        try {
+            $this->broker()->sendResetLink(
+                ['email' => $user->email]
+            );
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        return response([]);
+    }
+
+    /**
      * 権限の選択オプションを返す
      *
      * @return \Illuminate\Http\Response

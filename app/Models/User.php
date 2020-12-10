@@ -38,6 +38,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password_set_at' => 'datetime',
     ];
 
     /**
@@ -45,7 +46,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['role_level', 'modify_flg', 'delete_flg'];
+    protected $appends = ['role_level', 'modify_flg', 'delete_flg', 'password_set_flg'];
 
     /**
      * 認証メールを紐付ける
@@ -128,6 +129,20 @@ class User extends Authenticatable
         return 1;
     }
 
+   /**
+     * パスワード設定済ユーザーのカラム
+     *
+     * @return int
+     */
+    public function getPasswordSetFlgAttribute ()
+    {
+        // nullの場合は設定前
+        if ($this->password_set_at === null) {
+            return 0;
+        }
+        return 1;
+    }
+
     /**
      * 権限レベルを返す
      *
@@ -148,4 +163,17 @@ class User extends Authenticatable
 
         return $roleLevel;
     }
+
+    /**
+     * パスワード設定済にする
+     *
+     * @return bool
+     */
+    public function markPasswordAsSet()
+    {
+        return $this->forceFill([
+            'password_set_at' => $this->freshTimestamp(),
+        ])->save();
+    }
+
 }

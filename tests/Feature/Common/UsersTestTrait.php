@@ -56,6 +56,11 @@ trait UsersTestTrait
 
         // 設定されたパスワードが保存されていることを確認
         $this->assertTrue(\Hash::check($newPasswordData['password'], $user->fresh()->password));
+
+        // データベースにパスワード設定時刻が入っているか確認
+        $verificationUser = User::find($user->id);
+        $this->assertNotNull($verificationUser->password_set_at);
+
     }
 
 }

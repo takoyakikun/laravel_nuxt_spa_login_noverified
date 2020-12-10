@@ -126,6 +126,15 @@ export const actions = {
       })
       .catch(err => err.response)
   },
+  // パスワードセットメール再送信
+  async passwordSetResend({ dispatch }, id) {
+    return await this.$axios
+      .post("/api/users/passwordSetResend/" + id)
+      .then(res => {
+        return res
+      })
+      .catch(err => err.response)
+  },
   // パスワードセット
   async passwordSet({ dispatch }, formValue) {
     return await this.$axios

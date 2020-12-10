@@ -39,6 +39,10 @@ class MyuserController extends Controller
                 'role' => 3,
             ]);
             event(new Registered($user));
+
+            // パスワード設定済にする
+            $user->markPasswordAsSet();
+
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollback();

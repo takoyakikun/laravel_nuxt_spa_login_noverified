@@ -54,6 +54,9 @@ class MyuserTest extends TestCase
             'email' => $newData['email'],
         ]);
 
+        // データベースにパスワード設定時刻が入っているか確認
+        $user = User::orderBy('id', 'desc')->first();
+        $this->assertNotNull($user->password_set_at);
     }
 
     /**

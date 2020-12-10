@@ -333,6 +333,42 @@ class UsersTest extends TestCase
     }
 
     /**
+     * パスワード設定メール再送信テスト
+     *
+     * @return void
+     */
+    public function testPasswordSetResend()
+    {
+        // 実際にメール送信しないようにする
+        Notification::fake();
+
+        // サンプルデータを追加
+        $sample = factory(User::class)->create([
+            'name'  => 'テスト',
+            'email' => 'sample@test.com',
+            'role' => 3,
+            'email_verified_at' => null,
+            'password_set_at' => null,
+            ]);
+
+        // 一般ユーザーはアクセス不可
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('users.passwordSetResend', $sample->id), [], ['X-Requested-With' => 'XMLHttpRequest']);
+        $response->assertStatus(403);
+
+        // 管理者ユーザーからリクエストを送信
+        $response = $this->actingAs($this->adminUser)
+            ->json('POST', route('users.passwordSetResend', $sample->id), [], ['X-Requested-With' => 'XMLHttpRequest']);
+
+        // 正しいレスポンスが返ってくることを確認
+        $response->assertStatus(200);
+
+        // ログインユーザーパスワード設定メール送信共通のテスト
+        $this->userPasswordSetMail();
+
+    }
+
+    /**
      * 権限の選択オプションテスト
      *
      * @return void

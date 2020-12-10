@@ -57,12 +57,29 @@
             </v-row>
           </template>
 
-          <template v-slot:[`item.role`]="{ value }">
+          <template #[`item.email`]="{ value, item }">
+            <span>{{ value }}</span>
+            <v-tooltip v-if="!item.password_set_flg" right color="primary">
+              <template #activator="{ on }">
+                <v-btn
+                  data-test="passwordSetResendDialog"
+                  icon
+                  color="primary"
+                  v-on="on"
+                  @click="openPasswordSetResendDialog(item)"
+                >
+                  <v-icon>mdi-email</v-icon>
+                </v-btn>
+              </template>
+              <span>パスワード設定メール再送信</span>
+            </v-tooltip>
+          </template>
+          <template #[`item.role`]="{ value }">
             {{ getConfigData("roleOptions", value) }}
           </template>
-          <template v-slot:[`item.action`]="{ item }">
+          <template #[`item.action`]="{ item }">
             <v-tooltip left color="success">
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-btn
                   data-test="editDialogButton"
                   icon
@@ -77,7 +94,7 @@
               <span>編集</span>
             </v-tooltip>
             <v-tooltip right color="error">
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-btn
                   data-test="deleteDialogButton"
                   icon
@@ -193,6 +210,34 @@
         <v-spacer />
       </template>
     </MyDialog>
+
+    <!-- パスワード設定メール再送信ダイアログ -->
+    <MyDialog
+      ref="passwordSetResendDialog"
+      v-model="passwordSetResendDialog"
+      title="パスワード設定メール再送信"
+      color="primary"
+    >
+      <template #content>
+        {{ passwordSetResendItem.name }} ({{ passwordSetResendItem.email }})
+        のパスワード設定メールを再送信しますか？
+      </template>
+
+      <template #actionsLeft="{ color }">
+        <v-btn
+          data-test="passwordSetResendSubmitButton"
+          :color="color"
+          :loading="passwordSetResendLoading"
+          @click="passwordSetResendSubmit"
+        >
+          <v-icon left>
+            mdi-email
+          </v-icon>
+          再送信
+        </v-btn>
+        <v-spacer />
+      </template>
+    </MyDialog>
   </v-container>
 </template>
 
@@ -218,7 +263,10 @@ export default {
       editFormValue: {},
       deleteDialog: false,
       deleteLoading: false,
-      deleteId: null
+      deleteId: null,
+      passwordSetResendDialog: false,
+      passwordSetResendLoading: false,
+      passwordSetResendItem: {}
     }
   },
   computed: {
@@ -267,7 +315,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("users", ["createData", "editData", "deleteData"]),
+    ...mapActions("users", [
+      "createData",
+      "editData",
+      "deleteData",
+      "passwordSetResend"
+    ]),
     ...mapActions("snackbar", ["openSnackbar"]),
 
     // ユーザー名検索
@@ -397,6 +450,34 @@ export default {
           }
         })
         this.deleteLoading = false
+      }
+    },
+    // 削除ダイアログを開く
+    openPasswordSetResendDialog(item) {
+      this.passwordSetResendDialog = true
+      this.passwordSetResendItem = item
+    },
+    // パスワード設定メールを再送信
+    async passwordSetResendSubmit() {
+      if (!this.passwordSetResendLoading) {
+        this.passwordSetResendLoading = true
+        await this.passwordSetResend(this.passwordSetResendItem.id).then(
+          res => {
+            if (res.status === 200) {
+              this.openSnackbar({
+                text: "パスワード設定メールを再送信しました。",
+                options: { color: "success" }
+              })
+              this.$refs.passwordSetResendDialog.close()
+            } else {
+              this.openSnackbar({
+                text: "パスワード設定メールの再送信に失敗しました。",
+                options: { color: "error" }
+              })
+            }
+          }
+        )
+        this.passwordSetResendLoading = false
       }
     }
   }
