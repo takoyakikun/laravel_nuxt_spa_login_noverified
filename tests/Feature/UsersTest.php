@@ -406,15 +406,17 @@ class UsersTest extends TestCase
             'email' => 'sample@test.com',
         ]);
 
-        // 入力されたメールアドレスがユニークの場合200を返す
+        // 入力されたメールアドレスがユニークの場合 true を返す
         $postData = [ 'email' => 'unique@test.com' ];
         $response = $this->json('POST', route('users.unique'), $postData, ['X-Requested-With' => 'XMLHttpRequest']);
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJson([true]);
 
-        // 入力されたメールアドレスがユニークでない場合422を返す
+        // 入力されたメールアドレスがユニークでない場合 false を返す
         $postData = [ 'email' => 'sample@test.com' ];
         $response = $this->json('POST', route('users.unique'), $postData, ['X-Requested-With' => 'XMLHttpRequest']);
-        $response->assertStatus(422);
+        $response->assertStatus(200)
+            ->assertJson([false]);
 
     }
 

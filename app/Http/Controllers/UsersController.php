@@ -188,11 +188,16 @@ class UsersController extends Controller
      */
     public function unique(Request $request)
     {
-        $request->validate([
-            'email' => 'unique:users',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'unique:users',
+            ]);
+        } catch (\Exception $e) {
+            // バリデーションエラーの場合は false を返す
+            return response([false]);
+        }
 
-        return response([]);
+        return response([true]);
 
     }
 

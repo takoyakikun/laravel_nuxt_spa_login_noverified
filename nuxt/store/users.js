@@ -159,13 +159,7 @@ export const actions = {
     return await this.$axios
       .post("/api/users/unique", { email: email })
       .then(res => {
-        commit("setUserUnique", 1) // true だとバリデートされないので 1 を入れる
-      })
-      .catch(err => {
-        // バリデーションエラーの時のみfalse
-        if (err.response.status === 422) {
-          commit("setUserUnique", 0) // false だとバリデートされないので 0 を入れる
-        }
+        commit("setUserUnique", Number(res.data[0])) // true/false だとバリデートされないので数値に変換
       })
   }
 }
