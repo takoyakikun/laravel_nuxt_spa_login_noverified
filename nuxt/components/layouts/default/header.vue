@@ -82,115 +82,36 @@
     </template>
 
     <!-- 編集ダイアログ -->
-    <validation-observer ref="editFormValidate" v-slot="{ invalid }">
-      <MyDialog
-        ref="editDialog"
-        v-model="editDialog"
-        title="ユーザー編集"
-        color="primary"
-        :options="{ persistent: true }"
-      >
-        <template #content>
-          <UserForm
-            v-model="editFormValue"
-            form-type="edit"
-            myuser
-            @submit="editSubmit"
-          />
-        </template>
-
-        <template #actionsLeft="{ color }">
-          <v-btn
-            data-test="editSubmitButton"
-            :disabled="invalid"
-            :color="color"
-            :loading="editLoading"
-            @click="editSubmit"
-          >
-            <v-icon left>
-              mdi-account-edit
-            </v-icon>
-            更新
-          </v-btn>
-          <v-spacer />
-        </template>
-      </MyDialog>
-    </validation-observer>
+    <EditDialog ref="editDialog" />
 
     <!-- パスワード変更ダイアログ -->
-    <validation-observer ref="passwordChangeFormValidate" v-slot="{ invalid }">
-      <MyDialog
-        ref="passwordChangeDialog"
-        v-model="passwordChangeDialog"
-        title="パスワード変更"
-        color="primary"
-        :options="{ persistent: true }"
-      >
-        <template #content>
-          <PasswordChangeForm
-            v-model="passwordChangeFormValue"
-            @submit="passwordChangeSubmit"
-          />
-        </template>
-
-        <template #actionsLeft="{ color }">
-          <v-btn
-            data-test="passwordChangeSubmitButton"
-            :disabled="invalid"
-            :color="color"
-            :loading="passwordChangeLoading"
-            @click="passwordChangeSubmit"
-          >
-            <v-icon left>
-              mdi-pencil-lock
-            </v-icon>
-            変更
-          </v-btn>
-          <v-spacer />
-        </template>
-      </MyDialog>
-    </validation-observer>
+    <PasswordChangeDialog ref="passwordChangeDialog" />
   </v-app-bar>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex"
-
-import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/userForm"
-import PasswordChangeForm from "@/components/users/passwordChangeForm"
+import EditDialog from "@/components/layouts/default/dialogs/editDialog"
+import PasswordChangeDialog from "@/components/layouts/default/dialogs/passwordChangeDialog"
 
 export default {
   components: {
-    MyDialog,
-    UserForm,
-    PasswordChangeForm
+    EditDialog,
+    PasswordChangeDialog
   },
   props: {
     drawer: {
       type: Boolean,
-      default: false,
-      required: true
+      default: false
     }
   },
   data() {
     return {
-      dataDrawer: false,
-      editDialog: false,
-      editLoading: false,
-      editFormValue: {},
-      passwordChangeDialog: false,
-      passwordChangeLoading: false,
-      passwordChangeFormValue: {}
+      dataDrawer: false
     }
   },
   computed: {
-    ...mapGetters("auth", [
-      "user",
-      "userExists",
-      "permission",
-      "permissionExists"
-    ])
+    ...mapGetters("auth", ["user", "userExists"])
   },
   watch: {
     drawer: {
@@ -219,77 +140,12 @@ export default {
 
     // 編集ダイアログを開く
     openEditDialog() {
-      this.editDialog = true
-      this.editFormValue = JSON.parse(JSON.stringify(this.user)) // ディープコピー
-    },
-    // データを更新
-    async editSubmit() {
-      if (!this.editLoading) {
-        this.editLoading = true
-        await this.$refs.editFormValidate.validate().then(async result => {
-          if (result) {
-            await this.editData({
-              formValue: this.editFormValue
-            }).then(res => {
-              if (res.status === 200) {
-                this.openSnackbar({
-                  text: "ユーザーデータを更新しました。",
-                  options: { color: "success" }
-                })
-                this.$refs.editDialog.close()
-                this.$refs.editFormValidate.reset()
-                this.$store.dispatch("auth/setUser")
-              } else {
-                this.openSnackbar({
-                  text: "ユーザーデータの更新に失敗しました。",
-                  options: { color: "error" }
-                })
-              }
-            })
-          }
-        })
-        this.editLoading = false
-      }
+      this.$refs.editDialog.openDialog()
     },
 
     // パスワード変更ダイアログを開く
     openPasswordChangeDialog() {
-      this.passwordChangeDialog = true
-      this.passwordChangeFormValue = {}
-    },
-    // パスワードを変更
-    async passwordChangeSubmit() {
-      if (!this.passwordChangeLoading) {
-        this.passwordChangeLoading = true
-        await this.$refs.passwordChangeFormValidate
-          .validate()
-          .then(async result => {
-            if (result) {
-              await this.passwordChange(this.passwordChangeFormValue).then(
-                res => {
-                  if (res.status === 200) {
-                    this.openSnackbar({
-                      text: "パスワードを変更しました。",
-                      options: { color: "success" }
-                    })
-                    this.$refs.passwordChangeDialog.close()
-                    this.$refs.passwordChangeFormValidate.reset()
-                  } else {
-                    let text = "パスワードの変更に失敗しました。"
-                    if (res.data.error_message) {
-                      text = res.data.error_message
-                    }
-                    this.openSnackbar({
-                      text: text,
-                      options: { color: "error" }
-                    })
-                  }
-                }
-              )
-            }
-          })
-        this.passwordChangeLoading = false
-      }
+      this.$refs.passwordChangeDialog.openDialog()
     }
   }
 }

@@ -9,11 +9,11 @@ export const getters = {
     if (getters.userExists) {
       return state.user
     } else {
-      return false
+      return {}
     }
   },
   // ユーザーデータが存在しているか
-  userExists: state => state.user,
+  userExists: state => Boolean(state.user),
 
   // アクセス許可を返す
   permission: (state, getters) => category => {
