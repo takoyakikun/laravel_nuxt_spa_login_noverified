@@ -244,7 +244,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/userForm"
+import UserForm from "@/components/users/forms/userForm"
 
 export default {
   components: {

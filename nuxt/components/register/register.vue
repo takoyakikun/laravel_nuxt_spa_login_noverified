@@ -39,7 +39,7 @@
 
 <script>
 import { mapActions } from "vuex"
-import UserForm from "~/components/users/userForm"
+import UserForm from "@/components/users/forms/userForm"
 
 export default {
   components: {

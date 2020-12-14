@@ -37,7 +37,7 @@
 import { mapGetters, mapActions } from "vuex"
 import lodash from "lodash"
 import MyDialog from "@/components/dialog/myDialog"
-import PasswordChangeForm from "@/components/users/passwordChangeForm"
+import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
 
 export default {
   components: {

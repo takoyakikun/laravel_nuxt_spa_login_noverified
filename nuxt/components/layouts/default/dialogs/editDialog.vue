@@ -42,7 +42,7 @@
 import { mapGetters, mapActions } from "vuex"
 import lodash from "lodash"
 import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/userForm"
+import UserForm from "@/components/users/forms/userForm"
 
 export default {
   components: {
@@ -67,9 +67,7 @@ export default {
     // ダイアログを開く
     openDialog() {
       this.dialog = true
-      if (this.user) {
-        this.formValue = lodash.cloneDeep(this.user) // ディープコピー
-      }
+      this.formValue = lodash.cloneDeep(this.user) // ディープコピー
     },
     // データを更新
     async submit() {

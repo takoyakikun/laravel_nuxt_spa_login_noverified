@@ -3,7 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
 import setConfigData from "@/test/setConfigData"
-import UserForm from "@/components/users/userForm"
+import UserForm from "@/components/users/forms/userForm"
 import Form from "@/components/form/form"
 import { ValidationObserver } from "vee-validate"
 
