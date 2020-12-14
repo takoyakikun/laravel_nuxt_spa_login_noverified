@@ -1,7 +1,6 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import axios from "axios"
 import storeConfig from "@/test/storeConfig"
 import setConfigData from "@/test/setConfigData"
 import UserList from "@/components/users/userList"
@@ -17,7 +16,6 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/setConfig", setConfigData)
-  store.commit("users/setRoleOptions", [1, 2, 3])
 })
 
 afterEach(() => {
@@ -31,572 +29,104 @@ describe("components/users/userList", () => {
       wrapper = shallowMount(UserList, {
         localVue,
         store,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
     test("is a Vue instance", () => {
       expect(wrapper.vm).toBeTruthy()
     })
-
-    describe("自ユーザーかどうか", () => {
-      beforeEach(() => {
-        // ログインデータを登録
-        wrapper.vm.$store.commit("auth/setUser", { id: 1 })
-      })
-
-      test("自ユーザー", () => {
-        // 自ユーザーはtrueを返す
-        wrapper.vm.editId = 1
-        expect(wrapper.vm.myuser).toBeTruthy()
-      })
-      test("それ以外", () => {
-        // それ以外はfalseを返す
-        wrapper.vm.editId = 2
-        expect(wrapper.vm.myuser).toBeFalsy()
-      })
-    })
   })
 
-  describe("フォーム動作テスト", () => {
+  describe("ダイアログオープンテスト", () => {
     let wrapper
+    let testUser
     beforeEach(() => {
       wrapper = mount(UserList, {
         localVue,
         store,
-        vuetify,
-        sync: false
-      })
-    })
-
-    describe("ユーザー追加", () => {
-      let createFormValidate
-      let axiosPost
-      beforeEach(() => {
-        // spyOn
-        createFormValidate = jest.spyOn(wrapper.vm.$refs.createForm, "validate")
-        axiosPost = jest.spyOn(axios, "post")
-
-        // ダイアログを開く
-        wrapper.vm.openCreateDialog()
+        vuetify
       })
 
-      describe("失敗", () => {
-        beforeEach(() => {
-          // エラーレスポンス
-          const response = {
-            status: 422
-          }
-          // axiosのレスポンスをモックする
-          axios.post.mockImplementation(url => {
-            return Promise.resolve(response)
-          })
-          wrapper.vm.$store.$axios = axios
-        })
-
-        test("フロント側エラー", async () => {
-          // ユーザー追加処理
-          await wrapper.vm.createSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(createFormValidate).toHaveBeenCalled()
-
-          // バリデーションエラー
-          expect(
-            Object.keys(wrapper.vm.$refs.createForm.errors)
-          ).not.toHaveLength(0)
-
-          // API送信をしない
-          expect(axiosPost).not.toHaveBeenCalled()
-        })
-
-        test("API側エラー", async () => {
-          // フォームを入力してユーザー追加処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='role'][value='3']").setChecked()
-          await wrapper.vm.createSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(createFormValidate).toHaveBeenCalled()
-
-          // API送信をした
-          expect(axiosPost).toHaveBeenCalled()
-          expect(axiosPost).toHaveBeenCalledWith("/api/users", {
-            name: "テスト",
-            email: "test@test.com",
-            role: 3
-          })
-
-          // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "ユーザーデータの追加に失敗しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
-        })
-      })
-
-      test("成功", async () => {
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // フォームを入力してユーザー追加処理
-        wrapper.find("input[name='name']").setValue("テスト")
-        wrapper.find("input[name='email']").setValue("test@test.com")
-        wrapper.find("input[name='role'][value='3']").setChecked()
-        await wrapper.vm.createSubmit()
-        jest.runAllTimers()
-
-        // バリデーションチェックをした
-        expect(createFormValidate).toHaveBeenCalled()
-
-        // API送信をした
-        expect(axiosPost).toHaveBeenCalled()
-        expect(axiosPost).toHaveBeenCalledWith("/api/users", {
-          name: "テスト",
-          email: "test@test.com",
-          role: 3
-        })
-
-        // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "ユーザーデータを追加しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
-      })
-
-      test("loading中は処理不可", async () => {
-        // loading中の設定
-        wrapper.setData({
-          createLoading: true
-        })
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // フォームを入力してユーザー追加処理
-        wrapper.find("input[name='name']").setValue("テスト")
-        wrapper.find("input[name='email']").setValue("test@test.com")
-        wrapper.find("input[name='role'][value='3']").setChecked()
-        await wrapper.vm.createSubmit()
-        jest.runAllTimers()
-
-        // API送信をしない
-        expect(axiosPost).not.toHaveBeenCalled()
-      })
-    })
-
-    describe("ユーザー編集", () => {
-      const editUser = {
+      testUser = {
         id: 1,
         name: "テスト",
         email: "test@test.com",
         role: 3,
         modify_flg: 1
       }
-
-      let editFormValidate
-      let axiosPatch
-      beforeEach(() => {
-        // spyOn
-        editFormValidate = jest.spyOn(wrapper.vm.$refs.editForm, "validate")
-        axiosPatch = jest.spyOn(axios, "patch")
-
-        // ダイアログを開く
-        wrapper.vm.openEditDialog(editUser)
-      })
-
-      describe("失敗", () => {
-        beforeEach(() => {
-          // エラーレスポンス
-          const response = {
-            status: 422
-          }
-          // axiosのレスポンスをモックする
-          axios.patch.mockImplementation(url => {
-            return Promise.resolve(response)
-          })
-          wrapper.vm.$store.$axios = axios
-        })
-
-        test("フロント側エラー", async () => {
-          // フォームを空にしてユーザー編集処理
-          wrapper.find("input[name='name']").setValue("")
-          wrapper.find("input[name='email']").setValue("")
-          await wrapper.vm.editSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(editFormValidate).toHaveBeenCalled()
-
-          // バリデーションエラー
-          expect(
-            Object.keys(wrapper.vm.$refs.editForm.errors)
-          ).not.toHaveLength(0)
-
-          // API送信をしない
-          expect(axiosPatch).not.toHaveBeenCalled()
-        })
-
-        test("API側エラー", async () => {
-          // フォームを入力してユーザー編集処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='role'][value='3']").setChecked()
-          await wrapper.vm.editSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(editFormValidate).toHaveBeenCalled()
-
-          // API送信をした
-          expect(axiosPatch).toHaveBeenCalled()
-          expect(axiosPatch).toHaveBeenCalledWith("/api/users/1", editUser)
-
-          // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "ユーザーデータの更新に失敗しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
-        })
-      })
-      describe("成功", () => {
-        beforeEach(() => {
-          // 正常なレスポンス
-          const response = {
-            status: 200
-          }
-          // axiosのレスポンスをモックする
-          axios.patch.mockImplementation(url => {
-            return Promise.resolve(response)
-          })
-          wrapper.vm.$store.$axios = axios
-        })
-
-        test("自ユーザー", async () => {
-          // ログインデータを登録
-          wrapper.vm.$store.commit("auth/setUser", { id: 1 })
-
-          // フォームを入力してユーザー編集処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='role'][value='3']").setChecked()
-          await wrapper.vm.editSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(editFormValidate).toHaveBeenCalled()
-
-          // API送信をした
-          expect(axiosPatch).toHaveBeenCalled()
-          expect(axiosPatch).toHaveBeenCalledWith(
-            "/api/myuser/update",
-            editUser
-          )
-
-          // snackbarの完了表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "ユーザーデータを更新しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "success"
-          )
-        })
-
-        test("それ以外", async () => {
-          // フォームを入力してユーザー編集処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='role'][value='3']").setChecked()
-          await wrapper.vm.editSubmit()
-          jest.runAllTimers()
-
-          // バリデーションチェックをした
-          expect(editFormValidate).toHaveBeenCalled()
-
-          // API送信をした
-          expect(axiosPatch).toHaveBeenCalled()
-          expect(axiosPatch).toHaveBeenCalledWith("/api/users/1", editUser)
-
-          // snackbarの完了表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "ユーザーデータを更新しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "success"
-          )
-        })
-      })
-
-      test("loading中は処理不可", async () => {
-        // loading中の設定
-        wrapper.setData({
-          editLoading: true
-        })
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // フォームを入力してユーザー編集処理
-        wrapper.find("input[name='name']").setValue("テスト")
-        wrapper.find("input[name='email']").setValue("test@test.com")
-        wrapper.find("input[name='role'][value='3']").setChecked()
-        await wrapper.vm.editSubmit()
-        jest.runAllTimers()
-
-        // API送信をしない
-        expect(axiosPatch).not.toHaveBeenCalled()
-      })
     })
 
-    describe("ユーザー削除", () => {
-      const deleteUser = {
-        id: 1,
-        name: "テスト",
-        email: "test@test.com",
-        role: 3,
-        delete_flg: 1
-      }
+    test("新規追加ダイアログを開く", () => {
+      // ダイアログを開く
+      wrapper.vm.openCreateDialog()
 
-      let axiosDelete
-      beforeEach(() => {
-        // spyOn
-        axiosDelete = jest.spyOn(axios, "delete")
-
-        // ダイアログを開く
-        wrapper.vm.openDeleteDialog(deleteUser)
-      })
-
-      test("失敗", async () => {
-        // エラーレスポンス
-        const response = {
-          status: 403
-        }
-        // axiosのレスポンスをモックする
-        axios.delete.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // ユーザー削除処理
-        await wrapper.vm.deleteSubmit()
-
-        // API送信をした
-        expect(axiosDelete).toHaveBeenCalled()
-        expect(axiosDelete).toHaveBeenCalledWith("/api/users/1")
-
-        // snackbarのエラー表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "ユーザーデータの削除に失敗しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "error"
-        )
-      })
-
-      test("成功", async () => {
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.delete.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // ユーザー削除処理
-        await wrapper.vm.deleteSubmit()
-
-        // API送信をした
-        expect(axiosDelete).toHaveBeenCalled()
-        expect(axiosDelete).toHaveBeenCalledWith("/api/users/1")
-
-        // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "ユーザーデータを削除しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
-      })
-
-      test("loading中は処理不可", async () => {
-        // loading中の設定
-        wrapper.setData({
-          deleteLoading: true
-        })
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.delete.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // ユーザー削除処理
-        await wrapper.vm.deleteSubmit()
-
-        // API送信をしない
-        expect(axiosDelete).not.toHaveBeenCalled()
-      })
+      // ダイアログが開いている
+      expect(wrapper.vm.$refs.createDialog.dialog).toBeTruthy()
     })
-    describe("パスワード設定メール再送信", () => {
-      const passwordSetResendUser = {
-        id: 1,
-        name: "テスト",
-        email: "test@test.com",
-        role: 3,
-        password_set_flg: 0
-      }
 
-      let axiosPost
-      beforeEach(() => {
-        // spyOn
-        axiosPost = jest.spyOn(axios, "post")
+    test("編集ダイアログを開く", () => {
+      // ダイアログを開く
+      wrapper.vm.openEditDialog(testUser)
 
-        // ダイアログを開く
-        wrapper.vm.openPasswordSetResendDialog(passwordSetResendUser)
-      })
+      // ダイアログが開いている
+      expect(wrapper.vm.$refs.editDialog.dialog).toBeTruthy()
 
-      test("失敗", async () => {
-        // エラーレスポンス
-        const response = {
-          status: 403
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
+      // 正しいユーザーデータが入っている
+      expect(wrapper.vm.$refs.editDialog.formValue).toEqual(testUser)
 
-        // パスワード設定メール再送信
-        await wrapper.vm.passwordSetResendSubmit()
+      // 正しいユーザーIDが入っている
+      expect(wrapper.vm.$refs.editDialog.editId).toEqual(testUser.id)
+    })
 
-        // API送信をした
-        expect(axiosPost).toHaveBeenCalled()
+    test("削除ダイアログを開く", () => {
+      // ダイアログを開く
+      wrapper.vm.openDeleteDialog(testUser)
 
-        // snackbarのエラー表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "パスワード設定メールの再送信に失敗しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "error"
-        )
-      })
+      // ダイアログが開いている
+      expect(wrapper.vm.$refs.deleteDialog.dialog).toBeTruthy()
 
-      test("成功", async () => {
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
+      // 正しいユーザーデータが入っている
+      expect(wrapper.vm.$refs.deleteDialog.userData).toEqual(testUser)
+    })
 
-        // パスワード設定メール再送信
-        await wrapper.vm.passwordSetResendSubmit()
+    test("パスワード設定メール再送信ダイアログを開く", () => {
+      // ダイアログを開く
+      wrapper.vm.openPasswordSetResendDialog(testUser)
 
-        // API送信をした
-        expect(axiosPost).toHaveBeenCalled()
+      // ダイアログが開いている
+      expect(wrapper.vm.$refs.passwordSetResendDialog.dialog).toBeTruthy()
 
-        // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "パスワード設定メールを再送信しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
-      })
-
-      test("loading中は処理不可", async () => {
-        // loading中の設定
-        wrapper.setData({
-          passwordSetResendLoading: true
-        })
-        // 正常なレスポンス
-        const response = {
-          status: 200
-        }
-        // axiosのレスポンスをモックする
-        axios.post.mockImplementation(url => {
-          return Promise.resolve(response)
-        })
-        wrapper.vm.$store.$axios = axios
-
-        // パスワード設定メール再送信
-        await wrapper.vm.passwordSetResendSubmit()
-
-        // API送信をしない
-        expect(axiosPost).not.toHaveBeenCalled()
-      })
+      // 正しいユーザーデータが入っている
+      expect(wrapper.vm.$refs.passwordSetResendDialog.userData).toEqual(
+        testUser
+      )
     })
   })
 
   describe("ボタン動作テスト", () => {
     let wrapper
     let openCreateDialog
-    let createSubmit
     let openEditDialog
-    let editSubmit
     let openDeleteDialog
-    let deleteSubmit
+    let openPasswordSetResendDialog
     beforeEach(() => {
       openCreateDialog = jest
         .spyOn(UserList.methods, "openCreateDialog")
         .mockReturnValue(true)
-      createSubmit = jest
-        .spyOn(UserList.methods, "createSubmit")
-        .mockReturnValue(true)
       openEditDialog = jest
         .spyOn(UserList.methods, "openEditDialog")
-        .mockReturnValue(true)
-      editSubmit = jest
-        .spyOn(UserList.methods, "editSubmit")
         .mockReturnValue(true)
       openDeleteDialog = jest
         .spyOn(UserList.methods, "openDeleteDialog")
         .mockReturnValue(true)
-      deleteSubmit = jest
-        .spyOn(UserList.methods, "deleteSubmit")
+      openPasswordSetResendDialog = jest
+        .spyOn(UserList.methods, "openPasswordSetResendDialog")
         .mockReturnValue(true)
       wrapper = mount(UserList, {
         localVue,
         store,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
@@ -606,17 +136,6 @@ describe("components/users/userList", () => {
 
       // メソッドが実行されたか
       expect(openCreateDialog).toHaveBeenCalled()
-    })
-
-    test("新規追加ボタン", async () => {
-      // ダイアログを開く
-      await wrapper.setData({ createDialog: true })
-
-      // ボタンをクリック
-      wrapper.find("[data-test='createSubmitButton']").trigger("click")
-
-      // メソッドが実行されたか
-      expect(createSubmit).toHaveBeenCalled()
     })
 
     test("編集ダイアログボタン", async () => {
@@ -638,17 +157,6 @@ describe("components/users/userList", () => {
       expect(openEditDialog).toHaveBeenCalled()
     })
 
-    test("更新ボタン", async () => {
-      // ダイアログを開く
-      await wrapper.setData({ editDialog: true })
-
-      // ボタンをクリック
-      wrapper.find("[data-test='editSubmitButton']").trigger("click")
-
-      // メソッドが実行されたか
-      expect(editSubmit).toHaveBeenCalled()
-    })
-
     test("削除ダイアログボタン", async () => {
       // テーブルにデータを追加
       await wrapper.vm.$store.commit("users/setList", [
@@ -668,15 +176,23 @@ describe("components/users/userList", () => {
       expect(openDeleteDialog).toHaveBeenCalled()
     })
 
-    test("削除ボタン", async () => {
-      // ダイアログを開く
-      await wrapper.setData({ deleteDialog: true })
+    test("パスワード設定メール再送信ダイアログボタン", async () => {
+      // テーブルにデータを追加
+      await wrapper.vm.$store.commit("users/setList", [
+        {
+          id: 1,
+          name: "テスト",
+          email: "test@test.com",
+          role: 3,
+          delete_flg: 1
+        }
+      ])
 
       // ボタンをクリック
-      wrapper.find("[data-test='deleteSubmitButton']").trigger("click")
+      wrapper.find("[data-test='passwordSetResendDialog']").trigger("click")
 
       // メソッドが実行されたか
-      expect(deleteSubmit).toHaveBeenCalled()
+      expect(openPasswordSetResendDialog).toHaveBeenCalled()
     })
   })
 

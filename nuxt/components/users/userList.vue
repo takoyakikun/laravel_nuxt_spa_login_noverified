@@ -114,168 +114,42 @@
     </v-row>
 
     <!-- 新規追加ダイアログ -->
-    <validation-observer ref="createForm" v-slot="{ invalid }">
-      <MyDialog
-        ref="createDialog"
-        v-model="createDialog"
-        title="新規ユーザー追加"
-        color="info"
-        :options="{ persistent: true }"
-      >
-        <template #content>
-          <UserForm
-            v-model="createFormValue"
-            form-type="usersCreate"
-            @submit="createSubmit"
-          />
-        </template>
-
-        <template #actionsLeft="{ color }">
-          <v-btn
-            data-test="createSubmitButton"
-            :disabled="invalid"
-            :color="color"
-            :loading="createLoading"
-            @click="createSubmit"
-          >
-            <v-icon left>
-              mdi-account-plus
-            </v-icon>
-            追加
-          </v-btn>
-          <v-spacer />
-        </template>
-      </MyDialog>
-    </validation-observer>
+    <CreateDialog ref="createDialog" />
 
     <!-- 編集ダイアログ -->
-    <validation-observer ref="editForm" v-slot="{ invalid }">
-      <MyDialog
-        ref="editDialog"
-        v-model="editDialog"
-        title="ユーザー編集"
-        color="success"
-        :options="{ persistent: true }"
-      >
-        <template #content>
-          <UserForm
-            v-model="editFormValue"
-            form-type="edit"
-            :myuser.sync="myuser"
-            @submit="editSubmit"
-          />
-        </template>
-
-        <template #actionsLeft="{ color }">
-          <v-btn
-            data-test="editSubmitButton"
-            :disabled="invalid"
-            :color="color"
-            :loading="editLoading"
-            @click="editSubmit"
-          >
-            <v-icon left>
-              mdi-account-edit
-            </v-icon>
-            更新
-          </v-btn>
-          <v-spacer />
-        </template>
-      </MyDialog>
-    </validation-observer>
+    <EditDialog ref="editDialog" />
 
     <!-- 削除ダイアログ -->
-    <MyDialog
-      ref="deleteDialog"
-      v-model="deleteDialog"
-      title="ユーザー削除"
-      color="error"
-    >
-      <template #content>
-        ユーザーを削除しますか？
-      </template>
-
-      <template #actionsLeft="{ color }">
-        <v-btn
-          data-test="deleteSubmitButton"
-          :color="color"
-          :loading="deleteLoading"
-          @click="deleteSubmit"
-        >
-          <v-icon left>
-            mdi-delete
-          </v-icon>
-          削除
-        </v-btn>
-        <v-spacer />
-      </template>
-    </MyDialog>
+    <DeleteDialog ref="deleteDialog" />
 
     <!-- パスワード設定メール再送信ダイアログ -->
-    <MyDialog
-      ref="passwordSetResendDialog"
-      v-model="passwordSetResendDialog"
-      title="パスワード設定メール再送信"
-      color="primary"
-    >
-      <template #content>
-        {{ passwordSetResendItem.name }} ({{ passwordSetResendItem.email }})
-        のパスワード設定メールを再送信しますか？
-      </template>
-
-      <template #actionsLeft="{ color }">
-        <v-btn
-          data-test="passwordSetResendSubmitButton"
-          :color="color"
-          :loading="passwordSetResendLoading"
-          @click="passwordSetResendSubmit"
-        >
-          <v-icon left>
-            mdi-email
-          </v-icon>
-          再送信
-        </v-btn>
-        <v-spacer />
-      </template>
-    </MyDialog>
+    <PasswordSetResendDialog ref="passwordSetResendDialog" />
   </v-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex"
-import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/forms/userForm"
+import CreateDialog from "@/components/users/dialogs/createDialog"
+import EditDialog from "@/components/users/dialogs/editDialog"
+import DeleteDialog from "@/components/users/dialogs/deleteDialog"
+import PasswordSetResendDialog from "@/components/users/dialogs/passwordSetResendDialog"
 
 export default {
   components: {
-    MyDialog,
-    UserForm
+    CreateDialog,
+    EditDialog,
+    DeleteDialog,
+    PasswordSetResendDialog
   },
   data() {
     return {
-      search: {},
-      createDialog: false,
-      createLoading: false,
-      createFormValue: {},
-      editDialog: false,
-      editLoading: false,
-      editId: null,
-      editFormValue: {},
-      deleteDialog: false,
-      deleteLoading: false,
-      deleteId: null,
-      passwordSetResendDialog: false,
-      passwordSetResendLoading: false,
-      passwordSetResendItem: {}
+      search: {}
     }
   },
   computed: {
     ...mapGetters({
       config: "config/config",
       getConfigData: "config/getConfigData",
-      user: "auth/user",
-      userExists: "auth/userExists",
-      permission: "auth/permission",
       userList: "users/list"
     }),
 
@@ -307,22 +181,9 @@ export default {
           value: "action"
         }
       ]
-    },
-
-    // 自ユーザーかどうか
-    myuser() {
-      return this.user.id === this.editId
     }
   },
   methods: {
-    ...mapActions("users", [
-      "createData",
-      "editData",
-      "deleteData",
-      "passwordSetResend"
-    ]),
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ユーザー名検索
     searchName(value) {
       if (!this.search.name) return true
@@ -353,132 +214,19 @@ export default {
 
     // 新規追加ダイアログを開く
     openCreateDialog() {
-      this.createDialog = true
-    },
-    // データを追加
-    async createSubmit() {
-      if (!this.createLoading) {
-        this.createLoading = true
-        await this.$refs.createForm.validate().then(async result => {
-          if (result) {
-            await this.createData(this.createFormValue).then(res => {
-              if (res.status === 200) {
-                this.openSnackbar({
-                  text: "ユーザーデータを追加しました。",
-                  options: { color: "success" }
-                })
-                this.$refs.createDialog.close()
-                this.createFormValue = {}
-                this.$refs.createForm.reset()
-              } else {
-                this.openSnackbar({
-                  text: "ユーザーデータの追加に失敗しました。",
-                  options: { color: "error" }
-                })
-              }
-            })
-          }
-        })
-        this.createLoading = false
-      }
+      this.$refs.createDialog.openDialog()
     },
     // 編集ダイアログを開く
     openEditDialog(item) {
-      this.editDialog = true
-      this.editId = item.id
-      this.editFormValue = JSON.parse(JSON.stringify(item)) // ディープコピー
-    },
-    // データを更新
-    async editSubmit() {
-      if (!this.editLoading) {
-        this.editLoading = true
-        await this.$refs.editForm.validate().then(async result => {
-          if (result) {
-            const option = {
-              formValue: this.editFormValue
-            }
-            // 自ユーザー以外はidを設定
-            if (!this.myuser) {
-              option.id = this.editId
-            }
-
-            await this.editData(option).then(res => {
-              if (res.status === 200) {
-                this.openSnackbar({
-                  text: "ユーザーデータを更新しました。",
-                  options: { color: "success" }
-                })
-                this.$refs.editDialog.close()
-                this.$refs.editForm.reset()
-                // 自ユーザーはログインデータを更新
-                if (this.myuser) {
-                  this.$store.dispatch("auth/setUser")
-                }
-              } else {
-                this.openSnackbar({
-                  text: "ユーザーデータの更新に失敗しました。",
-                  options: { color: "error" }
-                })
-              }
-            })
-          }
-        })
-        this.editLoading = false
-      }
+      this.$refs.editDialog.openDialog(item)
     },
     // 削除ダイアログを開く
     openDeleteDialog(item) {
-      this.deleteDialog = true
-      this.deleteId = item.id
+      this.$refs.deleteDialog.openDialog(item)
     },
-    // データを削除
-    async deleteSubmit() {
-      if (!this.deleteLoading) {
-        this.deleteLoading = true
-        await this.deleteData(this.deleteId).then(res => {
-          if (res.status === 200) {
-            this.openSnackbar({
-              text: "ユーザーデータを削除しました。",
-              options: { color: "success" }
-            })
-            this.$refs.deleteDialog.close()
-          } else {
-            this.openSnackbar({
-              text: "ユーザーデータの削除に失敗しました。",
-              options: { color: "error" }
-            })
-          }
-        })
-        this.deleteLoading = false
-      }
-    },
-    // 削除ダイアログを開く
+    // パスワード設定メール再送信ダイアログを開く
     openPasswordSetResendDialog(item) {
-      this.passwordSetResendDialog = true
-      this.passwordSetResendItem = item
-    },
-    // パスワード設定メールを再送信
-    async passwordSetResendSubmit() {
-      if (!this.passwordSetResendLoading) {
-        this.passwordSetResendLoading = true
-        await this.passwordSetResend(this.passwordSetResendItem.id).then(
-          res => {
-            if (res.status === 200) {
-              this.openSnackbar({
-                text: "パスワード設定メールを再送信しました。",
-                options: { color: "success" }
-              })
-              this.$refs.passwordSetResendDialog.close()
-            } else {
-              this.openSnackbar({
-                text: "パスワード設定メールの再送信に失敗しました。",
-                options: { color: "error" }
-              })
-            }
-          }
-        )
-        this.passwordSetResendLoading = false
-      }
+      this.$refs.passwordSetResendDialog.openDialog(item)
     }
   }
 }

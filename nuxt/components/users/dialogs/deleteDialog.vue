@@ -1,0 +1,73 @@
+<template>
+  <div>
+    <MyDialog ref="dialog" v-model="dialog" title="ユーザー削除" color="error">
+      <template #content>
+        {{ userData.name }} ({{ userData.email }}) を削除しますか？
+      </template>
+
+      <template #actionsLeft="{ color }">
+        <v-btn
+          data-test="submitButton"
+          :color="color"
+          :loading="loading"
+          @click="submit"
+        >
+          <v-icon left>
+            mdi-delete
+          </v-icon>
+          削除
+        </v-btn>
+        <v-spacer />
+      </template>
+    </MyDialog>
+  </div>
+</template>
+
+<script>
+import { mapActions } from "vuex"
+import MyDialog from "@/components/dialog/myDialog"
+
+export default {
+  components: {
+    MyDialog
+  },
+  data() {
+    return {
+      dialog: false,
+      loading: false,
+      userData: {}
+    }
+  },
+  methods: {
+    ...mapActions("snackbar", ["openSnackbar"]),
+    ...mapActions("users", ["deleteData"]),
+
+    // ダイアログを開く
+    openDialog(userData) {
+      this.dialog = true
+      this.userData = userData
+    },
+    // データを削除
+    async submit() {
+      if (!this.loading) {
+        this.loading = true
+        await this.deleteData(this.userData.id).then(res => {
+          if (res.status === 200) {
+            this.openSnackbar({
+              text: "ユーザーデータを削除しました。",
+              options: { color: "success" }
+            })
+            this.$refs.dialog.close()
+          } else {
+            this.openSnackbar({
+              text: "ユーザーデータの削除に失敗しました。",
+              options: { color: "error" }
+            })
+          }
+        })
+        this.loading = false
+      }
+    }
+  }
+}
+</script>
