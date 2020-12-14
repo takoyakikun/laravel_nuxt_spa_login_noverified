@@ -1,7 +1,6 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import VueRouter from "vue-router"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
 import setConfigData from "@/test/setConfigData"
@@ -9,9 +8,7 @@ import PasswordChangeDialog from "@/components/layouts/default/dialogs/passwordC
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-localVue.use(VueRouter)
 
-const router = new VueRouter()
 const vuetify = new Vuetify()
 
 jest.useFakeTimers()

@@ -35,7 +35,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex"
-import lodash from "lodash"
 import MyDialog from "@/components/dialog/myDialog"
 import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
 
@@ -56,8 +55,7 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["editData", "passwordChange"]),
-    ...mapActions("auth", ["setUser"]),
+    ...mapActions("users", ["passwordChange"]),
 
     // ダイアログを開く
     openDialog() {

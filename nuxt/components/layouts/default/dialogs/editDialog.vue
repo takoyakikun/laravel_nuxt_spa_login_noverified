@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["editData", "passwordChange"]),
+    ...mapActions("users", ["editData"]),
     ...mapActions("auth", ["setUser"]),
 
     // ダイアログを開く

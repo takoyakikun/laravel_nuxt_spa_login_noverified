@@ -122,9 +122,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["editData", "passwordChange"]),
-
     // サイドバーの表示切り替え
     toggleDrawer() {
       this.dataDrawer = !this.dataDrawer
