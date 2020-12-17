@@ -38,11 +38,15 @@
     "eslint-plugin-jest": "^23.18.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.2",
+    "fibers": "^5.0.0",
     "jest": "^26.1.0",
+    "node-sass": "^5.0.0",
     "prettier": "^1.19.1",
     "require-extension-hooks": "^0.3.3",
     "require-extension-hooks-babel": "^1.0.0",
     "require-extension-hooks-vue": "^2.0.0",
+    "sass": "^1.30.0",
+    "sass-loader": "^7.1.0",
     "vue-jest": "^3.0.6"
   }
 }

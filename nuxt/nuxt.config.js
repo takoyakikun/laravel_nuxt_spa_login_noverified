@@ -32,8 +32,8 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "~/plugins/axios",
-    "~/plugins/nuxt-client-init.js",
+    "@/plugins/axios",
+    "@/plugins/nuxt-client-init.js",
     "@/plugins/vee-validate"
   ],
 
@@ -63,7 +63,7 @@ export default {
    ** https://github.com/nuxt-community/vuetify-module
    */
   vuetify: {
-    customVariables: ["~/assets/variables.scss"],
+    customVariables: ["@/assets/variables.scss"],
     theme: {
       dark: false,
       themes: {

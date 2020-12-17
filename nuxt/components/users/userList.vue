@@ -132,6 +132,7 @@
           fixed
           bottom
           color="light-blue lighten-5"
+          class="selectedBar"
         >
           <v-container>
             <v-row justify="center">
@@ -314,3 +315,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.selectedBar {
+  z-index: 10;
+}
+</style>

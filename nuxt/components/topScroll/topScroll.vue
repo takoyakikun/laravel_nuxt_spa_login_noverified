@@ -4,6 +4,7 @@
     v-show="showTopScroll"
     data-test="topScrollButton"
     v-bind="mergeButtonOptions"
+    class="topScrollButton"
     @click="topScroll"
   >
     <slot :icon="icon">
@@ -66,3 +67,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.topScrollButton {
+  z-index: 100;
+}
+</style>
