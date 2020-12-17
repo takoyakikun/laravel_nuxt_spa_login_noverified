@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
 import setConfigData from "@/test/setConfigData"
 import UserList from "@/components/users/userList"
+import DeleteMultiDialog from "@/components/users/dialogs/deleteMultiDialog"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -36,6 +37,71 @@ describe("components/users/userList", () => {
     test("is a Vue instance", () => {
       expect(wrapper.vm).toBeTruthy()
     })
+
+    test("ユーザーデータが更新されたら選択を初期化", async () => {
+      // テーブルにデータを追加
+      const userData = [
+        {
+          id: 1,
+          name: "テスト開発者",
+          email: "test_system@test.com",
+          role: 1
+        },
+        {
+          id: 2,
+          name: "テスト管理者",
+          email: "test_admin@test.com",
+          role: 2
+        },
+        {
+          id: 3,
+          name: "テスト一般",
+          email: "test_user@test.com",
+          role: 3
+        },
+        {
+          id: 4,
+          name: "一般",
+          email: "user@test.com",
+          role: 3
+        }
+      ]
+      await wrapper.vm.$store.commit("users/setList", userData)
+
+      // 選択ユーザーを追加
+      wrapper.setData({
+        selected: userData
+      })
+
+      // 全て選択されている
+      expect(wrapper.vm.selected).toHaveLength(4)
+
+      // 新しいユーザーデータで更新
+      const newUserData = [
+        {
+          id: 1,
+          name: "テスト開発者",
+          email: "test_system@test.com",
+          role: 1
+        },
+        {
+          id: 2,
+          name: "テスト管理者",
+          email: "test_admin@test.com",
+          role: 2
+        },
+        {
+          id: 3,
+          name: "テスト一般",
+          email: "test_user@test.com",
+          role: 3
+        }
+      ]
+      await wrapper.vm.$store.commit("users/setList", newUserData)
+
+      // 選択が初期化されている
+      expect(wrapper.vm.selected).toHaveLength(0)
+    })
   })
 
   describe("ダイアログオープンテスト", () => {
@@ -48,12 +114,14 @@ describe("components/users/userList", () => {
         vuetify
       })
 
+      // テストユーザーを追加
       testUser = {
         id: 1,
         name: "テスト",
         email: "test@test.com",
         role: 3,
-        modify_flg: 1
+        modify_flg: 1,
+        delete_flg: 1
       }
     })
 
@@ -90,6 +158,29 @@ describe("components/users/userList", () => {
       expect(wrapper.vm.$refs.deleteDialog.userData).toEqual(testUser)
     })
 
+    describe("複数削除ダイアログを開く", () => {
+      test("選択ユーザーなし", () => {
+        // ダイアログを開く
+        wrapper.vm.openDeleteMultiDialog()
+
+        // ダイアログが開いていない
+        expect(wrapper.vm.$refs.deleteMultiDialog.dialog).toBeFalsy()
+      })
+
+      test("選択ユーザーあり", () => {
+        // 選択ユーザーを追加
+        wrapper
+          .findComponent(DeleteMultiDialog)
+          .setProps({ deleteUsers: [testUser] })
+
+        // ダイアログを開く
+        wrapper.vm.openDeleteMultiDialog()
+
+        // ダイアログが開いている
+        expect(wrapper.vm.$refs.deleteMultiDialog.dialog).toBeTruthy()
+      })
+    })
+
     test("パスワード設定メール再送信ダイアログを開く", () => {
       // ダイアログを開く
       wrapper.vm.openPasswordSetResendDialog(testUser)
@@ -109,6 +200,7 @@ describe("components/users/userList", () => {
     let openCreateDialog
     let openEditDialog
     let openDeleteDialog
+    let openDeleteMultiDialog
     let openPasswordSetResendDialog
     beforeEach(() => {
       openCreateDialog = jest
@@ -119,6 +211,9 @@ describe("components/users/userList", () => {
         .mockReturnValue(true)
       openDeleteDialog = jest
         .spyOn(UserList.methods, "openDeleteDialog")
+        .mockReturnValue(true)
+      openDeleteMultiDialog = jest
+        .spyOn(UserList.methods, "openDeleteMultiDialog")
         .mockReturnValue(true)
       openPasswordSetResendDialog = jest
         .spyOn(UserList.methods, "openPasswordSetResendDialog")
@@ -176,6 +271,27 @@ describe("components/users/userList", () => {
       expect(openDeleteDialog).toHaveBeenCalled()
     })
 
+    test("複数削除ダイアログボタン", async () => {
+      // 選択ユーザーを追加
+      wrapper.setData({
+        selected: [
+          {
+            id: 1,
+            name: "テスト",
+            email: "test@test.com",
+            role: 3,
+            delete_flg: 1
+          }
+        ]
+      })
+
+      // ボタンをクリック
+      wrapper.find("[data-test='deleteMultiDialogButton']").trigger("click")
+
+      // メソッドが実行されたか
+      expect(openDeleteMultiDialog).toHaveBeenCalled()
+    })
+
     test("パスワード設定メール再送信ダイアログボタン", async () => {
       // テーブルにデータを追加
       await wrapper.vm.$store.commit("users/setList", [
@@ -202,8 +318,7 @@ describe("components/users/userList", () => {
       wrapper = shallowMount(UserList, {
         localVue,
         store,
-        vuetify,
-        sync: false
+        vuetify
       })
 
       // テーブルにデータを追加
@@ -350,6 +465,102 @@ describe("components/users/userList", () => {
         results.push(wrapper.vm.searchRole(user.role))
       }
       expect(results).toEqual(expects)
+    })
+  })
+
+  describe("ユーザーテーブル選択テスト", () => {
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(UserList, {
+        localVue,
+        store,
+        vuetify
+      })
+
+      // テーブルにデータを追加
+      wrapper.vm.$store.commit("users/setList", [
+        {
+          id: 1,
+          name: "テスト開発者",
+          email: "test_system@test.com",
+          role: 1,
+          delete_flg: 0
+        },
+        {
+          id: 2,
+          name: "テスト管理者",
+          email: "test_admin@test.com",
+          role: 2,
+          delete_flg: 1
+        },
+        {
+          id: 3,
+          name: "テスト一般",
+          email: "test_user@test.com",
+          role: 3,
+          delete_flg: 1
+        },
+        {
+          id: 4,
+          name: "一般",
+          email: "user@test.com",
+          role: 3,
+          delete_flg: 1
+        }
+      ])
+    })
+
+    test("選択されていない", () => {
+      // チェックボックスが選択されて無い
+      expect(wrapper.vm.selected).toHaveLength(0)
+
+      // アクションメニューバーが表示されていない
+      expect(wrapper.vm.showSelectedBar).toBeFalsy()
+    })
+
+    test("全て選択", () => {
+      // 全てのチェックボックスを選択
+      wrapper.vm.selected = wrapper.vm.userList
+
+      // id:1 以外は削除するユーザー
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 1)).toBeFalsy()
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 2)).toBeTruthy()
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 3)).toBeTruthy()
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 4)).toBeTruthy()
+      expect(wrapper.vm.deleteUsers).toHaveLength(3)
+
+      // アクションメニューバーが表示されている
+      expect(wrapper.vm.showSelectedBar).toBeTruthy()
+
+      // 複数ユーザー削除ボタンが表示されている
+      expect(wrapper.vm.showDeleteMultiButton).toBeTruthy()
+    })
+
+    test("id:1 だけ選択", () => {
+      // id:1 のチェックボックスを選択
+      wrapper.vm.selected = wrapper.vm.userList.filter(item => item.id === 1)
+
+      // id:1 が削除対象に入っていない
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 1)).toBeFalsy()
+      expect(wrapper.vm.deleteUsers).toHaveLength(0)
+
+      // アクションメニューバーが表示されていない
+      expect(wrapper.vm.showSelectedBar).toBeFalsy()
+    })
+
+    test("id:2 だけ選択", () => {
+      // id:2 のチェックボックスを選択
+      wrapper.vm.selected = wrapper.vm.userList.filter(item => item.id === 2)
+
+      // id:2 が削除対象に入っていない
+      expect(wrapper.vm.deleteUsers.find(item => item.id === 2)).toBeTruthy()
+      expect(wrapper.vm.deleteUsers).toHaveLength(1)
+
+      // アクションメニューバーが表示されている
+      expect(wrapper.vm.showSelectedBar).toBeTruthy()
+
+      // 複数ユーザー削除ボタンが表示されている
+      expect(wrapper.vm.showDeleteMultiButton).toBeTruthy()
     })
   })
 })

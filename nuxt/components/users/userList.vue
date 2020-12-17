@@ -20,14 +20,16 @@
       <v-col>
         <!-- ユーザー一覧テーブル -->
         <v-data-table
+          v-model="selected"
           :headers="headers"
           :items="userList"
           disable-sort
           disable-pagination
           hide-default-footer
+          show-select
           class="elevation-1"
         >
-          <template v-slot:top>
+          <template #top>
             <!-- 検索フォーム -->
             <v-row dense>
               <v-col>
@@ -57,6 +59,18 @@
             </v-row>
           </template>
 
+          <template #[`header.data-table-select`]="{ props, on }">
+            <v-simple-checkbox v-bind="props" color="primary" v-on="on" />
+          </template>
+
+          <template #[`item.data-table-select`]="{ isSelected, select }">
+            <v-simple-checkbox
+              :value="isSelected"
+              color="primary"
+              @input="select(!isSelected)"
+            />
+          </template>
+
           <template #[`item.email`]="{ value, item }">
             <span>{{ value }}</span>
             <v-tooltip v-if="!item.password_set_flg" right color="primary">
@@ -74,9 +88,11 @@
               <span>パスワード設定メール再送信</span>
             </v-tooltip>
           </template>
+
           <template #[`item.role`]="{ value }">
             {{ getConfigData("roleOptions", value) }}
           </template>
+
           <template #[`item.action`]="{ item }">
             <v-tooltip left color="success">
               <template #activator="{ on }">
@@ -110,6 +126,33 @@
             </v-tooltip>
           </template>
         </v-data-table>
+
+        <v-app-bar
+          v-model="showSelectedBar"
+          fixed
+          bottom
+          color="light-blue lighten-5"
+        >
+          <v-container>
+            <v-row justify="center">
+              <v-col cols="auto">
+                <v-toolbar-title>
+                  選択したユーザーを
+                </v-toolbar-title>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn
+                  data-test="deleteMultiDialogButton"
+                  color="error"
+                  @click="openDeleteMultiDialog"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                  <span>削除</span>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-app-bar>
       </v-col>
     </v-row>
 
@@ -122,6 +165,12 @@
     <!-- 削除ダイアログ -->
     <DeleteDialog ref="deleteDialog" />
 
+    <!-- 複数削除ダイアログ -->
+    <DeleteMultiDialog
+      ref="deleteMultiDialog"
+      :delete-users.sync="deleteUsers"
+    />
+
     <!-- パスワード設定メール再送信ダイアログ -->
     <PasswordSetResendDialog ref="passwordSetResendDialog" />
   </v-container>
@@ -132,6 +181,7 @@ import { mapGetters, mapActions } from "vuex"
 import CreateDialog from "@/components/users/dialogs/createDialog"
 import EditDialog from "@/components/users/dialogs/editDialog"
 import DeleteDialog from "@/components/users/dialogs/deleteDialog"
+import DeleteMultiDialog from "@/components/users/dialogs/deleteMultiDialog"
 import PasswordSetResendDialog from "@/components/users/dialogs/passwordSetResendDialog"
 
 export default {
@@ -139,20 +189,23 @@ export default {
     CreateDialog,
     EditDialog,
     DeleteDialog,
+    DeleteMultiDialog,
     PasswordSetResendDialog
   },
   data() {
     return {
-      search: {}
+      search: {},
+      selected: []
     }
   },
   computed: {
     ...mapGetters({
       config: "config/config",
       getConfigData: "config/getConfigData",
-      userList: "users/list"
+      userListStore: "users/list"
     }),
 
+    // テーブルのヘッダー設定
     headers() {
       return [
         {
@@ -181,6 +234,32 @@ export default {
           value: "action"
         }
       ]
+    },
+
+    // ユーザーデータをストアから取得
+    userList() {
+      return this.userListStore
+    },
+
+    // 選択したユーザーのアクションメニューバー表示
+    showSelectedBar() {
+      return this.showDeleteMultiButton
+    },
+
+    // 削除するユーザーデータを取得
+    deleteUsers() {
+      return this.selected.filter(item => item.delete_flg === 1)
+    },
+
+    // 複数ユーザー削除ボタン表示
+    showDeleteMultiButton() {
+      return this.deleteUsers.length > 0
+    }
+  },
+  watch: {
+    // ユーザーデータが更新されたら選択を初期化する
+    userList() {
+      this.selected = []
     }
   },
   methods: {
@@ -223,6 +302,10 @@ export default {
     // 削除ダイアログを開く
     openDeleteDialog(item) {
       this.$refs.deleteDialog.openDialog(item)
+    },
+    // 複数削除ダイアログを開く
+    openDeleteMultiDialog() {
+      this.$refs.deleteMultiDialog.openDialog()
     },
     // パスワード設定メール再送信ダイアログを開く
     openPasswordSetResendDialog(item) {

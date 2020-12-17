@@ -98,6 +98,16 @@ export const actions = {
       })
       .catch(err => err.response)
   },
+  // 複数データ削除
+  async deleteMultiData({ dispatch }, idList) {
+    return await this.$axios
+      .delete("/api/users/" + JSON.stringify(idList))
+      .then(res => {
+        dispatch("setList")
+        return res
+      })
+      .catch(err => err.response)
+  },
   // パスワード変更
   async passwordChange({ dispatch }, formValue) {
     return await this.$axios

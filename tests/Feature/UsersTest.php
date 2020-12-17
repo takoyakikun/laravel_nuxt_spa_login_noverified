@@ -254,6 +254,40 @@ class UsersTest extends TestCase
 
     }
 
+     /**
+     * ログインユーザー複数削除テスト
+     *
+     * @return void
+     */
+    public function testDestroyMulti()
+    {
+        // サンプルデータを追加
+        $sample[] = factory(User::class)->create([
+            'email' => 'sample@test.com',
+            'role' => 3
+        ]);
+        $sample[] = factory(User::class)->create([
+            'email' => 'sample2@test.com',
+            'role' => 3
+        ]);
+        foreach($sample as $user) {
+            $finds[] = $user->id;
+        }
+
+        // 管理者ユーザーからリクエストを送信
+        $response = $this->actingAs($this->adminUser)
+            ->json('DELETE', route('users.destroy', json_encode($finds)), [], ['X-Requested-With' => 'XMLHttpRequest']);
+
+         // 正常レスポンスを返す
+         $response->assertStatus(200);
+
+        // ユーザーが削除されているか確認
+        foreach($sample as $user) {
+            $this->assertDeleted($user);
+        }
+
+    }
+
     /**
      * ログインユーザー削除アクセス権限テスト
      *

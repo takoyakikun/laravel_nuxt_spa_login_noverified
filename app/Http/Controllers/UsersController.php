@@ -113,15 +113,29 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int|array  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $user = resolve(User::class)->find($id);
+        // json形式の入力データを配列に変換
+        if (!is_numeric($id)) {
+            $id = json_decode($id);
+        }
 
-        if ((int)$user->delete_flg !== 1){
-            return response([], 403);
+        // 入力データが配列ではない場合は配列にして find する
+        if (is_array($id)) {
+            $finds = $id;
+        } else {
+            $finds = [$id];
+        }
+        $users = resolve(User::class)->find($finds);
+
+        // 一つでも削除不可があった場合は403エラー
+        foreach ($users as $user) {
+            if ((int)$user->delete_flg !== 1){
+                return response([], 403);
+            }
         }
     
         \DB::beginTransaction();
