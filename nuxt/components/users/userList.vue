@@ -63,8 +63,9 @@
             <v-simple-checkbox v-bind="props" color="primary" v-on="on" />
           </template>
 
-          <template #[`item.data-table-select`]="{ isSelected, select }">
+          <template #[`item.data-table-select`]="{ isSelected, select, item }">
             <v-simple-checkbox
+              v-if="selectedUser(item)"
               :value="isSelected"
               color="primary"
               @input="select(!isSelected)"
@@ -311,6 +312,15 @@ export default {
     // パスワード設定メール再送信ダイアログを開く
     openPasswordSetResendDialog(item) {
       this.$refs.passwordSetResendDialog.openDialog(item)
+    },
+
+    // 選択可能ユーザーの判定
+    selectedUser(user) {
+      if (user.delete_flg) {
+        return user.delete_flg === 1
+      } else {
+        return false
+      }
     }
   }
 }

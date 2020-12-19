@@ -102,6 +102,26 @@ describe("components/users/userList", () => {
       // 選択が初期化されている
       expect(wrapper.vm.selected).toHaveLength(0)
     })
+
+    describe("選択可能ユーザーの判定テスト", () => {
+      test("プロパティなし", () => {
+        expect(wrapper.vm.selectedUser({})).toBeFalsy()
+      })
+
+      test("全てのメニューバーアクション不可", () => {
+        const user = {
+          delete_flg: 0
+        }
+        expect(wrapper.vm.selectedUser(user)).toBeFalsy()
+      })
+
+      test("全てのメニューバーアクション可能", () => {
+        const user = {
+          delete_flg: 1
+        }
+        expect(wrapper.vm.selectedUser(user)).toBeTruthy()
+      })
+    })
   })
 
   describe("ダイアログオープンテスト", () => {
