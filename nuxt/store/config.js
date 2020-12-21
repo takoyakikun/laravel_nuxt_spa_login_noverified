@@ -1,3 +1,5 @@
+import * as types from "./mutation-types"
+
 export const state = () => ({
   data: {
     role: []
@@ -34,7 +36,7 @@ export const getters = {
 
 export const mutations = {
   // コンフィグデータをセット
-  setConfig(state, config) {
+  [types.CONFIG_SET_CONFIG](state, config) {
     state.data = { ...state.data, ...config }
   }
 }
@@ -45,7 +47,7 @@ export const actions = {
     return await this.$axios
       .get("/api/config")
       .then(res => {
-        commit("setConfig", res.data)
+        commit(types.CONFIG_SET_CONFIG, res.data)
         return res
       })
       .catch(e => e.response)

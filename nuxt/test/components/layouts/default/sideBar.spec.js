@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import SideBar from "@/components/layouts/default/sideBar"
 
@@ -16,7 +17,7 @@ const vuetify = new Vuetify()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -65,7 +66,7 @@ describe("components/layouts/default/sideBar", () => {
 
     test("認証済ページリンク", async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 10
@@ -77,13 +78,13 @@ describe("components/layouts/default/sideBar", () => {
 
     test("ユーザー管理ページリンク", async () => {
       // 権限を管理者以上にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "admin-higher",
         permission: true
       })
 
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 5
@@ -124,7 +125,7 @@ describe("components/layouts/default/sideBar", () => {
 
     test("一般権限", async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 3
@@ -142,13 +143,13 @@ describe("components/layouts/default/sideBar", () => {
 
     test("管理者権限", async () => {
       // 権限を管理者以上にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "admin-higher",
         permission: true
       })
 
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 2
@@ -166,19 +167,19 @@ describe("components/layouts/default/sideBar", () => {
 
     test("開発者権限", async () => {
       // 権限を開発者にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "system-only",
         permission: true
       })
 
       // 権限を管理者以上にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "admin-higher",
         permission: true
       })
 
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 1

@@ -2,7 +2,6 @@ import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
-import setConfigData from "@/test/setConfigData"
 import Default from "@/layouts/default"
 
 const localVue = createLocalVue()
@@ -13,7 +12,6 @@ let vuetify = new Vuetify()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
 })
 
 afterEach(() => {

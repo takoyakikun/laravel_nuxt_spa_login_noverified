@@ -1,3 +1,5 @@
+import * as types from "./mutation-types"
+
 export const state = () => ({
   dialog: {}
 })
@@ -9,7 +11,7 @@ export const getters = {
 
 export const mutations = {
   // ダイアログの表示/非表示をセット
-  setDialog(state, { dialog, name }) {
+  [types.DIALOG_SET_DIALOG](state, { dialog, name }) {
     const dialogStatus = state.dialog
     dialogStatus[name] = dialog
     state.dialog = {}
@@ -20,10 +22,10 @@ export const mutations = {
 export const actions = {
   // ダイアログを開く
   openDialog({ commit }, name) {
-    commit("setDialog", { dialog: true, name: name })
+    commit(types.DIALOG_SET_DIALOG, { dialog: true, name: name })
   },
   // ダイアログを閉じる
   closeDialog({ commit }, name) {
-    commit("setDialog", { dialog: false, name: name })
+    commit(types.DIALOG_SET_DIALOG, { dialog: false, name: name })
   }
 }

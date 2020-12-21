@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import Header from "@/components/layouts/default/header"
 
@@ -19,7 +20,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -153,7 +154,7 @@ describe("components/layouts/default/header", () => {
     describe("マイユーザー管理メニュー", () => {
       beforeEach(async () => {
         // ログインデータを登録
-        await wrapper.vm.$store.commit("auth/setUser", { id: 1 })
+        await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, { id: 1 })
 
         // マイユーザー管理メニューを開く
         wrapper.find("[data-test='myuserMenuButton']").trigger("click")
@@ -210,7 +211,7 @@ describe("components/layouts/default/header", () => {
 
     test("一般権限", async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 3
@@ -244,14 +245,14 @@ describe("components/layouts/default/header", () => {
 
     test("管理者権限", async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 2
       })
 
       // 権限を管理者以上にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "admin-higher",
         permission: true
       })
@@ -284,14 +285,14 @@ describe("components/layouts/default/header", () => {
 
     test("開発者権限", async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/setUser", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
         name: "テスト",
         email: "test@test.com",
         role: 1
       })
 
       // 権限を開発者にする
-      await wrapper.vm.$store.commit("auth/setPermission", {
+      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
         category: "system-only",
         permission: true
       })

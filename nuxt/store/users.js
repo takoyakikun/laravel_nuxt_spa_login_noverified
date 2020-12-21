@@ -1,3 +1,5 @@
+import * as types from "./mutation-types"
+
 export const state = () => ({
   list: [],
   roleOptions: [],
@@ -12,15 +14,15 @@ export const getters = {
 
 export const mutations = {
   // ユーザーデータをセット
-  setList(state, list) {
+  [types.USERS_SET_LIST](state, list) {
     state.list = list
   },
   // 権限の選択オプションをセット
-  setRoleOptions(state, value) {
+  [types.USERS_SET_ROLE_OPTIONS](state, value) {
     state.roleOptions = value
   },
   // ユーザーのメールアドレスがユニークかどうかの判定をセット
-  setUserUnique(state, value) {
+  [types.USERS_SET_USER_UNIQUE](state, value) {
     state.userUnique = value
   }
 }
@@ -31,7 +33,7 @@ export const actions = {
     return await this.$axios
       .get("/api/users")
       .then(res => {
-        commit("setList", res.data)
+        commit(types.USERS_SET_LIST, res.data)
         return res
       })
       .catch(err => err.response)
@@ -159,7 +161,7 @@ export const actions = {
     return await this.$axios
       .get("/api/users/roleOptions")
       .then(res => {
-        commit("setRoleOptions", res.data)
+        commit(types.USERS_SET_ROLE_OPTIONS, res.data)
         return res
       })
       .catch(err => err.response)
@@ -169,7 +171,7 @@ export const actions = {
     return await this.$axios
       .post("/api/users/unique", { email: email })
       .then(res => {
-        commit("setUserUnique", Number(res.data[0])) // true/false だとバリデートされないので数値に変換
+        commit(types.USERS_SET_USER_UNIQUE, Number(res.data[0])) // true/false だとバリデートされないので数値に変換
       })
   }
 }

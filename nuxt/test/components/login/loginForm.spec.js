@@ -9,7 +9,11 @@ import { ValidationObserver } from "vee-validate"
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-const store = new Vuex.Store(storeConfig)
+let store
+beforeEach(() => {
+  store = new Vuex.Store(storeConfig)
+})
+
 const vuetify = new Vuetify()
 
 jest.useFakeTimers()

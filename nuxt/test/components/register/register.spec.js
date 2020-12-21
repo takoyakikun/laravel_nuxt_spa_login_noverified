@@ -4,7 +4,6 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
-import setConfigData from "@/test/setConfigData"
 import Register from "@/components/register/register"
 
 const localVue = createLocalVue()
@@ -19,7 +18,6 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
 })
 
 afterEach(() => {

@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import UserList from "@/components/users/userList"
 import DeleteMultiDialog from "@/components/users/dialogs/deleteMultiDialog"
@@ -16,7 +17,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -66,7 +67,7 @@ describe("components/users/userList", () => {
           role: 3
         }
       ]
-      await wrapper.vm.$store.commit("users/setList", userData)
+      await wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, userData)
 
       // 選択ユーザーを追加
       wrapper.setData({
@@ -97,7 +98,10 @@ describe("components/users/userList", () => {
           role: 3
         }
       ]
-      await wrapper.vm.$store.commit("users/setList", newUserData)
+      await wrapper.vm.$store.commit(
+        "users/" + types.USERS_SET_LIST,
+        newUserData
+      )
 
       // 選択が初期化されている
       expect(wrapper.vm.selected).toHaveLength(0)
@@ -255,7 +259,7 @@ describe("components/users/userList", () => {
 
     test("編集ダイアログボタン", async () => {
       // テーブルにデータを追加
-      await wrapper.vm.$store.commit("users/setList", [
+      await wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, [
         {
           id: 1,
           name: "テスト",
@@ -274,7 +278,7 @@ describe("components/users/userList", () => {
 
     test("削除ダイアログボタン", async () => {
       // テーブルにデータを追加
-      await wrapper.vm.$store.commit("users/setList", [
+      await wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, [
         {
           id: 1,
           name: "テスト",
@@ -314,7 +318,7 @@ describe("components/users/userList", () => {
 
     test("パスワード設定メール再送信ダイアログボタン", async () => {
       // テーブルにデータを追加
-      await wrapper.vm.$store.commit("users/setList", [
+      await wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, [
         {
           id: 1,
           name: "テスト",
@@ -342,7 +346,7 @@ describe("components/users/userList", () => {
       })
 
       // テーブルにデータを追加
-      wrapper.vm.$store.commit("users/setList", [
+      wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, [
         {
           id: 1,
           name: "テスト開発者",
@@ -498,7 +502,7 @@ describe("components/users/userList", () => {
       })
 
       // テーブルにデータを追加
-      wrapper.vm.$store.commit("users/setList", [
+      wrapper.vm.$store.commit("users/" + types.USERS_SET_LIST, [
         {
           id: 1,
           name: "テスト開発者",

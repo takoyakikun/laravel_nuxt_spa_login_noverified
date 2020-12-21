@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import EditDialog from "@/components/users/dialogs/editDialog"
 
@@ -16,8 +17,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
-  store.commit("users/setRoleOptions", [1, 2, 3])
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
 })
 
 afterEach(() => {
@@ -42,7 +43,7 @@ describe("components/users/dialogs/editDialog", () => {
     describe("自ユーザーかどうか", () => {
       beforeEach(() => {
         // ログインデータを登録
-        wrapper.vm.$store.commit("auth/setUser", { id: 1 })
+        wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, { id: 1 })
       })
 
       test("自ユーザー", () => {
@@ -161,7 +162,7 @@ describe("components/users/dialogs/editDialog", () => {
 
         test("自ユーザー", async () => {
           // ログインデータを登録
-          wrapper.vm.$store.commit("auth/setUser", { id: 1 })
+          wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, { id: 1 })
 
           // フォームを入力してユーザー編集処理
           wrapper.find("input[name='name']").setValue("テスト")

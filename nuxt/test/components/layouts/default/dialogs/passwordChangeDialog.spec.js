@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import PasswordChangeDialog from "@/components/layouts/default/dialogs/passwordChangeDialog"
 
@@ -16,7 +17,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {

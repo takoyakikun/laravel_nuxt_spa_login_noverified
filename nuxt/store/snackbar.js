@@ -1,3 +1,5 @@
+import * as types from "./mutation-types"
+
 export const state = () => ({
   value: false,
   text: "",
@@ -12,7 +14,7 @@ export const getters = {
 
 export const mutations = {
   // snackbarの表示をセット
-  openSnackbar(state, snackbar) {
+  [types.SNACKBAR_OPEN_SNACKBAR](state, snackbar) {
     if (snackbar.options) {
       state.options = snackbar.options
     } else {
@@ -22,7 +24,7 @@ export const mutations = {
     state.text = snackbar.text
   },
   // snackbarの非表示をセット
-  closeSnackbar(state) {
+  [types.SNACKBAR_CLOSE_SNACKBAR](state) {
     state.value = false
   }
 }
@@ -30,10 +32,10 @@ export const mutations = {
 export const actions = {
   // snackbarを開く
   openSnackbar({ commit }, snackbar) {
-    commit("openSnackbar", snackbar)
+    commit(types.SNACKBAR_OPEN_SNACKBAR, snackbar)
   },
   // snackbarを閉じる
   closeSnackbar({ commit }) {
-    commit("closeSnackbar")
+    commit(types.SNACKBAR_CLOSE_SNACKBAR)
   }
 }

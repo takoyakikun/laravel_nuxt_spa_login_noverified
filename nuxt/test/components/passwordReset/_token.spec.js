@@ -10,11 +10,15 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueRouter)
 
-const store = new Vuex.Store(storeConfig)
 const router = new VueRouter()
 const vuetify = new Vuetify()
 
 jest.useFakeTimers()
+
+let store
+beforeEach(() => {
+  store = new Vuex.Store(storeConfig)
+})
 
 afterEach(() => {
   jest.clearAllMocks()

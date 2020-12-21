@@ -1,3 +1,5 @@
+import * as types from "./mutation-types"
+
 export const state = () => ({
   user: null,
   permission: {}
@@ -29,17 +31,17 @@ export const getters = {
 
 export const mutations = {
   // ユーザーデータをセット
-  setUser(state, user) {
+  [types.AUTH_SET_USER](state, user) {
     state.user = user
   },
 
   // アクセス権限をセット
-  setPermission(state, { category, permission }) {
+  [types.AUTH_SET_PERMISSION](state, { category, permission }) {
     state.permission[category] = permission
   },
 
   // アクセス権限をリセット
-  resetPermission(state) {
+  [types.AUTH_RESET_PERMISSION](state) {
     state.permission = {}
   }
 }
@@ -58,7 +60,7 @@ export const actions = {
     return await this.$axios
       .post("/api/login", loginData)
       .then(res => {
-        commit("setUser", res.data)
+        commit(types.AUTH_SET_USER, res.data)
         return res
       })
       .catch(e => {
@@ -71,8 +73,8 @@ export const actions = {
     return await this.$axios
       .post("/api/logout")
       .then(res => {
-        commit("setUser", null)
-        commit("resetPermission")
+        commit(types.AUTH_SET_USER, null)
+        commit(types.AUTH_RESET_PERMISSION)
         return res
       })
       .catch(e => {
@@ -85,7 +87,7 @@ export const actions = {
     return await this.$axios
       .get("/api/user")
       .then(res => {
-        commit("setUser", res.data)
+        commit(types.AUTH_SET_USER, res.data)
         return res
       })
       .catch(e => {
@@ -113,7 +115,7 @@ export const actions = {
             return false
           })
           .then(result => {
-            commit("setPermission", {
+            commit(types.AUTH_SET_PERMISSION, {
               category: value,
               permission: result
             })

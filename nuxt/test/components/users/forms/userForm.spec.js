@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import UserForm from "@/components/users/forms/userForm"
 import Form from "@/components/form/form"
@@ -17,7 +18,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -46,7 +47,11 @@ describe("components/users/userForm", () => {
     describe("権限ごとに選択できる権限を変える", () => {
       test("開発者権限", () => {
         // 選択オプションデータをセット
-        wrapper.vm.$store.commit("users/setRoleOptions", [1, 2, 3])
+        wrapper.vm.$store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [
+          1,
+          2,
+          3
+        ])
 
         // 全ての権限を返す
         expect(wrapper.vm.role.map(item => item.value)).toEqual([1, 2, 3])
@@ -54,7 +59,10 @@ describe("components/users/userForm", () => {
 
       test("それ以外", () => {
         // 選択オプションデータをセット
-        wrapper.vm.$store.commit("users/setRoleOptions", [2, 3])
+        wrapper.vm.$store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [
+          2,
+          3
+        ])
 
         // 管理者以外を返す
         expect(wrapper.vm.role.map(item => item.value)).toEqual([2, 3])

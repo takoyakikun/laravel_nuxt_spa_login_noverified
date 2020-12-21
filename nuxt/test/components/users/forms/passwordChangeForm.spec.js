@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
 import Form from "@/components/form/form"
@@ -17,7 +18,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {

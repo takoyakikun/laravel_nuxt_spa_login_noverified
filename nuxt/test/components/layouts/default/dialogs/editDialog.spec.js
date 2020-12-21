@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import storeConfig from "@/test/storeConfig"
+import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import EditDialog from "@/components/layouts/default/dialogs/editDialog"
 
@@ -16,7 +17,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/setConfig", setConfigData)
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -54,7 +55,7 @@ describe("components/layouts/default/dialogs/editDialog", () => {
       let axiosPatch
       beforeEach(async () => {
         // ログインデータを登録
-        await wrapper.vm.$store.commit("auth/setUser", { id: 1 })
+        await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, { id: 1 })
 
         // ダイアログを開く
         wrapper.vm.openDialog()
