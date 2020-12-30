@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import UserList from "~/components/users/userList"
+import UserList from "@/components/users/userList"
 
 export default {
   middleware: "admin",
@@ -17,8 +17,8 @@ export default {
     UserList
   },
   created() {
-    this.$store.dispatch("users/setList")
-    this.$store.dispatch("users/setRoleOptions")
+    this.$api.users.getList()
+    this.$api.users.getRoleOptions()
   }
 }
 </script>

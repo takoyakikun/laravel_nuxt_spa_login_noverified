@@ -1,6 +1,6 @@
 <template>
-  <validation-observer ref="loginForm" v-slot="{ invalid }">
-    <v-card class="elevation-12">
+  <v-card class="elevation-12">
+    <validation-observer ref="loginForm" v-slot="{ invalid }">
       <v-toolbar color="primary" dark flat>
         <v-toolbar-title>Login form</v-toolbar-title>
       </v-toolbar>
@@ -37,13 +37,13 @@
           Top
         </v-btn>
       </v-card-actions>
-    </v-card>
-  </validation-observer>
+    </validation-observer>
+  </v-card>
 </template>
 
 <script>
 import { mapActions } from "vuex"
-import LoginForm from "~/components/login/loginForm"
+import LoginForm from "@/components/login/loginForm"
 
 export default {
   components: {
@@ -68,8 +68,8 @@ export default {
         this.loading = true
         await this.$refs.loginForm.validate().then(async result => {
           if (result) {
-            await this.$store
-              .dispatch("auth/login", {
+            await this.$api.auth
+              .login({
                 email: this.loginForm.email,
                 password: this.loginForm.password,
                 remember: this.loginForm.remember

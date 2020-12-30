@@ -1,7 +1,7 @@
-export default async function({ store, redirect }) {
+export default async function({ store, redirect, app }) {
   // ユーザーがログインしていない場合はログインページへリダイレクト
   if (!store.getters["auth/userExists"]) {
-    redirect("/login")
+    return redirect("/login")
   }
 
   // アクセス権限を取得してストアにセットする
@@ -9,6 +9,6 @@ export default async function({ store, redirect }) {
 
   // 管理者以上でない場合はTopページへリダイレクト
   if (!store.getters["auth/permission"]("admin-higher")) {
-    redirect("/")
+    return redirect("/")
   }
 }

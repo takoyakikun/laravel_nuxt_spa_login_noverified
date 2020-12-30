@@ -30,7 +30,7 @@
 
 <script>
 import { mapActions } from "vuex"
-import PasswordResetForm from "~/components/passwordReset/passwordResetForm"
+import PasswordResetForm from "@/components/passwordReset/passwordResetForm"
 
 export default {
   components: {
@@ -52,11 +52,11 @@ export default {
         await this.$refs.passwordResetValidate.validate().then(async result => {
           if (result) {
             this.formValue.token = this.$nuxt.$route.params.token
-            await this.$store
-              .dispatch("users/passwordReset", this.formValue)
+            await this.$api.users
+              .passwordReset(this.formValue)
               .then(async res => {
                 if (res.status === 200) {
-                  await this.$store.dispatch("auth/setUser")
+                  await this.$api.auth.getUser()
                   this.openSnackbar({
                     text: "パスワードリセットしました。",
                     options: { color: "success" }

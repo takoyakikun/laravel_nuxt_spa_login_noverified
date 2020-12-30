@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["createData"]),
 
     // ダイアログを開く
     openDialog() {
@@ -67,7 +66,7 @@ export default {
         this.loading = true
         await this.$refs.validate.validate().then(async result => {
           if (result) {
-            await this.createData(this.formValue).then(res => {
+            await this.$api.users.createData(this.formValue).then(res => {
               if (res.status === 200) {
                 this.openSnackbar({
                   text: "ユーザーデータを追加しました。",

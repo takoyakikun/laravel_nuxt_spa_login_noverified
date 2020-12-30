@@ -1,8 +1,9 @@
-import { createLocalVue, mount } from "@vue/test-utils"
+import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import Register from "@/components/register/register"
 
@@ -18,6 +19,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -25,7 +28,25 @@ afterEach(() => {
 })
 
 describe("components/register/register", () => {
-  describe("mount", () => {
+  describe("テスト", () => {
+    let wrapper
+    beforeEach(() => {
+      router.push = jest.fn()
+
+      wrapper = shallowMount(Register, {
+        localVue,
+        store,
+        router,
+        vuetify
+      })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+  })
+
+  describe("フォーム送信テスト", () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -34,13 +55,8 @@ describe("components/register/register", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
-    })
-
-    test("is a Vue instance", () => {
-      expect(wrapper.vm).toBeTruthy()
     })
 
     describe("ユーザー追加", () => {
@@ -65,13 +81,13 @@ describe("components/register/register", () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
 
         test("フロント側エラー", async () => {
           // ユーザー追加処理
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(registerFormValidation).toHaveBeenCalled()
@@ -153,6 +169,7 @@ describe("components/register/register", () => {
             .setValue("password")
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(registerFormValidation).toHaveBeenCalled()
@@ -203,6 +220,7 @@ describe("components/register/register", () => {
             .setValue("password")
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(registerFormValidation).toHaveBeenCalled()
@@ -249,6 +267,7 @@ describe("components/register/register", () => {
         // ログイン処理
         await wrapper.vm.submit()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをしない
         expect(registerFormValidation).not.toHaveBeenCalled()
@@ -265,8 +284,7 @@ describe("components/register/register", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
@@ -286,8 +304,7 @@ describe("components/register/register", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 

@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -18,6 +19,8 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  const apiClass = new Api({ axios, store })
+  localVue.prototype.$api = apiClass
 })
 
 afterEach(() => {
@@ -75,7 +78,6 @@ describe("components/layouts/default/dialogs/editDialog", () => {
           axios.patch.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
         test("フロント側エラー", async () => {
           // フォームを空にしてユーザー編集処理
@@ -135,7 +137,6 @@ describe("components/layouts/default/dialogs/editDialog", () => {
         axios.patch.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してユーザー編集処理
         wrapper.find("input[name='name']").setValue("テスト")
@@ -177,7 +178,6 @@ describe("components/layouts/default/dialogs/editDialog", () => {
         axios.patch.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してユーザー編集処理
         wrapper.find("input[name='name']").setValue("テスト")

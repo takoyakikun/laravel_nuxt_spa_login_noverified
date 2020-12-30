@@ -52,11 +52,11 @@ export default {
         await this.$refs.passwordSetValidate.validate().then(async result => {
           if (result) {
             this.formValue.token = this.$nuxt.$route.params.token
-            await this.$store
-              .dispatch("users/passwordSet", this.formValue)
+            await this.$api.users
+              .passwordSet(this.formValue)
               .then(async res => {
                 if (res.status === 200) {
-                  await this.$store.dispatch("auth/setUser")
+                  await this.$api.auth.getUser()
                   this.openSnackbar({
                     text: "パスワードを登録しました。",
                     options: { color: "success" }

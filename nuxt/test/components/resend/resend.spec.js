@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import Resend from "@/components/resend/resend"
 
@@ -13,6 +14,8 @@ let vuetify = new Vuetify()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -29,7 +32,6 @@ describe("components/resend", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         mocks: { $router: router }
       })
     })
@@ -54,7 +56,6 @@ describe("components/resend", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // 認証メール再送信処理
         await wrapper.vm.resendMail()
@@ -81,7 +82,6 @@ describe("components/resend", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // 認証メール再送信処理
         await wrapper.vm.resendMail()
@@ -108,7 +108,6 @@ describe("components/resend", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // 認証メール再送信処理
         await wrapper.vm.resendMail()
@@ -131,7 +130,6 @@ describe("components/resend", () => {
       axios.post.mockImplementation(url => {
         return Promise.resolve(response)
       })
-      wrapper.vm.$store.$axios = axios
 
       // ログアウト処理
       await wrapper.vm.logout()
@@ -158,8 +156,7 @@ describe("components/resend", () => {
       wrapper = mount(Resend, {
         localVue,
         store,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 

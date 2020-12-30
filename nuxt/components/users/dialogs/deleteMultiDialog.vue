@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["deleteMultiData"]),
 
     // ダイアログを開く
     openDialog() {
@@ -70,7 +69,7 @@ export default {
       if (!this.loading) {
         this.loading = true
         const deleteUsersId = this.deleteUsers.map(item => item.id)
-        await this.deleteMultiData(deleteUsersId).then(res => {
+        await this.$api.users.deleteMultiData(deleteUsersId).then(res => {
           if (res.status === 200) {
             this.openSnackbar({
               text: "ユーザーデータを削除しました。",

@@ -2,15 +2,21 @@ import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
 import Guest from "@/middleware/guest"
 
+jest.useFakeTimers()
+jest.mock("axios")
+
 let store
 let redirect
+beforeEach(() => {
+  store = new Vuex.Store(storeConfig)
+  redirect = jest.fn()
+})
 
-describe("middleware/auth", () => {
-  beforeEach(() => {
-    store = new Vuex.Store(storeConfig)
-    redirect = jest.fn()
-  })
+afterEach(() => {
+  jest.clearAllMocks()
+})
 
+describe("middleware/guest", () => {
   test("ログインしていない", async () => {
     // ミドルウェアを実行
     await Guest({ store: store, redirect: redirect })
@@ -32,6 +38,7 @@ describe("middleware/auth", () => {
 
     // ミドルウェアを実行
     await Guest({ store: store, redirect: redirect })
+    jest.runAllTimers()
 
     // ログインしているのでtrue
     expect(store.getters["auth/userExists"]).toBeTruthy()

@@ -66,8 +66,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["editData"]),
-    ...mapActions("auth", ["setUser"]),
 
     // ダイアログを開く
     openDialog(userData) {
@@ -89,7 +87,7 @@ export default {
               option.id = this.editId
             }
 
-            await this.editData(option).then(res => {
+            await this.$api.users.editData(option).then(res => {
               if (res.status === 200) {
                 this.openSnackbar({
                   text: "ユーザーデータを更新しました。",
@@ -99,7 +97,7 @@ export default {
                 this.$refs.validate.reset()
                 // 自ユーザーはログインデータを更新
                 if (this.myuser) {
-                  this.setUser()
+                  this.$api.auth.getUser()
                 }
               } else {
                 this.openSnackbar({

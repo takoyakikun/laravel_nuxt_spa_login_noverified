@@ -26,11 +26,11 @@
 
 <script>
 import { mapGetters } from "vuex"
-import TopScroll from "~/components/topScroll/topScroll"
-import Snackbar from "~/components/snackbar/snackbar"
-import SideBar from "~/components/layouts/default/sideBar"
-import Header from "~/components/layouts/default/header"
-import Footer from "~/components/layouts/default/footer"
+import TopScroll from "@/components/topScroll/topScroll"
+import Snackbar from "@/components/snackbar/snackbar"
+import SideBar from "@/components/layouts/default/sideBar"
+import Header from "@/components/layouts/default/header"
+import Footer from "@/components/layouts/default/footer"
 
 export default {
   components: {
@@ -52,7 +52,7 @@ export default {
     })
   },
   async created() {
-    await this.$store.dispatch("auth/checkAuth", "admin-higher")
+    await this.$api.auth.checkAuth("admin-higher")
   },
   methods: {
     // サイドバーの状態をセット

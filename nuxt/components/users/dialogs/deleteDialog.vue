@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["deleteData"]),
 
     // ダイアログを開く
     openDialog(userData) {
@@ -51,7 +50,7 @@ export default {
     async submit() {
       if (!this.loading) {
         this.loading = true
-        await this.deleteData(this.userData.id).then(res => {
+        await this.$api.users.deleteData(this.userData.id).then(res => {
           if (res.status === 200) {
             this.openSnackbar({
               text: "ユーザーデータを削除しました。",

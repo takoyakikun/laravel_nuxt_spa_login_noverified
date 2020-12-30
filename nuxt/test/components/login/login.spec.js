@@ -1,8 +1,14 @@
-import { createLocalVue, mount, RouterLinkStub } from "@vue/test-utils"
+import {
+  createLocalVue,
+  shallowMount,
+  mount,
+  RouterLinkStub
+} from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import Login from "@/components/login/login"
 
@@ -18,6 +24,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const apiClass = new Api({ axios, store })
+  localVue.prototype.$api = apiClass
 })
 
 afterEach(() => {
@@ -25,16 +33,15 @@ afterEach(() => {
 })
 
 describe("components/login/login", () => {
-  describe("mount", () => {
+  describe("テスト", () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
-      wrapper = mount(Login, {
+      wrapper = shallowMount(Login, {
         localVue,
         store,
         router,
         vuetify,
-        sync: false,
         stubs: {
           NuxtLink: RouterLinkStub
         }
@@ -43,6 +50,22 @@ describe("components/login/login", () => {
 
     test("is a Vue instance", () => {
       expect(wrapper.vm).toBeTruthy()
+    })
+  })
+
+  describe("フォーム動作テスト", () => {
+    let wrapper
+    beforeEach(() => {
+      router.push = jest.fn()
+      wrapper = mount(Login, {
+        localVue,
+        store,
+        router,
+        vuetify,
+        stubs: {
+          NuxtLink: RouterLinkStub
+        }
+      })
     })
 
     describe("ログイン", () => {
@@ -64,13 +87,13 @@ describe("components/login/login", () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
 
         test("フロント側エラー", async () => {
           // ログイン処理
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(loginFormValidation).toHaveBeenCalled()
@@ -90,6 +113,7 @@ describe("components/login/login", () => {
           wrapper.find("input[name='password']").setValue("password")
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(loginFormValidation).toHaveBeenCalled()
@@ -123,13 +147,13 @@ describe("components/login/login", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してログイン処理
         wrapper.find("input[name='login']").setValue("test@test.com")
         wrapper.find("input[name='password']").setValue("password")
         await wrapper.vm.submit()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをした
         expect(loginFormValidation).toHaveBeenCalled()
@@ -155,6 +179,7 @@ describe("components/login/login", () => {
         // ログイン処理
         await wrapper.vm.submit()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをしない
         expect(loginFormValidation).not.toHaveBeenCalled()

@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["passwordChange"]),
 
     // ダイアログを開く
     openDialog() {
@@ -68,7 +67,7 @@ export default {
         this.loading = true
         await this.$refs.validate.validate().then(async result => {
           if (result) {
-            await this.passwordChange(this.formValue).then(res => {
+            await this.$api.users.passwordChange(this.formValue).then(res => {
               if (res.status === 200) {
                 this.openSnackbar({
                   text: "パスワードを変更しました。",

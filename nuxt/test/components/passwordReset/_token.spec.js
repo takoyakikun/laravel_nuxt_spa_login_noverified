@@ -1,8 +1,9 @@
-import { createLocalVue, mount } from "@vue/test-utils"
+import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import Token from "@/components/passwordReset/_token"
 
@@ -18,6 +19,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -25,6 +28,22 @@ afterEach(() => {
 })
 
 describe("components/passwordReset/_token", () => {
+  describe("テスト", () => {
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(Token, {
+        localVue,
+        store,
+        router,
+        vuetify
+      })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+  })
+
   describe("mount", () => {
     let wrapper
     beforeEach(() => {
@@ -35,13 +54,8 @@ describe("components/passwordReset/_token", () => {
         store,
         router,
         vuetify,
-        sync: false,
         mocks: { $nuxt: { $route: route } }
       })
-    })
-
-    test("is a Vue instance", () => {
-      expect(wrapper.vm).toBeTruthy()
     })
 
     describe("パスワードリセット", () => {
@@ -69,13 +83,13 @@ describe("components/passwordReset/_token", () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
 
         test("フロント側エラー", async () => {
           // パスワードリセット処理
           await wrapper.vm.passwordReset()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(passwordResetValidate).toHaveBeenCalled()
@@ -98,6 +112,7 @@ describe("components/passwordReset/_token", () => {
             .setValue("password")
           await wrapper.vm.passwordReset()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(passwordResetValidate).toHaveBeenCalled()
@@ -133,7 +148,6 @@ describe("components/passwordReset/_token", () => {
         axios.get.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してパスワードリセット処理
         wrapper.find("input[name='email']").setValue("test@test.com")
@@ -141,6 +155,7 @@ describe("components/passwordReset/_token", () => {
         wrapper.find("input[name='password_confirmation']").setValue("password")
         await wrapper.vm.passwordReset()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをした
         expect(passwordResetValidate).toHaveBeenCalled()
@@ -184,6 +199,7 @@ describe("components/passwordReset/_token", () => {
         // パスワードリセット処理
         await wrapper.vm.passwordReset()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをしない
         expect(passwordResetValidate).not.toHaveBeenCalled()
@@ -202,8 +218,7 @@ describe("components/passwordReset/_token", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 

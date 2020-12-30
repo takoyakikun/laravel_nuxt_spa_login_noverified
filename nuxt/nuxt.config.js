@@ -32,7 +32,7 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "@/plugins/axios",
+    "@/plugins/api/index",
     "@/plugins/nuxt-client-init.js",
     "@/plugins/vee-validate"
   ],
@@ -104,6 +104,14 @@ export default {
             }
           }
         ]
+      }
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: "pre",
+          test: /\.(js|vue)$/,
+          loader: "eslint-loader",
+          exclude: /(node_modules)/
+        })
       }
     },
     transpile: ["vee-validate/dist/rules"]

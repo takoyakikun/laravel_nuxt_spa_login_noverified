@@ -61,8 +61,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["editData"]),
-    ...mapActions("auth", ["setUser"]),
 
     // ダイアログを開く
     openDialog() {
@@ -75,24 +73,26 @@ export default {
         this.loading = true
         await this.$refs.validate.validate().then(async result => {
           if (result) {
-            await this.editData({
-              formValue: this.formValue
-            }).then(res => {
-              if (res.status === 200) {
-                this.openSnackbar({
-                  text: "ユーザーデータを更新しました。",
-                  options: { color: "success" }
-                })
-                this.$refs.dialog.close()
-                this.$refs.validate.reset()
-                this.setUser()
-              } else {
-                this.openSnackbar({
-                  text: "ユーザーデータの更新に失敗しました。",
-                  options: { color: "error" }
-                })
-              }
-            })
+            await this.$api.users
+              .editData({
+                formValue: this.formValue
+              })
+              .then(res => {
+                if (res.status === 200) {
+                  this.openSnackbar({
+                    text: "ユーザーデータを更新しました。",
+                    options: { color: "success" }
+                  })
+                  this.$refs.dialog.close()
+                  this.$refs.validate.reset()
+                  this.$api.auth.getUser()
+                } else {
+                  this.openSnackbar({
+                    text: "ユーザーデータの更新に失敗しました。",
+                    options: { color: "error" }
+                  })
+                }
+              })
           }
         })
         this.loading = false

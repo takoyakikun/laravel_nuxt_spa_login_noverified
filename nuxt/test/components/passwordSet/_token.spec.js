@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import Token from "@/components/passwordSet/_token"
 
@@ -18,6 +19,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -32,8 +35,7 @@ describe("components/passwordSet/_token", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
@@ -52,7 +54,6 @@ describe("components/passwordSet/_token", () => {
         store,
         router,
         vuetify,
-        sync: false,
         mocks: { $nuxt: { $route: route } }
       })
     })
@@ -82,13 +83,13 @@ describe("components/passwordSet/_token", () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
 
         test("フロント側エラー", async () => {
           // パスワード登録処理
           await wrapper.vm.passwordSet()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(passwordSetValidate).toHaveBeenCalled()
@@ -146,7 +147,6 @@ describe("components/passwordSet/_token", () => {
         axios.get.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してパスワード登録処理
         wrapper.find("input[name='email']").setValue("test@test.com")
@@ -154,6 +154,7 @@ describe("components/passwordSet/_token", () => {
         wrapper.find("input[name='password_confirmation']").setValue("password")
         await wrapper.vm.passwordSet()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをした
         expect(passwordSetValidate).toHaveBeenCalled()
@@ -191,6 +192,7 @@ describe("components/passwordSet/_token", () => {
         // パスワード登録処理
         await wrapper.vm.passwordSet()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをしない
         expect(passwordSetValidate).not.toHaveBeenCalled()
@@ -209,8 +211,7 @@ describe("components/passwordSet/_token", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 

@@ -61,8 +61,8 @@ export default {
         this.loading = true
         await this.$refs.sendMailValidate.validate().then(async result => {
           if (result) {
-            await this.$store
-              .dispatch("users/passwordResetMail", this.formValue)
+            await this.$api.users
+              .passwordResetMail(this.formValue)
               .then(res => {
                 if (res.status === 200) {
                   this.send = true

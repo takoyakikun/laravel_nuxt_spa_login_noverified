@@ -130,7 +130,7 @@ export default {
 
     // ログアウト
     async logout() {
-      await this.$store.dispatch("auth/logout")
+      await this.$api.auth.logout()
 
       this.$router.push("/")
     },

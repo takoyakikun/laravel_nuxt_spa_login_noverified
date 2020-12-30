@@ -40,16 +40,3 @@ export const mutations = {
     state.data = { ...state.data, ...config }
   }
 }
-
-export const actions = {
-  // APIサーバから取得したコンフィグデータをセットする
-  async setConfig({ commit }) {
-    return await this.$axios
-      .get("/api/config")
-      .then(res => {
-        commit(types.CONFIG_SET_CONFIG, res.data)
-        return res
-      })
-      .catch(e => e.response)
-  }
-}

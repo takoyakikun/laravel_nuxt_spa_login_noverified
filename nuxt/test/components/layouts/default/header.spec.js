@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -21,6 +22,8 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {

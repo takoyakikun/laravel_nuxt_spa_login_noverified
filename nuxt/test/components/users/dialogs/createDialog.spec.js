@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -19,6 +20,8 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -73,13 +76,13 @@ describe("components/users/dialogs/createDialog", () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
 
         test("フロント側エラー", async () => {
           // ユーザー追加処理
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(validate).toHaveBeenCalled()
@@ -132,7 +135,6 @@ describe("components/users/dialogs/createDialog", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してユーザー追加処理
         wrapper.find("input[name='name']").setValue("テスト")
@@ -175,7 +177,6 @@ describe("components/users/dialogs/createDialog", () => {
         axios.post.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してユーザー追加処理
         wrapper.find("input[name='name']").setValue("テスト")

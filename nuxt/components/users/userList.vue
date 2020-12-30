@@ -179,7 +179,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters } from "vuex"
 import CreateDialog from "@/components/users/dialogs/createDialog"
 import EditDialog from "@/components/users/dialogs/editDialog"
 import DeleteDialog from "@/components/users/dialogs/deleteDialog"

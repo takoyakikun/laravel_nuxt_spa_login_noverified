@@ -1,8 +1,9 @@
-import { createLocalVue, mount } from "@vue/test-utils"
+import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import PasswordReset from "@/components/passwordReset/index"
 
@@ -18,6 +19,8 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -25,7 +28,7 @@ afterEach(() => {
 })
 
 describe("components/passwordReset/index", () => {
-  describe("mount", () => {
+  describe("テスト", () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -33,13 +36,25 @@ describe("components/passwordReset/index", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
     test("is a Vue instance", () => {
       expect(wrapper.vm).toBeTruthy()
+    })
+  })
+
+  describe("フォーム動作テスト", () => {
+    let wrapper
+    beforeEach(() => {
+      router.push = jest.fn()
+      wrapper = mount(PasswordReset, {
+        localVue,
+        store,
+        router,
+        vuetify
+      })
     })
 
     describe("パスワードリセットメール送信", () => {
@@ -71,6 +86,7 @@ describe("components/passwordReset/index", () => {
           // パスワードリセットメール送信処理
           await wrapper.vm.sendMail()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(sendMailValidate).toHaveBeenCalled()
@@ -89,6 +105,7 @@ describe("components/passwordReset/index", () => {
           wrapper.find("input[name='email']").setValue("test@test.com")
           await wrapper.vm.sendMail()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(sendMailValidate).toHaveBeenCalled()
@@ -124,6 +141,7 @@ describe("components/passwordReset/index", () => {
         wrapper.find("input[name='email']").setValue("test@test.com")
         await wrapper.vm.sendMail()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをした
         expect(sendMailValidate).toHaveBeenCalled()
@@ -147,6 +165,7 @@ describe("components/passwordReset/index", () => {
         // パスワードリセットメール送信
         await wrapper.vm.sendMail()
         jest.runAllTimers()
+        await wrapper.vm.$nextTick()
 
         // バリデーションチェックをしない
         expect(sendMailValidate).not.toHaveBeenCalled()
@@ -165,8 +184,7 @@ describe("components/passwordReset/index", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 
@@ -186,8 +204,7 @@ describe("components/passwordReset/index", () => {
         localVue,
         store,
         router,
-        vuetify,
-        sync: false
+        vuetify
       })
     })
 

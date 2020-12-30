@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -18,6 +19,8 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
@@ -77,7 +80,6 @@ describe("components/users/dialogs/deleteDialog", () => {
         axios.delete.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // ユーザー削除処理
         await wrapper.vm.submit()
@@ -104,7 +106,6 @@ describe("components/users/dialogs/deleteDialog", () => {
         axios.delete.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // ユーザー削除処理
         await wrapper.vm.submit()
@@ -135,7 +136,6 @@ describe("components/users/dialogs/deleteDialog", () => {
         axios.delete.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // ユーザー削除処理
         await wrapper.vm.submit()

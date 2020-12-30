@@ -1,6 +1,6 @@
-export default async function({ store, redirect }) {
+export default async function({ store, redirect, app }) {
   // ユーザーがログインしていない場合はログインページへリダイレクト
   if (!store.getters["auth/userExists"]) {
-    redirect("/login")
+    return redirect("/login")
   }
 }

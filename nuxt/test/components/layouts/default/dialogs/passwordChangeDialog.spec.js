@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
+import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -18,6 +19,8 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  const apiClass = new Api({ axios, store })
+  localVue.prototype.$api = apiClass
 })
 
 afterEach(() => {
@@ -73,7 +76,6 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
           axios.patch.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
         })
         test("フロント側エラー", async () => {
           // フォームを空にしてパスワード変更処理
@@ -82,6 +84,7 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
           wrapper.find("input[name='password_confirmation']").setValue("")
           await wrapper.vm.submit()
           jest.runAllTimers()
+          await wrapper.vm.$nextTick()
 
           // バリデーションチェックをした
           expect(validate).toHaveBeenCalled()
@@ -106,7 +109,6 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
             axios.patch.mockImplementation(url => {
               return Promise.resolve(response)
             })
-            wrapper.vm.$store.$axios = axios
 
             // フォームを入力してパスワード変更処理
             wrapper
@@ -155,7 +157,6 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
             axios.patch.mockImplementation(url => {
               return Promise.resolve(response)
             })
-            wrapper.vm.$store.$axios = axios
 
             // フォームを入力してパスワード変更処理
             wrapper
@@ -203,7 +204,6 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
         axios.patch.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してパスワード変更処理
         wrapper.find("input[name='current_password']").setValue("currentpass")
@@ -248,7 +248,6 @@ describe("components/layouts/default/dialogs/passwordChangeDialog", () => {
         axios.patch.mockImplementation(url => {
           return Promise.resolve(response)
         })
-        wrapper.vm.$store.$axios = axios
 
         // フォームを入力してパスワード変更処理
         wrapper.find("input[name='current_password']").setValue("currentpass")

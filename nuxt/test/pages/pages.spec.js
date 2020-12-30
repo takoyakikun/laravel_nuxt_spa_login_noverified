@@ -2,6 +2,8 @@ import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
+import axios from "axios"
+import Api from "@/test/api"
 import Index from "@/pages/index"
 import Auth from "@/pages/auth"
 import Login from "@/pages/login"
@@ -19,114 +21,52 @@ const vuetify = new Vuetify()
 jest.mock("vuex")
 
 let store
+let ApiClass
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
+  ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
 })
 
 afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("index", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Index, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-})
-
-describe("auth", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Auth, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("authミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("auth")
-  })
-})
-
-describe("login", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Login, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("guestミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("guest")
-  })
-})
-
-describe("register", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Register, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("guestミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("guest")
-  })
-})
-
-describe("users", () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = shallowMount(Users, { store, vuetify })
-  })
-
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("adminミドルウェアが登録されているか", () => {
-    expect(wrapper.vm.$options.middleware).toContain("admin")
-  })
-
-  test("createdが実行されているか", () => {
-    // spyOn
-    const storeDispatch = jest.spyOn(wrapper.vm.$store, "dispatch")
-
-    // createdのdispatchが実行されているか
-    expect(storeDispatch).toHaveBeenCalledWith("users/setList")
-    expect(storeDispatch).toHaveBeenCalledWith("users/setRoleOptions")
-  })
-})
-
-describe("passwordReset", () => {
+describe("pages", () => {
   describe("index", () => {
     let wrapper
     beforeEach(() => {
-      wrapper = shallowMount(PasswordReset, { store, vuetify })
+      wrapper = shallowMount(Index, { localVue, store, vuetify })
     })
 
     test("is a Vue instance", () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    test("guestミドルウェアが登録されているか", () => {
-      expect(wrapper.vm.$options.middleware).toContain("guest")
+    test("verifiedミドルウェアが登録されているか", () => {
+      expect(wrapper.vm.$options.middleware).toContain("verified")
     })
   })
 
-  describe("_token", () => {
+  describe("auth", () => {
     let wrapper
     beforeEach(() => {
-      wrapper = shallowMount(PasswordResetToken, { store, vuetify })
+      wrapper = shallowMount(Auth, { localVue, store, vuetify })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    test("authミドルウェアが登録されているか", () => {
+      expect(wrapper.vm.$options.middleware).toContain("auth")
+    })
+  })
+
+  describe("login", () => {
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(Login, { localVue, store, vuetify })
     })
 
     test("is a Vue instance", () => {
@@ -138,11 +78,68 @@ describe("passwordReset", () => {
     })
   })
 
-  describe("passwordSet", () => {
-    describe("_token", () => {
+  describe("register", () => {
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(Register, { localVue, store, vuetify })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    test("guestミドルウェアが登録されているか", () => {
+      expect(wrapper.vm.$options.middleware).toContain("guest")
+    })
+  })
+
+  describe("resend", () => {
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(Resend, { localVue, store, vuetify })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    test("noVerifiedミドルウェアが登録されているか", () => {
+      expect(wrapper.vm.$options.middleware).toContain("noVerified")
+    })
+  })
+
+  describe("users", () => {
+    let wrapper
+    let getList
+    let getRoleOptions
+    beforeEach(() => {
+      // spyOn
+      getList = jest.spyOn(ApiClass.users, "getList")
+      getRoleOptions = jest.spyOn(ApiClass.users, "getRoleOptions")
+
+      wrapper = shallowMount(Users, { localVue, store, vuetify })
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    test("adminミドルウェアが登録されているか", () => {
+      expect(wrapper.vm.$options.middleware).toContain("admin")
+    })
+
+    test("createdが実行されているか", () => {
+      // createdのdispatchが実行されているか
+      expect(getList).toHaveBeenCalled()
+      expect(getRoleOptions).toHaveBeenCalled()
+    })
+  })
+
+  describe("passwordReset", () => {
+    describe("index", () => {
       let wrapper
       beforeEach(() => {
-        wrapper = shallowMount(PasswordSetToken, { store, vuetify })
+        wrapper = shallowMount(PasswordReset, { localVue, store, vuetify })
       })
 
       test("is a Vue instance", () => {
@@ -151,6 +148,38 @@ describe("passwordReset", () => {
 
       test("guestミドルウェアが登録されているか", () => {
         expect(wrapper.vm.$options.middleware).toContain("guest")
+      })
+    })
+
+    describe("_token", () => {
+      let wrapper
+      beforeEach(() => {
+        wrapper = shallowMount(PasswordResetToken, { localVue, store, vuetify })
+      })
+
+      test("is a Vue instance", () => {
+        expect(wrapper.vm).toBeTruthy()
+      })
+
+      test("guestミドルウェアが登録されているか", () => {
+        expect(wrapper.vm.$options.middleware).toContain("guest")
+      })
+    })
+
+    describe("passwordSet", () => {
+      describe("_token", () => {
+        let wrapper
+        beforeEach(() => {
+          wrapper = shallowMount(PasswordSetToken, { localVue, store, vuetify })
+        })
+
+        test("is a Vue instance", () => {
+          expect(wrapper.vm).toBeTruthy()
+        })
+
+        test("guestミドルウェアが登録されているか", () => {
+          expect(wrapper.vm.$options.middleware).toContain("guest")
+        })
       })
     })
   })

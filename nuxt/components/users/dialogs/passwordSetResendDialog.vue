@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     ...mapActions("snackbar", ["openSnackbar"]),
-    ...mapActions("users", ["passwordSetResend"]),
 
     // ダイアログを開く
     openDialog(userData) {
@@ -57,7 +56,7 @@ export default {
     async submit() {
       if (!this.loading) {
         this.loading = true
-        await this.passwordSetResend(this.userData.id).then(res => {
+        await this.$api.users.passwordSetResend(this.userData.id).then(res => {
           if (res.status === 200) {
             this.openSnackbar({
               text: "パスワード設定メールを再送信しました。",

@@ -1,20 +1,30 @@
 import Vuex from "vuex"
 import storeConfig from "@/test/storeConfig"
 import axios from "axios"
+import Api from "@/test/api"
 import Admin from "@/middleware/admin"
+
+jest.useFakeTimers()
+jest.mock("axios")
 
 let store
 let redirect
+let ApiClass
+beforeEach(() => {
+  store = new Vuex.Store(storeConfig)
+  redirect = jest.fn()
+  ApiClass = new Api({ axios, store })
+})
+
+afterEach(() => {
+  jest.clearAllMocks()
+})
 
 describe("middleware/admin", () => {
-  beforeEach(() => {
-    store = new Vuex.Store(storeConfig)
-    redirect = jest.fn()
-  })
-
   test("ログインしていない", async () => {
     // ミドルウェアを実行
-    await Admin({ store: store, redirect: redirect })
+    await Admin({ store: store, redirect: redirect, app: { $api: ApiClass } })
+    jest.runAllTimers()
 
     // ログインしていないのでfalse
     expect(store.getters["auth/userExists"]).toBeFalsy()

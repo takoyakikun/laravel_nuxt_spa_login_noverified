@@ -61,7 +61,7 @@ export default {
     async resendMail() {
       if (!this.loading) {
         this.loading = true
-        await this.$store.dispatch("users/resendMail").then(res => {
+        await this.$api.users.resendMail().then(res => {
           if (res.status === 200) {
             this.resend = true
           } else {
@@ -77,7 +77,7 @@ export default {
 
     // ログアウト
     async logout() {
-      await this.$store.dispatch("auth/logout")
+      await this.$api.auth.logout()
 
       this.$router.push("/")
     }
