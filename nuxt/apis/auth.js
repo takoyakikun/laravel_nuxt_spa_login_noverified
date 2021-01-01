@@ -3,12 +3,7 @@ import path from "path"
 
 const moduleName = "auth"
 
-export default class {
-  constructor({ axios, store }) {
-    this.axios = axios
-    this.store = store
-  }
-
+export default (axios, store) => ({
   // ログイン
   async login({ email, password, remember }) {
     const loginData = {
@@ -19,37 +14,37 @@ export default class {
     if (remember) {
       loginData.remember = remember
     }
-    return await this.axios
+    return await axios
       .post("/api/login", loginData)
       .then(res => {
-        this.store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
+        store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
         return res
       })
       .catch(e => e.response)
-  }
+  },
 
   // ログアウト
   async logout() {
-    return await this.axios
+    return await axios
       .post("/api/logout")
       .then(res => {
-        this.store.commit(path.join(moduleName, types.AUTH_SET_USER), null)
-        this.store.commit(path.join(moduleName, types.AUTH_RESET_PERMISSION))
+        store.commit(path.join(moduleName, types.AUTH_SET_USER), null)
+        store.commit(path.join(moduleName, types.AUTH_RESET_PERMISSION))
         return res
       })
       .catch(e => e.response)
-  }
+  },
 
   // ユーザーデータを取得
   async getUser() {
-    return await this.axios
+    return await axios
       .get("/api/user")
       .then(res => {
-        this.store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
+        store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
         return res
       })
       .catch(e => e.response)
-  }
+  },
 
   // アクセス権限をチェック
   async checkAuth(category) {
@@ -61,10 +56,10 @@ export default class {
     }
     for (let value of categories) {
       if (
-        this.store.getters[path.join(moduleName, "user")] &&
-        !this.store.getters[path.join(moduleName, "permission")](value)
+        store.getters[path.join(moduleName, "user")] &&
+        !store.getters[path.join(moduleName, "permission")](value)
       ) {
-        await this.axios
+        await axios
           .get("/api/permission/" + value)
           .then(res => {
             // 権限がある場合は true ない場合は false
@@ -74,15 +69,12 @@ export default class {
             return false
           })
           .then(result => {
-            this.store.commit(
-              path.join(moduleName, types.AUTH_SET_PERMISSION),
-              {
-                category: value,
-                permission: result
-              }
-            )
+            store.commit(path.join(moduleName, types.AUTH_SET_PERMISSION), {
+              category: value,
+              permission: result
+            })
           })
       }
     }
   }
-}
+})

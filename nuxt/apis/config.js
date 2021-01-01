@@ -3,23 +3,15 @@ import path from "path"
 
 const moduleName = "config"
 
-export default class {
-  constructor({ axios, store }) {
-    this.axios = axios
-    this.store = store
-  }
-
+export default (axios, store) => ({
   // コンフィグデータを取得
   getConfig() {
-    return this.axios
+    return axios
       .get("/api/config")
       .then(res => {
-        this.store.commit(
-          path.join(moduleName, types.CONFIG_SET_CONFIG),
-          res.data
-        )
+        store.commit(path.join(moduleName, types.CONFIG_SET_CONFIG), res.data)
         return res
       })
       .catch(e => e.response)
   }
-}
+})

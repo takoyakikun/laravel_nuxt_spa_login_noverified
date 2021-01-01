@@ -4,11 +4,7 @@ export default class {
   constructor({ axios, store }) {
     const modules = require.context("~/apis", false, /\.js$/)
     modules.keys().map(key => {
-      const ModuleClass = modules(key).default
-      this[path.basename(key, ".js")] = new ModuleClass({
-        axios,
-        store
-      })
+      this[path.basename(key, ".js")] = modules(key).default(axios, store)
     })
   }
 }
