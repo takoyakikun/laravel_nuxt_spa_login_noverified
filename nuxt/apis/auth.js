@@ -56,7 +56,7 @@ export default (axios, store) => ({
     }
     for (let value of categories) {
       if (
-        store.getters[path.join(moduleName, "user")] &&
+        store.getters[path.join(moduleName, "userExists")] &&
         !store.getters[path.join(moduleName, "permission")](value)
       ) {
         await axios
