@@ -33,6 +33,7 @@ export default {
    */
   plugins: [
     "@/plugins/api/index",
+    "@/plugins/snackbar",
     "@/plugins/nuxt-client-init.js",
     "@/plugins/vee-validate"
   ],
@@ -40,7 +41,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/vuetify"],
+  buildModules: ["@nuxtjs/vuetify", "@nuxtjs/composition-api"],
   /*
    ** Nuxt.js modules
    */
@@ -118,7 +119,8 @@ export default {
   },
   generate: {
     dir: "../public/dist",
-    fallback: true
+    fallback: true,
+    interval: 2000
   },
   vue: {
     config: {

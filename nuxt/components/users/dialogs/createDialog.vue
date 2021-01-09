@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
 import UserForm from "@/components/users/forms/userForm"
 
@@ -54,8 +53,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog() {
       this.dialog = true
@@ -68,7 +65,7 @@ export default {
           if (result) {
             await this.$api.users.createData(this.formValue).then(res => {
               if (res.status === 200) {
-                this.openSnackbar({
+                this.$snackbar.openSnackbar({
                   text: "ユーザーデータを追加しました。",
                   options: { color: "success" }
                 })
@@ -76,7 +73,7 @@ export default {
                 this.formValue = {}
                 this.$refs.validate.reset()
               } else {
-                this.openSnackbar({
+                this.$snackbar.openSnackbar({
                   text: "ユーザーデータの追加に失敗しました。",
                   options: { color: "error" }
                 })

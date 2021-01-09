@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/composition-api": "^0.17.0",
     "@nuxtjs/dotenv": "^1.4.0",
     "cross-env": "^7.0.2",
     "lodash": "^4.17.19",

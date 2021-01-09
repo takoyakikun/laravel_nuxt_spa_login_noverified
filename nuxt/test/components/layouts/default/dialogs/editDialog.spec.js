@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import axios from "axios"
 import Api from "@/test/api"
 import storeConfig from "@/test/storeConfig"
+import setInject from "@/test/setInject"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
 import EditDialog from "@/components/layouts/default/dialogs/editDialog"
@@ -21,6 +22,7 @@ beforeEach(() => {
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   const apiClass = new Api({ axios, store })
   localVue.prototype.$api = apiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -119,12 +121,10 @@ describe("components/layouts/default/dialogs/editDialog", () => {
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "ユーザーデータの更新に失敗しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
 
@@ -157,12 +157,8 @@ describe("components/layouts/default/dialogs/editDialog", () => {
         })
 
         // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "ユーザーデータを更新しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
+        expect(wrapper.vm.$snackbar.text).toBe("ユーザーデータを更新しました。")
+        expect(wrapper.vm.$snackbar.options.color).toBe("success")
       })
 
       test("loading中は処理不可", async () => {

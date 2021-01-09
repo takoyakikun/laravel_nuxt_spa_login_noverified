@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import PasswordSetForm from "@/components/passwordSet/passwordSetForm"
 
 export default {
@@ -43,8 +42,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // パスワード登録
     async passwordSet() {
       if (!this.loading) {
@@ -57,13 +54,13 @@ export default {
               .then(async res => {
                 if (res.status === 200) {
                   await this.$api.auth.getUser()
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "パスワードを登録しました。",
                     options: { color: "success" }
                   })
                   this.$router.push("/")
                 } else {
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "パスワードの登録に失敗しました。",
                     options: { color: "error" }
                   })

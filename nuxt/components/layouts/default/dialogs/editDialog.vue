@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters } from "vuex"
 import lodash from "lodash"
 import MyDialog from "@/components/dialog/myDialog"
 import UserForm from "@/components/users/forms/userForm"
@@ -60,8 +60,6 @@ export default {
     ...mapGetters("auth", ["user"])
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog() {
       this.dialog = true
@@ -79,7 +77,7 @@ export default {
               })
               .then(res => {
                 if (res.status === 200) {
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "ユーザーデータを更新しました。",
                     options: { color: "success" }
                   })
@@ -87,7 +85,7 @@ export default {
                   this.$refs.validate.reset()
                   this.$api.auth.getUser()
                 } else {
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "ユーザーデータの更新に失敗しました。",
                     options: { color: "error" }
                   })

@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
 
 export default {
@@ -39,8 +38,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog(userData) {
       this.dialog = true
@@ -52,13 +49,13 @@ export default {
         this.loading = true
         await this.$api.users.deleteData(this.userData.id).then(res => {
           if (res.status === 200) {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "ユーザーデータを削除しました。",
               options: { color: "success" }
             })
             this.$refs.dialog.close()
           } else {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "ユーザーデータの削除に失敗しました。",
               options: { color: "error" }
             })

@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
 
 export default {
@@ -55,8 +54,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog() {
       // 削除するユーザーデータがある場合のみ開く
@@ -71,13 +68,13 @@ export default {
         const deleteUsersId = this.deleteUsers.map(item => item.id)
         await this.$api.users.deleteMultiData(deleteUsersId).then(res => {
           if (res.status === 200) {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "ユーザーデータを削除しました。",
               options: { color: "success" }
             })
             this.$refs.dialog.close()
           } else {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "ユーザーデータの削除に失敗しました。",
               options: { color: "error" }
             })

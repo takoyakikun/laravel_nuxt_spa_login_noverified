@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import Token from "@/components/passwordSet/_token"
 
@@ -21,6 +22,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -126,12 +128,10 @@ describe("components/passwordSet/_token", () => {
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "パスワードの登録に失敗しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
 
@@ -175,12 +175,8 @@ describe("components/passwordSet/_token", () => {
         expect(routerPush).toHaveBeenCalledWith("/")
 
         // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-          "パスワードを登録しました。"
-        )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
+        expect(wrapper.vm.$snackbar.text).toBe("パスワードを登録しました。")
+        expect(wrapper.vm.$snackbar.options.color).toBe("success")
       })
 
       test("loading中はパスワード登録不可", async () => {

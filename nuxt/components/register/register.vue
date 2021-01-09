@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import UserForm from "@/components/users/forms/userForm"
 
 export default {
@@ -55,8 +54,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // フォームを送信
     async submit(event) {
       if (!this.loading) {
@@ -75,13 +72,13 @@ export default {
                     })
                     .then(res => {
                       if (res.status === 200) {
-                        this.openSnackbar({
+                        this.$snackbar.openSnackbar({
                           text: "新規ユーザーを作成しました。",
                           options: { color: "success" }
                         })
                         this.$router.push("/resend")
                       } else {
-                        this.openSnackbar({
+                        this.$snackbar.openSnackbar({
                           text: "認証に失敗しました。",
                           options: { color: "error" }
                         })
@@ -89,7 +86,7 @@ export default {
                       }
                     })
                 } else {
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "新規ユーザーの作成に失敗しました。",
                     options: { color: "error" }
                   })

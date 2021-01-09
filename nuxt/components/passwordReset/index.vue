@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import SendMailForm from "~/components/passwordReset/sendMailForm"
 
 export default {
@@ -53,8 +52,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // パスワードリセットメールを送信
     async sendMail() {
       if (!this.loading) {
@@ -67,7 +64,7 @@ export default {
                 if (res.status === 200) {
                   this.send = true
                 } else {
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "パスワードリセットメール送信に失敗しました。",
                     options: { color: "error" }
                   })

@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import Resend from "@/components/resend/resend"
 
@@ -16,6 +17,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -65,12 +67,10 @@ describe("components/resend", () => {
         expect(axiosPost).toHaveBeenCalledWith("/api/email/resend")
 
         // snackbarのエラー表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+        expect(wrapper.vm.$snackbar.text).toBe(
           "認証メールの再送信に失敗しました。"
         )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "error"
-        )
+        expect(wrapper.vm.$snackbar.options.color).toBe("error")
       })
 
       test("成功", async () => {

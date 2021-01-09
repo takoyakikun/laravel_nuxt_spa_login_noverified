@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import PasswordReset from "@/components/passwordReset/index"
 
@@ -21,6 +22,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -117,12 +119,10 @@ describe("components/passwordReset/index", () => {
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "パスワードリセットメール送信に失敗しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
 

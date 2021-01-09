@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -22,6 +23,7 @@ beforeEach(() => {
   store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -141,12 +143,10 @@ describe("components/users/dialogs/editDialog", () => {
           expect(axiosPatch).toHaveBeenCalledWith("/api/users/1", editUser)
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "ユーザーデータの更新に失敗しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
       describe("成功", () => {
@@ -184,12 +184,10 @@ describe("components/users/dialogs/editDialog", () => {
           )
 
           // snackbarの完了表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "ユーザーデータを更新しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "success"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("success")
         })
 
         test("それ以外", async () => {
@@ -209,12 +207,10 @@ describe("components/users/dialogs/editDialog", () => {
           expect(axiosPatch).toHaveBeenCalledWith("/api/users/1", editUser)
 
           // snackbarの完了表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "ユーザーデータを更新しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "success"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("success")
         })
       })
 

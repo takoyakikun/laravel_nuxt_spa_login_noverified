@@ -42,10 +42,10 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import LoginForm from "@/components/login/loginForm"
 
 export default {
+  name: "LoginComponent",
   components: {
     LoginForm
   },
@@ -60,8 +60,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ログイン処理
     async submit() {
       if (!this.loading) {
@@ -80,7 +78,7 @@ export default {
                 } else {
                   this.loginForm.password = ""
                   this.$refs.loginForm.reset()
-                  this.openSnackbar({
+                  this.$snackbar.openSnackbar({
                     text: "認証に失敗しました。",
                     options: { color: "error" }
                   })

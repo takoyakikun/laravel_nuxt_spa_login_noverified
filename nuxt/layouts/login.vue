@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Snackbar from "~/components/snackbar/snackbar"
+import Snackbar from "@/components/snackbar/snackbar"
 
 export default {
   components: {

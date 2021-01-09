@@ -3,6 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import * as types from "@/store/mutation-types"
 import setConfigData from "@/test/setConfigData"
@@ -21,6 +22,7 @@ beforeEach(() => {
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -88,12 +90,10 @@ describe("components/users/dialogs/passwordSetResendDialog", () => {
         expect(axiosPost).toHaveBeenCalled()
 
         // snackbarのエラー表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+        expect(wrapper.vm.$snackbar.text).toBe(
           "パスワード設定メールの再送信に失敗しました。"
         )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "error"
-        )
+        expect(wrapper.vm.$snackbar.options.color).toBe("error")
       })
 
       test("成功", async () => {
@@ -113,12 +113,10 @@ describe("components/users/dialogs/passwordSetResendDialog", () => {
         expect(axiosPost).toHaveBeenCalled()
 
         // snackbarの完了表示
-        expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+        expect(wrapper.vm.$snackbar.text).toBe(
           "パスワード設定メールを再送信しました。"
         )
-        expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-          "success"
-        )
+        expect(wrapper.vm.$snackbar.options.color).toBe("success")
       })
 
       test("loading中は処理不可", async () => {

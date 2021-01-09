@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
 import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
 
@@ -54,8 +54,6 @@ export default {
     ...mapGetters("auth", ["user"])
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog() {
       this.dialog = true
@@ -69,7 +67,7 @@ export default {
           if (result) {
             await this.$api.users.passwordChange(this.formValue).then(res => {
               if (res.status === 200) {
-                this.openSnackbar({
+                this.$snackbar.openSnackbar({
                   text: "パスワードを変更しました。",
                   options: { color: "success" }
                 })
@@ -80,7 +78,7 @@ export default {
                 if (res.data.error_message) {
                   text = res.data.error_message
                 }
-                this.openSnackbar({
+                this.$snackbar.openSnackbar({
                   text: text,
                   options: { color: "error" }
                 })

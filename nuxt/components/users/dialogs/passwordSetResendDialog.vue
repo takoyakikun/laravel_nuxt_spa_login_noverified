@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
 import MyDialog from "@/components/dialog/myDialog"
 
 export default {
@@ -45,8 +44,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // ダイアログを開く
     openDialog(userData) {
       this.dialog = true
@@ -58,13 +55,13 @@ export default {
         this.loading = true
         await this.$api.users.passwordSetResend(this.userData.id).then(res => {
           if (res.status === 200) {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "パスワード設定メールを再送信しました。",
               options: { color: "success" }
             })
             this.$refs.dialog.close()
           } else {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "パスワード設定メールの再送信に失敗しました。",
               options: { color: "error" }
             })

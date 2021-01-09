@@ -2,7 +2,8 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
     "^~/(.*)$": "<rootDir>/$1",
-    "\\.(css|less|sass|scss)$": "<rootDir>/test/__mocks__/styleMock.js"
+    "\\.(css|less|sass|scss)$": "<rootDir>/test/__mocks__/styleMock.js",
+    "@nuxtjs/composition-api": "@nuxtjs/composition-api/lib/entrypoint.js"
   },
   moduleFileExtensions: ["js", "vue", "json"],
   transform: {

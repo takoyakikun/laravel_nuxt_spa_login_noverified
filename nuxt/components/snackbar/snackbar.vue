@@ -1,20 +1,25 @@
 <template>
-  <v-snackbar v-bind="options" :value="value" @input="closeSnackbar">
-    <slot :text="text">
-      {{ text }}
+  <v-snackbar
+    v-model="snackbar.value"
+    v-bind="snackbar.options"
+    @input="snackbar.closeSnackbar()"
+  >
+    <slot :text="snackbar.text">
+      {{ snackbar.text }}
     </slot>
   </v-snackbar>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { defineComponent, useContext, reactive } from "@nuxtjs/composition-api"
 
-export default {
-  computed: {
-    ...mapGetters("snackbar", ["value", "text", "options"])
-  },
-  methods: {
-    ...mapActions("snackbar", ["closeSnackbar"])
+export default defineComponent({
+  setup() {
+    const { app } = useContext()
+    const snackbar = reactive(app.$snackbar)
+    return {
+      snackbar
+    }
   }
-}
+})
 </script>

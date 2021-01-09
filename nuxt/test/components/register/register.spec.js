@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import Register from "@/components/register/register"
 
@@ -21,6 +22,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -125,12 +127,10 @@ describe("components/register/register", () => {
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
+          expect(wrapper.vm.$snackbar.text).toBe(
             "新規ユーザーの作成に失敗しました。"
           )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
 
@@ -192,12 +192,8 @@ describe("components/register/register", () => {
           expect(routerPush).toHaveBeenCalledWith("/login")
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "認証に失敗しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.text).toBe("認証に失敗しました。")
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
 
         test("認証成功", async () => {
@@ -243,12 +239,8 @@ describe("components/register/register", () => {
           expect(routerPush).toHaveBeenCalledWith("/resend")
 
           // snackbarの完了表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "新規ユーザーを作成しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "success"
-          )
+          expect(wrapper.vm.$snackbar.text).toBe("新規ユーザーを作成しました。")
+          expect(wrapper.vm.$snackbar.options.color).toBe("success")
         })
       })
 

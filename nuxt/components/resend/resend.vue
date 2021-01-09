@@ -45,8 +45,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
-
 export default {
   data() {
     return {
@@ -55,8 +53,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("snackbar", ["openSnackbar"]),
-
     // 認証メール再送信
     async resendMail() {
       if (!this.loading) {
@@ -65,7 +61,7 @@ export default {
           if (res.status === 200) {
             this.resend = true
           } else {
-            this.openSnackbar({
+            this.$snackbar.openSnackbar({
               text: "認証メールの再送信に失敗しました。",
               options: { color: "error" }
             })

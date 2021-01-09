@@ -9,6 +9,7 @@ import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
 import Api from "@/test/api"
+import setInject from "@/test/setInject"
 import storeConfig from "@/test/storeConfig"
 import Login from "@/components/login/login"
 
@@ -24,8 +25,9 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  const apiClass = new Api({ axios, store })
-  localVue.prototype.$api = apiClass
+  const ApiClass = new Api({ axios, store })
+  localVue.prototype.$api = ApiClass
+  setInject(localVue)
 })
 
 afterEach(() => {
@@ -126,12 +128,8 @@ describe("components/login/login", () => {
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$store.getters["snackbar/text"]).toBe(
-            "認証に失敗しました。"
-          )
-          expect(wrapper.vm.$store.getters["snackbar/options"].color).toBe(
-            "error"
-          )
+          expect(wrapper.vm.$snackbar.text).toBe("認証に失敗しました。")
+          expect(wrapper.vm.$snackbar.options.color).toBe("error")
         })
       })
 
@@ -197,7 +195,6 @@ describe("components/login/login", () => {
         store,
         router,
         vuetify,
-        sync: false,
         stubs: {
           NuxtLink: RouterLinkStub
         }
@@ -221,7 +218,6 @@ describe("components/login/login", () => {
         store,
         router,
         vuetify,
-        sync: false,
         stubs: {
           NuxtLink: RouterLinkStub
         }
