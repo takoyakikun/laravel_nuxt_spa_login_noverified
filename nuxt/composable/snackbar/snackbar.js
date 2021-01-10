@@ -3,8 +3,6 @@ export default {
   text: "",
   options: {},
 
-  getData: name => this[name],
-
   // snackbarを開く
   openSnackbar({ text, options }) {
     if (options) {
