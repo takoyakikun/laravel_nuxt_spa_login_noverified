@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyDialog ref="dialog" v-model="dialog" title="ユーザー削除" color="error">
+    <MyDialog ref="dialog" title="ユーザー削除" color="error">
       <template #content>
         <v-list dense>
           <v-list-item>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import MyDialog from "@/components/dialog/myDialog"
+import MyDialog from "~/components/dialog/myDialog"
 
 export default {
   components: {
@@ -49,7 +49,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false
     }
   },
@@ -58,7 +57,7 @@ export default {
     openDialog() {
       // 削除するユーザーデータがある場合のみ開く
       if (this.deleteUsers.length > 0) {
-        this.dialog = true
+        this.$refs.dialog.openDialog()
       }
     },
     // データを削除
@@ -72,7 +71,7 @@ export default {
               text: "ユーザーデータを削除しました。",
               options: { color: "success" }
             })
-            this.$refs.dialog.close()
+            this.$refs.dialog.closeDialog()
           } else {
             this.$snackbar.openSnackbar({
               text: "ユーザーデータの削除に失敗しました。",

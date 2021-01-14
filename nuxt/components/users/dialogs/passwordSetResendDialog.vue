@@ -1,11 +1,6 @@
 <template>
   <div>
-    <MyDialog
-      ref="dialog"
-      v-model="dialog"
-      title="パスワード設定メール再送信"
-      color="primary"
-    >
+    <MyDialog ref="dialog" title="パスワード設定メール再送信" color="primary">
       <template #content>
         {{ userData.name }} ({{ userData.email }})
         のパスワード設定メールを再送信しますか？
@@ -30,7 +25,7 @@
 </template>
 
 <script>
-import MyDialog from "@/components/dialog/myDialog"
+import MyDialog from "~/components/dialog/myDialog"
 
 export default {
   components: {
@@ -38,7 +33,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false,
       userData: {}
     }
@@ -46,7 +40,7 @@ export default {
   methods: {
     // ダイアログを開く
     openDialog(userData) {
-      this.dialog = true
+      this.$refs.dialog.openDialog()
       this.userData = userData
     },
     // パスワード設定メールを再送信
@@ -59,7 +53,7 @@ export default {
               text: "パスワード設定メールを再送信しました。",
               options: { color: "success" }
             })
-            this.$refs.dialog.close()
+            this.$refs.dialog.closeDialog()
           } else {
             this.$snackbar.openSnackbar({
               text: "パスワード設定メールの再送信に失敗しました。",

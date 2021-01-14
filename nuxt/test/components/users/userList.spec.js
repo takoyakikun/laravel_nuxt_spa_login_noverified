@@ -1,11 +1,12 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import * as types from "@/store/mutation-types"
-import setConfigData from "@/test/setConfigData"
-import UserList from "@/components/users/userList"
-import DeleteMultiDialog from "@/components/users/dialogs/deleteMultiDialog"
+import storeConfig from "~/test/storeConfig"
+import setPlugin from "~/test/setPlugin"
+import * as types from "~/store/mutation-types"
+import setConfigData from "~/test/setConfigData"
+import UserList from "~/components/users/userList"
+import DeleteMultiDialog from "~/components/users/dialogs/deleteMultiDialog"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,6 +19,7 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  setPlugin(localVue)
 })
 
 afterEach(() => {
@@ -27,7 +29,7 @@ afterEach(() => {
 describe("components/users/userList", () => {
   describe("テスト", () => {
     let wrapper
-    beforeEach(async () => {
+    beforeEach(() => {
       wrapper = shallowMount(UserList, {
         localVue,
         store,
@@ -154,7 +156,9 @@ describe("components/users/userList", () => {
       wrapper.vm.openCreateDialog()
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.createDialog.dialog).toBeTruthy()
+      expect(
+        wrapper.vm.$refs.createDialog.$refs.dialog.state.value
+      ).toBeTruthy()
     })
 
     test("編集ダイアログを開く", () => {
@@ -162,7 +166,7 @@ describe("components/users/userList", () => {
       wrapper.vm.openEditDialog(testUser)
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.editDialog.dialog).toBeTruthy()
+      expect(wrapper.vm.$refs.editDialog.$refs.dialog.state.value).toBeTruthy()
 
       // 正しいユーザーデータが入っている
       expect(wrapper.vm.$refs.editDialog.formValue).toEqual(testUser)
@@ -176,7 +180,9 @@ describe("components/users/userList", () => {
       wrapper.vm.openDeleteDialog(testUser)
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.deleteDialog.dialog).toBeTruthy()
+      expect(
+        wrapper.vm.$refs.deleteDialog.$refs.dialog.state.value
+      ).toBeTruthy()
 
       // 正しいユーザーデータが入っている
       expect(wrapper.vm.$refs.deleteDialog.userData).toEqual(testUser)
@@ -188,7 +194,9 @@ describe("components/users/userList", () => {
         wrapper.vm.openDeleteMultiDialog()
 
         // ダイアログが開いていない
-        expect(wrapper.vm.$refs.deleteMultiDialog.dialog).toBeFalsy()
+        expect(
+          wrapper.vm.$refs.deleteMultiDialog.$refs.dialog.state.value
+        ).toBeFalsy()
       })
 
       test("選択ユーザーあり", () => {
@@ -201,7 +209,9 @@ describe("components/users/userList", () => {
         wrapper.vm.openDeleteMultiDialog()
 
         // ダイアログが開いている
-        expect(wrapper.vm.$refs.deleteMultiDialog.dialog).toBeTruthy()
+        expect(
+          wrapper.vm.$refs.deleteMultiDialog.$refs.dialog.state.value
+        ).toBeTruthy()
       })
     })
 
@@ -210,7 +220,9 @@ describe("components/users/userList", () => {
       wrapper.vm.openPasswordSetResendDialog(testUser)
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.passwordSetResendDialog.dialog).toBeTruthy()
+      expect(
+        wrapper.vm.$refs.passwordSetResendDialog.$refs.dialog.state.value
+      ).toBeTruthy()
 
       // 正しいユーザーデータが入っている
       expect(wrapper.vm.$refs.passwordSetResendDialog.userData).toEqual(

@@ -3,7 +3,6 @@
     <ValidationObserver ref="validate" v-slot="{ invalid }">
       <MyDialog
         ref="dialog"
-        v-model="dialog"
         title="ユーザー編集"
         color="success"
         :options="{ persistent: true }"
@@ -40,8 +39,8 @@
 <script>
 import { mapGetters } from "vuex"
 import lodash from "lodash"
-import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/forms/userForm"
+import MyDialog from "~/components/dialog/myDialog"
+import UserForm from "~/components/users/forms/userForm"
 
 export default {
   components: {
@@ -50,7 +49,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false,
       formValue: {},
       editId: null
@@ -67,7 +65,7 @@ export default {
   methods: {
     // ダイアログを開く
     openDialog(userData) {
-      this.dialog = true
+      this.$refs.dialog.openDialog()
       this.formValue = lodash.cloneDeep(userData) // ディープコピー
       this.editId = userData.id
     },
@@ -91,7 +89,7 @@ export default {
                   text: "ユーザーデータを更新しました。",
                   options: { color: "success" }
                 })
-                this.$refs.dialog.close()
+                this.$refs.dialog.closeDialog()
                 this.$refs.validate.reset()
                 // 自ユーザーはログインデータを更新
                 if (this.myuser) {

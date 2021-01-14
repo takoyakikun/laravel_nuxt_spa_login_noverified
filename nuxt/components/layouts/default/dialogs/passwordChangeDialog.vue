@@ -4,7 +4,6 @@
     <ValidationObserver ref="validate" v-slot="{ invalid }">
       <MyDialog
         ref="dialog"
-        v-model="dialog"
         title="パスワード変更"
         color="primary"
         :options="{ persistent: true }"
@@ -35,8 +34,8 @@
 
 <script>
 import { mapGetters } from "vuex"
-import MyDialog from "@/components/dialog/myDialog"
-import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
+import MyDialog from "~/components/dialog/myDialog"
+import PasswordChangeForm from "~/components/users/forms/passwordChangeForm"
 
 export default {
   components: {
@@ -45,7 +44,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false,
       formValue: {}
     }
@@ -56,7 +54,7 @@ export default {
   methods: {
     // ダイアログを開く
     openDialog() {
-      this.dialog = true
+      this.$refs.dialog.openDialog()
       this.formValue = {}
     },
     // データを更新
@@ -71,7 +69,7 @@ export default {
                   text: "パスワードを変更しました。",
                   options: { color: "success" }
                 })
-                this.$refs.dialog.close()
+                this.$refs.dialog.closeDialog()
                 this.$refs.validate.reset()
               } else {
                 let text = "パスワードの変更に失敗しました。"

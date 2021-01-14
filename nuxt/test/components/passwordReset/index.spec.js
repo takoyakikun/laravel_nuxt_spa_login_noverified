@@ -3,10 +3,10 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
-import Api from "@/test/api"
-import setInject from "@/test/setInject"
-import storeConfig from "@/test/storeConfig"
-import PasswordReset from "@/components/passwordReset/index"
+import Api from "~/test/api"
+import setPlugin from "~/test/setPlugin"
+import storeConfig from "~/test/storeConfig"
+import PasswordReset from "~/components/passwordReset/index"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -22,7 +22,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
-  setInject(localVue)
+  setPlugin(localVue)
 })
 
 afterEach(() => {

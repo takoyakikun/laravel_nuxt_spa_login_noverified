@@ -2,10 +2,10 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
-import Api from "@/test/api"
-import setInject from "@/test/setInject"
-import storeConfig from "@/test/storeConfig"
-import Resend from "@/components/resend/resend"
+import Api from "~/test/api"
+import setPlugin from "~/test/setPlugin"
+import storeConfig from "~/test/storeConfig"
+import Resend from "~/components/resend/resend"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -17,7 +17,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
-  setInject(localVue)
+  setPlugin(localVue)
 })
 
 afterEach(() => {

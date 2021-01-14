@@ -2,10 +2,11 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
-import storeConfig from "@/test/storeConfig"
-import * as types from "@/store/mutation-types"
-import setConfigData from "@/test/setConfigData"
-import SideBar from "@/components/layouts/default/sideBar"
+import storeConfig from "~/test/storeConfig"
+import setPlugin from "~/test/setPlugin"
+import * as types from "~/store/mutation-types"
+import setConfigData from "~/test/setConfigData"
+import SideBar from "~/components/layouts/default/sideBar"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,6 +19,7 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  setPlugin(localVue)
 })
 
 afterEach(() => {
@@ -32,7 +34,6 @@ describe("components/layouts/default/sideBar", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         propsData: {
           value: false
         }
@@ -52,7 +53,6 @@ describe("components/layouts/default/sideBar", () => {
         store,
         router,
         vuetify,
-        sync: false,
         propsData: {
           value: false
         }
@@ -105,7 +105,6 @@ describe("components/layouts/default/sideBar", () => {
         store,
         router,
         vuetify,
-        sync: false,
         propsData: {
           value: false
         }

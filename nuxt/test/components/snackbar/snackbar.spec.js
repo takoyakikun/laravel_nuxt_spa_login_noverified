@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import setInject from "@/test/setInject"
-import Snackbar from "@/components/snackbar/snackbar"
+import storeConfig from "~/test/storeConfig"
+import setPlugin from "~/test/setPlugin"
+import Snackbar from "~/components/snackbar/snackbar"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -13,7 +13,7 @@ const vuetify = new Vuetify()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  setInject(localVue)
+  setPlugin(localVue)
 })
 
 afterEach(() => {

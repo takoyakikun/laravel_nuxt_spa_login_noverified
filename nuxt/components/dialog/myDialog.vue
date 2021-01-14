@@ -1,30 +1,34 @@
 <template>
   <!-- ダイアログ -->
-  <v-dialog v-model="dialog" v-bind="mergeOptions" @click:outside="outside">
+  <v-dialog
+    v-model="state.value"
+    v-bind="state.options"
+    @click:outside="outside"
+  >
     <v-card>
-      <v-app-bar dark :color="color" class="headline">
-        <slot name="titleLeft" :color="color" :close="close" :title="title">
-          {{ title }}
+      <v-app-bar dark :color="state.color" class="headline">
+        <slot name="titleLeft" v-bind="{ state, closeDialog }">
+          {{ state.title }}
         </slot>
         <v-spacer />
-        <slot name="titleRight" :color="color" :close="close" :title="title" />
-        <slot name="titleClose" :color="color" :close="close">
-          <v-btn data-test="titleCloseButton" icon="icon" @click="close">
+        <slot name="titleRight" v-bind="{ state, closeDialog }" />
+        <slot name="titleClose" v-bind="{ state, closeDialog }">
+          <v-btn data-test="titleCloseButton" icon="icon" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </slot>
       </v-app-bar>
 
       <v-card-text class="mt-5">
-        <slot name="content" :color="color" :close="close" />
+        <slot name="content" v-bind="{ state, closeDialog }" />
       </v-card-text>
 
       <v-card-actions>
-        <slot name="actionsLeft" :color="color" :close="close" />
+        <slot name="actionsLeft" v-bind="{ state, closeDialog }" />
         <v-spacer />
-        <slot name="actionsRight" :color="color" :close="close" />
-        <slot name="actionsClose" :color="color" :close="close">
-          <v-btn data-test="actionsCloseButton" @click="close">
+        <slot name="actionsRight" v-bind="{ state, closeDialog }" />
+        <slot name="actionsClose" v-bind="{ state, closeDialog }">
+          <v-btn data-test="actionsCloseButton" @click="closeDialog">
             <v-icon left>
               mdi-close
             </v-icon>
@@ -37,12 +41,10 @@
 </template>
 
 <script>
-export default {
+import { defineComponent, useContext, reactive } from "@nuxtjs/composition-api"
+
+export default defineComponent({
   props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
     options: {
       type: Object,
       default: () => ({})
@@ -60,43 +62,41 @@ export default {
       default: "primary"
     }
   },
-  data() {
-    return {
-      defaultOptions: {
-        maxWidth: 600,
-        scrollable: "scrollable"
-      }
+  setup(props) {
+    const { app } = useContext()
+
+    // デフォルトのoptions
+    const defaultOptions = {
+      maxWidth: 600,
+      scrollable: "scrollable"
     }
-  },
-  computed: {
-    // 入力されたオプションとデフォルトのオプションを組み合わせる
-    mergeOptions() {
-      return Object.assign(this.defaultOptions, this.options)
-    },
-    // name が指定されている場合はストアから、ない場合は value から状態を取得
-    dialog() {
-      if (this.name) {
-        return this.$store.getters["dialog/dialog"](this.name)
-      } else {
-        return this.value
-      }
+
+    // ダイアログのステータスを作成する
+    const state = reactive(app.$dialog.createDialog(props, defaultOptions))
+
+    // ダイアログを開く
+    const openDialog = () => {
+      app.$dialog.openDialog(state.name)
     }
-  },
-  methods: {
-    // ダイアログの外をクリック
-    outside() {
-      if (!this.mergeOptions.persistent) {
-        this.close()
-      }
-    },
+
     // ダイアログを閉じる
-    close() {
-      if (this.name) {
-        this.$store.dispatch("dialog/closeDialog", this.name)
-      } else {
-        this.$emit("input", false)
+    const closeDialog = () => {
+      app.$dialog.closeDialog(state.name)
+    }
+
+    // ダイアログの外をクリック
+    const outside = () => {
+      if (state.options.persistent !== true) {
+        closeDialog()
       }
+    }
+
+    return {
+      state,
+      openDialog,
+      closeDialog,
+      outside
     }
   }
-}
+})
 </script>

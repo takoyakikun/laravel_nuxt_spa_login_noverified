@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyDialog ref="dialog" v-model="dialog" title="ユーザー削除" color="error">
+    <MyDialog ref="dialog" title="ユーザー削除" color="error">
       <template #content>
         {{ userData.name }} ({{ userData.email }}) を削除しますか？
       </template>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import MyDialog from "@/components/dialog/myDialog"
+import MyDialog from "~/components/dialog/myDialog"
 
 export default {
   components: {
@@ -32,7 +32,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false,
       userData: {}
     }
@@ -40,7 +39,7 @@ export default {
   methods: {
     // ダイアログを開く
     openDialog(userData) {
-      this.dialog = true
+      this.$refs.dialog.openDialog()
       this.userData = userData
     },
     // データを削除
@@ -53,7 +52,7 @@ export default {
               text: "ユーザーデータを削除しました。",
               options: { color: "success" }
             })
-            this.$refs.dialog.close()
+            this.$refs.dialog.closeDialog()
           } else {
             this.$snackbar.openSnackbar({
               text: "ユーザーデータの削除に失敗しました。",

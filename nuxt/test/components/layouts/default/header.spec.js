@@ -3,11 +3,12 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
-import Api from "@/test/api"
-import storeConfig from "@/test/storeConfig"
-import * as types from "@/store/mutation-types"
-import setConfigData from "@/test/setConfigData"
-import Header from "@/components/layouts/default/header"
+import Api from "~/test/api"
+import storeConfig from "~/test/storeConfig"
+import setPlugin from "~/test/setPlugin"
+import * as types from "~/store/mutation-types"
+import setConfigData from "~/test/setConfigData"
+import Header from "~/components/layouts/default/header"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -24,6 +25,7 @@ beforeEach(() => {
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   const ApiClass = new Api({ axios, store })
   localVue.prototype.$api = ApiClass
+  setPlugin(localVue)
 })
 
 afterEach(() => {
@@ -123,7 +125,7 @@ describe("components/layouts/default/header", () => {
       wrapper.vm.openEditDialog()
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.editDialog.dialog).toBeTruthy()
+      expect(wrapper.vm.$refs.editDialog.$refs.dialog.state.value).toBeTruthy()
     })
 
     test("パスワード変更ダイアログを開く", () => {
@@ -131,7 +133,9 @@ describe("components/layouts/default/header", () => {
       wrapper.vm.openPasswordChangeDialog()
 
       // ダイアログが開いている
-      expect(wrapper.vm.$refs.passwordChangeDialog.dialog).toBeTruthy()
+      expect(
+        wrapper.vm.$refs.passwordChangeDialog.$refs.dialog.state.value
+      ).toBeTruthy()
     })
   })
 

@@ -3,7 +3,6 @@
     <ValidationObserver ref="validate" v-slot="{ invalid }">
       <MyDialog
         ref="dialog"
-        v-model="dialog"
         title="新規ユーザー追加"
         color="info"
         :options="{ persistent: true }"
@@ -37,8 +36,8 @@
 </template>
 
 <script>
-import MyDialog from "@/components/dialog/myDialog"
-import UserForm from "@/components/users/forms/userForm"
+import MyDialog from "~/components/dialog/myDialog"
+import UserForm from "~/components/users/forms/userForm"
 
 export default {
   components: {
@@ -47,7 +46,6 @@ export default {
   },
   data() {
     return {
-      dialog: false,
       loading: false,
       formValue: {}
     }
@@ -55,7 +53,7 @@ export default {
   methods: {
     // ダイアログを開く
     openDialog() {
-      this.dialog = true
+      this.$refs.dialog.openDialog()
     },
     // データを追加
     async submit() {
@@ -69,7 +67,7 @@ export default {
                   text: "ユーザーデータを追加しました。",
                   options: { color: "success" }
                 })
-                this.$refs.dialog.close()
+                this.$refs.dialog.closeDialog()
                 this.formValue = {}
                 this.$refs.validate.reset()
               } else {
