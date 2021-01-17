@@ -3,7 +3,7 @@ import Vuetify from "vuetify"
 import Vuex from "vuex"
 import VueRouter from "vue-router"
 import axios from "axios"
-import Api from "~/test/api"
+import api from "~/test/api"
 import setPlugin from "~/test/setPlugin"
 import storeConfig from "~/test/storeConfig"
 import Token from "~/components/passwordSet/_token"
@@ -20,8 +20,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  const ApiClass = new Api({ axios, store })
-  localVue.prototype.$api = ApiClass
+  localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
 })
 

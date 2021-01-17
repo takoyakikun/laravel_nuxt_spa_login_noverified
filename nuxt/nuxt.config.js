@@ -32,10 +32,10 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "~/plugins/api/index",
+    "~/plugins/api/setup",
     "~/plugins/snackbar",
     "~/plugins/dialog",
-    "~/plugins/nuxt-client-init.js",
+    "~/plugins/nuxt-client-init",
     "~/plugins/vee-validate"
   ],
 

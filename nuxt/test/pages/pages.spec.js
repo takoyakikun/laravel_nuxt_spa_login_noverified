@@ -1,17 +1,18 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
+import storeConfig from "~/test/storeConfig"
 import axios from "axios"
-import Api from "@/test/api"
-import Index from "@/pages/index"
-import Auth from "@/pages/auth"
-import Login from "@/pages/login"
-import Register from "@/pages/register"
-import Users from "@/pages/users"
-import PasswordReset from "@/pages/passwordReset/index"
-import PasswordResetToken from "@/pages/passwordReset/_token"
-import PasswordSetToken from "@/pages/passwordSet/_token"
+import api from "~/test/api"
+import Index from "~/pages/index"
+import Auth from "~/pages/auth"
+import Login from "~/pages/login"
+import Register from "~/pages/register"
+import Resend from "~/pages/resend"
+import Users from "~/pages/users"
+import PasswordReset from "~/pages/passwordReset/index"
+import PasswordResetToken from "~/pages/passwordReset/_token"
+import PasswordSetToken from "~/pages/passwordSet/_token"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -21,11 +22,11 @@ const vuetify = new Vuetify()
 jest.mock("vuex")
 
 let store
-let ApiClass
+let $api
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  ApiClass = new Api({ axios, store })
-  localVue.prototype.$api = ApiClass
+  $api = api({ $axios: axios, store })
+  localVue.prototype.$api = $api
 })
 
 afterEach(() => {
@@ -114,8 +115,8 @@ describe("pages", () => {
     let getRoleOptions
     beforeEach(() => {
       // spyOn
-      getList = jest.spyOn(ApiClass.users, "getList")
-      getRoleOptions = jest.spyOn(ApiClass.users, "getRoleOptions")
+      getList = jest.spyOn($api.users, "getList")
+      getRoleOptions = jest.spyOn($api.users, "getRoleOptions")
 
       wrapper = shallowMount(Users, { localVue, store, vuetify })
     })

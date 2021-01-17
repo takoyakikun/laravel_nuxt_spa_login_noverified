@@ -1,8 +1,9 @@
 import path from "path"
-import api from "~/plugins/api/api"
+import api from "./api"
 
 export default ({ $axios, store }) => {
-  const modules = require.context(path.resolve("./apis"), false, /\.js$/)
+  // 読み込んだモジュールをセットする
+  const modules = require.context("~/apis", false, /\.js$/)
   modules.keys().map(key => {
     api.setApiModule(
       modules(key).default($axios, store),

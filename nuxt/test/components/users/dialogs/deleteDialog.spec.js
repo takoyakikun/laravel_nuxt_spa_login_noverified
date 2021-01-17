@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
 import axios from "axios"
-import Api from "~/test/api"
+import api from "~/test/api"
 import setPlugin from "~/test/setPlugin"
 import storeConfig from "~/test/storeConfig"
 import * as types from "~/store/mutation-types"
@@ -20,8 +20,7 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
-  const ApiClass = new Api({ axios, store })
-  localVue.prototype.$api = ApiClass
+  localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
 })
 
