@@ -1,4 +1,4 @@
-import dialog from "~/composable/dialog/dialog"
+import dialog from "~/composition/dialog/dialog"
 
 export default (_, inject) => {
   inject("dialog", dialog)

@@ -1,5 +1,5 @@
-import snackbar from "~/composable/snackbar/snackbar"
-import dialog from "~/composable/dialog/dialog"
+import snackbar from "~/composition/snackbar/snackbar"
+import dialog from "~/composition/dialog/dialog"
 
 export default localVue => {
   const plugin = {
