@@ -15,6 +15,16 @@ export default {
       state.name = "dialog-" + (Object.keys(this.state).length + 1)
     }
 
+    // color をセット
+    if (props.color) {
+      state.color = props.color
+    }
+
+    // title をセット
+    if (props.title) {
+      state.title = props.title
+    }
+
     // デフォルトのoptionsとpropsから設定されたoptionsをマージする
     state.options = { ...defaultOptions, ...props.options }
 
