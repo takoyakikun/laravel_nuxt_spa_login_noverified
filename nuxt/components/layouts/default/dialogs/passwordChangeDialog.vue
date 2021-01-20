@@ -12,11 +12,11 @@
           <PasswordChangeForm v-model="formValue" @submit="submit" />
         </template>
 
-        <template #actionsLeft="{ color }">
+        <template #actionsLeft="{ state }">
           <v-btn
             data-test="submitButton"
             :disabled="invalid"
-            :color="color"
+            :color="state.color"
             :loading="loading"
             @click="submit"
           >

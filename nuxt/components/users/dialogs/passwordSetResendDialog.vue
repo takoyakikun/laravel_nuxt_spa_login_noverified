@@ -6,10 +6,10 @@
         のパスワード設定メールを再送信しますか？
       </template>
 
-      <template #actionsLeft="{ color }">
+      <template #actionsLeft="{ state }">
         <v-btn
           data-test="submitButton"
-          :color="color"
+          :color="state.color"
           :loading="loading"
           @click="submit"
         >
