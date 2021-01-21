@@ -25,7 +25,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/passwordChangeForm", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(async () => {

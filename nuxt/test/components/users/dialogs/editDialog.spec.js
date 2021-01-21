@@ -30,7 +30,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/dialogs/editDialog", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

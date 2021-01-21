@@ -26,7 +26,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/userForm", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     let mountOptions

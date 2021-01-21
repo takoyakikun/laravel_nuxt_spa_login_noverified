@@ -16,7 +16,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("middleware/guest", () => {
+describe(__filename, () => {
   test("ログインしていない", async () => {
     // ミドルウェアを実行
     await Guest({ store: store, redirect: redirect })

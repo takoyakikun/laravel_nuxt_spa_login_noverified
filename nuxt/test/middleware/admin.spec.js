@@ -20,7 +20,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("middleware/admin", () => {
+describe(__filename, () => {
   test("ログインしていない", async () => {
     // ミドルウェアを実行
     await Admin({ store: store, redirect: redirect, app: { $api } })

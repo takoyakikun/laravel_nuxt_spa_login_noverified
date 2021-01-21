@@ -23,7 +23,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/resend", () => {
+describe(__filename, () => {
   describe("resend", () => {
     let wrapper
     beforeEach(() => {

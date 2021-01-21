@@ -32,7 +32,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/layouts/default/header", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

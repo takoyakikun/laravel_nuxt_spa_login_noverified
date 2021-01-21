@@ -20,7 +20,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/dialog/myDialog", () => {
+describe(__filename, () => {
   let wrapper
   let mountOptions
   beforeEach(() => {
@@ -31,9 +31,14 @@ describe("components/dialog/myDialog", () => {
     }
   })
 
-  test("is a Vue instance", () => {
-    wrapper = shallowMount(MyDialog, mountOptions)
-    expect(wrapper.vm).toBeTruthy()
+  describe("", () => {
+    beforeEach(() => {
+      wrapper = shallowMount(MyDialog, mountOptions)
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
   })
 
   describe("ダイアログの開閉", () => {

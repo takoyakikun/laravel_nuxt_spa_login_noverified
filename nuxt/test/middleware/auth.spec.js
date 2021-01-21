@@ -20,7 +20,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("middleware/auth", () => {
+describe(__filename, () => {
   beforeEach(() => {})
 
   test("ログインしていない", async () => {

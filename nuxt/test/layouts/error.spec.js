@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount, RouterLinkStub } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import Error from "@/layouts/error"
+import storeConfig from "~/test/storeConfig"
+import Error from "~/layouts/error"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,14 +18,14 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("layouts/error", () => {
+describe(__filename, () => {
   let wrapper
+  let mountOptions
   beforeEach(() => {
-    wrapper = shallowMount(Error, {
+    mountOptions = {
       localVue,
       store,
       vuetify,
-      sync: false,
       propsData: {
         error: {
           statusCode: 404
@@ -35,36 +35,42 @@ describe("layouts/error", () => {
         NuxtLink: RouterLinkStub,
         nuxt: true
       }
-    })
+    }
   })
 
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  test("statusCodeが404", () => {
-    // statusCodeを404にする
-    wrapper.setProps({
-      error: {
-        statusCode: 404
-      }
+  describe("", () => {
+    beforeEach(() => {
+      wrapper = shallowMount(Error, mountOptions)
     })
 
-    // "404 Not Found" を返す
-    const head = wrapper.vm.$options.head.call(wrapper.vm)
-    expect(head.title).toBe("404 Not Found")
-  })
-
-  test("statusCodeが404以外", () => {
-    // statusCodeを404以外にする
-    wrapper.setProps({
-      error: {
-        statusCode: 403
-      }
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
     })
 
-    // "An error occurred" を返す
-    const head = wrapper.vm.$options.head.call(wrapper.vm)
-    expect(head.title).toBe("An error occurred")
+    test("statusCodeが404", () => {
+      // statusCodeを404にする
+      wrapper.setProps({
+        error: {
+          statusCode: 404
+        }
+      })
+
+      // "404 Not Found" を返す
+      const head = wrapper.vm.$options.head.call(wrapper.vm)
+      expect(head.title).toBe("404 Not Found")
+    })
+
+    test("statusCodeが404以外", () => {
+      // statusCodeを404以外にする
+      wrapper.setProps({
+        error: {
+          statusCode: 403
+        }
+      })
+
+      // "An error occurred" を返す
+      const head = wrapper.vm.$options.head.call(wrapper.vm)
+      expect(head.title).toBe("An error occurred")
+    })
   })
 })

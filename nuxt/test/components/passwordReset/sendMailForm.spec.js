@@ -22,7 +22,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/passwordReset/sendMailForm", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

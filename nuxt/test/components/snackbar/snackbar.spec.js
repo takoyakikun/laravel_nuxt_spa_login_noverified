@@ -20,15 +20,20 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/snackbar/snackbar", () => {
-  describe("テスト", () => {
-    let wrapper
+describe(__filename, () => {
+  let wrapper
+  let mountOptions
+  beforeEach(() => {
+    mountOptions = {
+      localVue,
+      store,
+      vuetify
+    }
+  })
+
+  describe("", () => {
     beforeEach(() => {
-      wrapper = shallowMount(Snackbar, {
-        localVue,
-        store,
-        vuetify
-      })
+      wrapper = shallowMount(Snackbar, mountOptions)
     })
 
     test("is a Vue instance", () => {

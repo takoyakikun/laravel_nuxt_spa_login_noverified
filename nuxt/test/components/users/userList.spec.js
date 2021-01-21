@@ -27,7 +27,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/userList", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

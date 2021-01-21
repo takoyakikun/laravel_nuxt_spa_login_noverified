@@ -28,7 +28,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/dialogs/deleteDialog", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

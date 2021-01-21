@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import Form from "@/components/form/form"
+import Form from "~/components/form/form"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -12,15 +12,19 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/form/form", () => {
-  describe("テスト", () => {
-    let wrapper
+describe(__filename, () => {
+  let wrapper
+  let mountOptions
+  beforeEach(() => {
+    mountOptions = {
+      localVue,
+      vuetify
+    }
+  })
+
+  describe("", () => {
     beforeEach(() => {
-      wrapper = shallowMount(Form, {
-        localVue,
-        vuetify,
-        sync: false
-      })
+      wrapper = shallowMount(Form, mountOptions)
     })
 
     test("is a Vue instance", () => {

@@ -21,47 +21,54 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("layouts/default", () => {
+describe(__filename, () => {
   let wrapper
+  let mountOptions
   beforeEach(() => {
-    wrapper = shallowMount(Default, {
+    mountOptions = {
       localVue,
       store,
       vuetify,
       stubs: {
         nuxt: true
       }
-    })
+    }
   })
 
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  describe("サイドバー", () => {
-    test("開く", () => {
-      // 初期値はfalse
-      expect(wrapper.vm.drawer).toBeFalsy()
-
-      // サイドバーを開く
-      wrapper.vm.setDrawer(true)
-
-      // 開いたのでtrue
-      expect(wrapper.vm.drawer).toBeTruthy()
+  describe("", () => {
+    beforeEach(() => {
+      wrapper = shallowMount(Default, mountOptions)
     })
 
-    test("閉じる", () => {
-      // 初期値をtrueにする
-      wrapper.setData({
-        drawer: true
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    describe("サイドバー", () => {
+      test("開く", () => {
+        // 初期値はfalse
+        expect(wrapper.vm.drawer).toBeFalsy()
+
+        // サイドバーを開く
+        wrapper.vm.setDrawer(true)
+
+        // 開いたのでtrue
+        expect(wrapper.vm.drawer).toBeTruthy()
       })
-      expect(wrapper.vm.drawer).toBeTruthy()
 
-      // サイドバーを閉じる
-      wrapper.vm.setDrawer(false)
+      test("閉じる", () => {
+        // 初期値をtrueにする
+        wrapper.setData({
+          drawer: true
+        })
+        expect(wrapper.vm.drawer).toBeTruthy()
 
-      // 閉じたのでfalse
-      expect(wrapper.vm.drawer).toBeFalsy()
+        // サイドバーを閉じる
+        wrapper.vm.setDrawer(false)
+
+        // 閉じたのでfalse
+        expect(wrapper.vm.drawer).toBeFalsy()
+      })
     })
   })
 })

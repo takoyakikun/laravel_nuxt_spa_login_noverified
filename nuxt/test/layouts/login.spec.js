@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import Login from "@/layouts/login"
+import storeConfig from "~/test/storeConfig"
+import Login from "~/layouts/login"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,21 +18,27 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("layouts/login", () => {
+describe(__filename, () => {
   let wrapper
+  let mountOptions
   beforeEach(() => {
-    wrapper = shallowMount(Login, {
+    mountOptions = {
       localVue,
       store,
       vuetify,
-      sync: false,
       stubs: {
         nuxt: true
       }
-    })
+    }
   })
 
-  test("is a Vue instance", () => {
-    expect(wrapper.vm).toBeTruthy()
+  describe("", () => {
+    beforeEach(() => {
+      wrapper = shallowMount(Login, mountOptions)
+    })
+
+    test("is a Vue instance", () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
   })
 })

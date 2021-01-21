@@ -33,7 +33,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("pages", () => {
+describe(__filename, () => {
   describe("index", () => {
     let wrapper
     beforeEach(() => {

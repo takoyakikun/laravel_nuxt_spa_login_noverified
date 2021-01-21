@@ -26,7 +26,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/layouts/default/sideBar", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

@@ -28,7 +28,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/passwordReset/_token", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

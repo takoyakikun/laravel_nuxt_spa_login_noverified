@@ -32,7 +32,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/register/register", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {

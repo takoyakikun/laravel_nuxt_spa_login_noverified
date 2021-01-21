@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import TopScroll from "@/components/topScroll/topScroll"
+import storeConfig from "~/test/storeConfig"
+import TopScroll from "~/components/topScroll/topScroll"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,16 +18,20 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/topScroll/topScroll", () => {
-  describe("テスト", () => {
-    let wrapper
+describe(__filename, () => {
+  let wrapper
+  let mountOptions
+  beforeEach(() => {
+    mountOptions = {
+      localVue,
+      store,
+      vuetify
+    }
+  })
+
+  describe("", () => {
     beforeEach(() => {
-      wrapper = shallowMount(TopScroll, {
-        localVue,
-        store,
-        vuetify,
-        sync: false
-      })
+      wrapper = shallowMount(TopScroll, mountOptions)
     })
 
     test("is a Vue instance", () => {
@@ -63,16 +67,10 @@ describe("components/topScroll/topScroll", () => {
   })
 
   describe("ボタン動作テスト", () => {
-    let wrapper
     let topScroll
     beforeEach(() => {
       topScroll = jest.spyOn(TopScroll.methods, "topScroll")
-      wrapper = mount(TopScroll, {
-        localVue,
-        store,
-        vuetify,
-        sync: false
-      })
+      wrapper = mount(TopScroll, mountOptions)
     })
 
     test("トップスクロールボタンを押してトップへスクロールする", () => {

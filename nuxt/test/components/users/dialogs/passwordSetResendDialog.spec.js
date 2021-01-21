@@ -29,7 +29,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-describe("components/users/dialogs/passwordSetResendDialog", () => {
+describe(__filename, () => {
   describe("テスト", () => {
     let wrapper
     beforeEach(() => {
