@@ -29,9 +29,10 @@
 </template>
 
 <script>
-import PasswordSetForm from "@/components/passwordSet/passwordSetForm"
+import PasswordSetForm from "~/components/passwordSet/passwordSetForm"
 
 export default {
+  name: "PasswordSetTokenComponent",
   components: {
     PasswordSetForm
   },

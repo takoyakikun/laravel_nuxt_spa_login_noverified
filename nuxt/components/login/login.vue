@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/login/loginForm"
+import LoginForm from "~/components/login/loginForm"
 
 export default {
   name: "LoginComponent",

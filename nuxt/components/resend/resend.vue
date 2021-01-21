@@ -46,6 +46,7 @@
 
 <script>
 export default {
+  name: "ResendVerifiedMailComponent",
   data() {
     return {
       resend: false,

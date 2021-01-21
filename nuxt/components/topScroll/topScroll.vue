@@ -16,6 +16,7 @@
 <script>
 import goTo from "vuetify/es5/services/goto"
 export default {
+  name: "TopScrollComponent",
   props: {
     scrollOptions: {
       type: Object,

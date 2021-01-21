@@ -43,6 +43,7 @@ import MyDialog from "~/components/dialog/myDialog"
 import UserForm from "~/components/users/forms/userForm"
 
 export default {
+  name: "UserEditDialogComponent",
   components: {
     MyDialog,
     UserForm

@@ -41,6 +41,7 @@
 import SendMailForm from "~/components/passwordReset/sendMailForm"
 
 export default {
+  name: "PasswordResetIndexComponent",
   components: {
     SendMailForm
   },

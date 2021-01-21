@@ -26,7 +26,7 @@ import { createFormOptions } from "~/composition/form/createFormOptions"
 import Form from "~/components/form/form"
 
 export default defineComponent({
-  name: "sendMailFormComponent",
+  name: "passwordResetSendMailFormComponent",
   components: { Form },
   props: {
     value: {

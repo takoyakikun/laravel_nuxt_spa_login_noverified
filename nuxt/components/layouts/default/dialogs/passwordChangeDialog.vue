@@ -38,6 +38,7 @@ import MyDialog from "~/components/dialog/myDialog"
 import PasswordChangeForm from "~/components/users/forms/passwordChangeForm"
 
 export default {
+  name: "DefaultLayoutPasswordChangeComponent",
   components: {
     MyDialog,
     PasswordChangeForm

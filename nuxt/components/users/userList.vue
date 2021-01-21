@@ -180,13 +180,14 @@
 
 <script>
 import { mapGetters } from "vuex"
-import CreateDialog from "@/components/users/dialogs/createDialog"
-import EditDialog from "@/components/users/dialogs/editDialog"
-import DeleteDialog from "@/components/users/dialogs/deleteDialog"
-import DeleteMultiDialog from "@/components/users/dialogs/deleteMultiDialog"
-import PasswordSetResendDialog from "@/components/users/dialogs/passwordSetResendDialog"
+import CreateDialog from "~/components/users/dialogs/createDialog"
+import EditDialog from "~/components/users/dialogs/editDialog"
+import DeleteDialog from "~/components/users/dialogs/deleteDialog"
+import DeleteMultiDialog from "~/components/users/dialogs/deleteMultiDialog"
+import PasswordSetResendDialog from "~/components/users/dialogs/passwordSetResendDialog"
 
 export default {
+  name: "UserListComponent",
   components: {
     CreateDialog,
     EditDialog,

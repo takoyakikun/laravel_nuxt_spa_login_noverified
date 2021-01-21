@@ -27,6 +27,7 @@
 import MyDialog from "~/components/dialog/myDialog"
 
 export default {
+  name: "UserDeleteDialogComponent",
   components: {
     MyDialog
   },

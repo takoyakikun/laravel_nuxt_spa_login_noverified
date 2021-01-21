@@ -43,6 +43,7 @@
 import { mapGetters } from "vuex"
 
 export default {
+  name: "DefaultLayoutSideBarComponent",
   props: {
     value: {
       type: Boolean,

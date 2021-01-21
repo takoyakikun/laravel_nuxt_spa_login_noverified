@@ -44,6 +44,7 @@
 import { defineComponent, useContext, reactive } from "@nuxtjs/composition-api"
 
 export default defineComponent({
+  name: "myDialogComponent",
   props: {
     options: {
       type: Object,

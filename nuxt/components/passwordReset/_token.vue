@@ -29,9 +29,10 @@
 </template>
 
 <script>
-import PasswordResetForm from "@/components/passwordReset/passwordResetForm"
+import PasswordResetForm from "~/components/passwordReset/passwordResetForm"
 
 export default {
+  name: "PasswordResetTokenComponent",
   components: {
     PasswordResetForm
   },

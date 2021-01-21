@@ -91,10 +91,11 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex"
-import EditDialog from "@/components/layouts/default/dialogs/editDialog"
-import PasswordChangeDialog from "@/components/layouts/default/dialogs/passwordChangeDialog"
+import EditDialog from "~/components/layouts/default/dialogs/editDialog"
+import PasswordChangeDialog from "~/components/layouts/default/dialogs/passwordChangeDialog"
 
 export default {
+  name: "DefaultLayoutHeaderComponent",
   components: {
     EditDialog,
     PasswordChangeDialog

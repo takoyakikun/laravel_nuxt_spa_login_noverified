@@ -38,9 +38,10 @@
 </template>
 
 <script>
-import UserForm from "@/components/users/forms/userForm"
+import UserForm from "~/components/users/forms/userForm"
 
 export default {
+  name: "UserRegisterComponent",
   components: {
     UserForm
   },
