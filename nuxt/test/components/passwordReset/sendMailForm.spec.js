@@ -30,7 +30,6 @@ describe("components/passwordReset/sendMailForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         stubs: {
           Form
         }
@@ -50,7 +49,6 @@ describe("components/passwordReset/sendMailForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         slots: {
           default: SendMailForm
         }
@@ -66,28 +64,56 @@ describe("components/passwordReset/sendMailForm", () => {
         validation = formWrapper.vm.$refs.emailValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("max", async () => {
+      test("maxエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(256))
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().max).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("email", async () => {
+      test("emailエラー", async () => {
+        // 入力データをセット
         form.setValue("aaa")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().email).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.email).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("test@test.com")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
   })

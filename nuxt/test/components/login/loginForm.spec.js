@@ -30,7 +30,6 @@ describe("components/login/loginForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         stubs: {
           Form
         }
@@ -50,7 +49,6 @@ describe("components/login/loginForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         slots: {
           default: LoginForm
         }
@@ -66,28 +64,56 @@ describe("components/login/loginForm", () => {
         validation = formWrapper.vm.$refs.loginValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("max", async () => {
+      test("maxエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(256))
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().max).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("email", async () => {
+      test("emailエラー", async () => {
+        // 入力データをセット
         form.setValue("aaa")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().email).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.email).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("test@test.com")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -99,16 +125,30 @@ describe("components/login/loginForm", () => {
         validation = formWrapper.vm.$refs.passwordValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
   })

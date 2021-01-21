@@ -1,22 +1,20 @@
 <template>
-  <v-form @submit.prevent="submit()">
-    <slot :submit="submit" />
+  <v-form @submit.prevent="methods.submit()">
+    <slot :submit="methods.submit" />
     <button v-show="false" type="submit" />
   </v-form>
 </template>
 
 <script>
-export default {
-  props: {
-    value: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  methods: {
-    submit() {
-      this.$emit("submit")
-    }
+import { defineComponent } from "@nuxtjs/composition-api"
+import { form } from "~/composition/form/form"
+
+export default defineComponent({
+  name: "formComponent",
+  setup(props, context) {
+    const { methods } = form({ context })
+
+    return { methods }
   }
-}
+})
 </script>

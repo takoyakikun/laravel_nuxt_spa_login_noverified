@@ -29,7 +29,7 @@ describe("components/form/form", () => {
 
     test("フォーム送信", () => {
       // フォーム送信
-      wrapper.vm.submit()
+      wrapper.vm.methods.submit()
 
       // submitがemitされている
       expect(wrapper.emitted().submit).toBeTruthy()

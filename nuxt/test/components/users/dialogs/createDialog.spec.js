@@ -23,6 +23,7 @@ beforeEach(() => {
   store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
   localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
+  localVue.prototype.$nuxt.context.store = store
 })
 
 afterEach(() => {

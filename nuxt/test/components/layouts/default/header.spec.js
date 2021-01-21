@@ -25,6 +25,7 @@ beforeEach(() => {
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
+  localVue.prototype.$nuxt.context.store = store
 })
 
 afterEach(() => {
@@ -192,7 +193,6 @@ describe("components/layouts/default/header", () => {
         store,
         router,
         vuetify,
-        sync: false,
         propsData: {
           drawer: false
         }

@@ -5,7 +5,9 @@ import VueRouter from "vue-router"
 import axios from "axios"
 import api from "~/test/api"
 import setPlugin from "~/test/setPlugin"
+import * as types from "~/store/mutation-types"
 import storeConfig from "~/test/storeConfig"
+import setConfigData from "~/test/setConfigData"
 import Register from "~/components/register/register"
 
 const localVue = createLocalVue()
@@ -21,7 +23,9 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   localVue.prototype.$api = api({ $axios: axios, store })
+  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   setPlugin(localVue)
+  localVue.prototype.$nuxt.context.store = store
 })
 
 afterEach(() => {

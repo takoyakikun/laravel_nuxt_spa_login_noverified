@@ -20,6 +20,7 @@ beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
   setPlugin(localVue)
+  localVue.prototype.$nuxt.context.store = store
 })
 
 afterEach(() => {

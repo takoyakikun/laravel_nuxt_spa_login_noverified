@@ -2,60 +2,90 @@
   <Form @submit="$emit('submit')">
     <template>
       <v-container>
-        <ValidationField
+        <!-- メールアドレス -->
+        <ValidationProvider
+          v-slot="props"
           ref="emailValidation"
-          v-model="value.email"
-          :rules="{ required, max: 255, email }"
-          mode="lazy"
-          label="メールアドレス"
-          name="email"
-          type="email"
-          :form-options="{
-            prependIcon: 'mdi-email'
-          }"
-        />
+          v-bind="validationOptions.email"
+        >
+          <v-text-field
+            v-model="value.email"
+            v-bind="formOptions.email"
+            prepend-icon="mdi-account"
+            :error-messages="props.errors"
+          />
+        </ValidationProvider>
 
-        <ValidationField
+        <!-- パスワード -->
+        <ValidationProvider
+          v-slot="props"
           ref="passwordValidation"
-          v-model="value.password"
-          :rules="{ required, min: 8 }"
-          mode="lazy"
-          label="パスワード"
-          name="password"
-          type="password"
-          :form-options="{
-            prependIcon: 'mdi-lock'
-          }"
-        />
+          v-bind="validationOptions.password"
+        >
+          <v-text-field
+            v-model="value.password"
+            v-bind="formOptions.password"
+            prepend-icon="mdi-lock"
+            :error-messages="props.errors"
+          />
+        </ValidationProvider>
 
-        <ValidationField
+        <!-- パスワード(確認) -->
+        <ValidationProvider
+          v-slot="props"
           ref="passwordConfirmationValidation"
-          v-model="value.password_confirmation"
-          :rules="{ required, min: 8, confirmed: 'password' }"
-          mode="lazy"
-          label="パスワード(確認)"
-          name="password_confirmation"
-          type="password"
-          :form-options="{
-            prependIcon: 'mdi-lock'
-          }"
-        />
+          v-bind="validationOptions.password_confirmation"
+        >
+          <v-text-field
+            v-model="value.password_confirmation"
+            v-bind="formOptions.password_confirmation"
+            prepend-icon="mdi-lock"
+            :error-messages="props.errors"
+          />
+        </ValidationProvider>
       </v-container>
     </template>
   </Form>
 </template>
 
 <script>
-import Form from "@/components/form/form"
-import ValidationField from "@/components/form/validationField"
+import { defineComponent } from "@nuxtjs/composition-api"
+import { createFormOptions } from "~/composition/form/createFormOptions"
+import Form from "~/components/form/form"
 
-export default {
-  components: { Form, ValidationField },
+export default defineComponent({
+  name: "passwordResetFormComponent",
+  components: { Form },
   props: {
     value: {
       type: Object,
       default: () => ({})
     }
+  },
+  setup() {
+    const formFields = {
+      email: {
+        rules: { required: true, max: 255, email: true },
+        mode: "lazy",
+        label: "メールアドレス",
+        type: "email"
+      },
+      password: {
+        rules: { required: true, min: 8 },
+        mode: "lazy",
+        label: "パスワード",
+        type: "password"
+      },
+      password_confirmation: {
+        rules: { required: true, min: 8, confirmed: "password" },
+        mode: "lazy",
+        label: "パスワード(確認)",
+        type: "password"
+      }
+    }
+    const { formOptions, validationOptions } = createFormOptions(formFields)
+
+    return { formOptions, validationOptions }
   }
-}
+})
 </script>

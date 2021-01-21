@@ -1,52 +1,79 @@
 <template>
   <Form @submit="$emit('submit')">
     <template>
-      <ValidationField
+      <!-- Loginメールアドレス -->
+      <ValidationProvider
+        v-slot="props"
         ref="loginValidation"
-        v-model="value.email"
-        :rules="{ required, max: 255, email }"
-        mode="lazy"
-        label="Login"
-        name="login"
-        type="email"
-        :form-options="{
-          prependIcon: 'mdi-account'
-        }"
-      />
+        v-bind="validationOptions.login"
+      >
+        <v-text-field
+          v-model="value.email"
+          v-bind="formOptions.login"
+          prepend-icon="mdi-account"
+          :error-messages="props.errors"
+        />
+      </ValidationProvider>
 
-      <ValidationField
+      <!-- パスワード -->
+      <ValidationProvider
+        v-slot="props"
         ref="passwordValidation"
-        v-model="value.password"
-        :rules="{ required }"
-        mode="lazy"
-        label="Password"
-        name="password"
-        type="password"
-        :form-options="{
-          prependIcon: 'mdi-lock'
-        }"
-      />
+        v-bind="validationOptions.password"
+      >
+        <v-text-field
+          v-model="value.password"
+          v-bind="formOptions.password"
+          prepend-icon="mdi-lock"
+          :error-messages="props.errors"
+        />
+      </ValidationProvider>
 
+      <!-- ログイン状態を保存する -->
       <v-checkbox
         v-model="value.remember"
         color="primary"
-        label="ログイン状態を保存する"
+        v-bind="formOptions.remember"
       />
     </template>
   </Form>
 </template>
 
 <script>
-import Form from "@/components/form/form"
-import ValidationField from "@/components/form/validationField"
+import { defineComponent } from "@nuxtjs/composition-api"
+import { createFormOptions } from "~/composition/form/createFormOptions"
+import Form from "~/components/form/form"
 
-export default {
-  components: { Form, ValidationField },
+export default defineComponent({
+  name: "loginFormComponent",
+  components: { Form },
   props: {
     value: {
       type: Object,
       default: () => ({})
     }
+  },
+  setup() {
+    const formFields = {
+      login: {
+        rules: { required: true, max: 255, email: true },
+        mode: "lazy",
+        label: "Login",
+        type: "email"
+      },
+      password: {
+        rules: { required: true },
+        mode: "lazy",
+        label: "Password",
+        type: "password"
+      },
+      remember: {
+        label: "ログイン状態を保存する"
+      }
+    }
+    const { formOptions, validationOptions } = createFormOptions(formFields)
+
+    return { formOptions, validationOptions }
   }
-}
+})
 </script>

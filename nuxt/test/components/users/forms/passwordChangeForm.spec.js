@@ -1,11 +1,11 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import * as types from "@/store/mutation-types"
-import setConfigData from "@/test/setConfigData"
-import PasswordChangeForm from "@/components/users/forms/passwordChangeForm"
-import Form from "@/components/form/form"
+import storeConfig from "~/test/storeConfig"
+import * as types from "~/store/mutation-types"
+import setConfigData from "~/test/setConfigData"
+import PasswordChangeForm from "~/components/users/forms/passwordChangeForm"
+import Form from "~/components/form/form"
 import { ValidationObserver } from "vee-validate"
 
 const localVue = createLocalVue()
@@ -33,7 +33,6 @@ describe("components/users/passwordChangeForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         stubs: {
           Form
         }
@@ -53,7 +52,6 @@ describe("components/users/passwordChangeForm", () => {
         localVue,
         store,
         vuetify,
-        sync: false,
         slots: {
           default: PasswordChangeForm
         }
@@ -69,16 +67,30 @@ describe("components/users/passwordChangeForm", () => {
         validation = formWrapper.vm.$refs.currentPasswordValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -90,22 +102,37 @@ describe("components/users/passwordChangeForm", () => {
         validation = formWrapper.vm.$refs.passwordValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("min", async () => {
+      test("minエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(7))
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().min).toBeTruthy()
+        expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -119,32 +146,60 @@ describe("components/users/passwordChangeForm", () => {
         validation = formWrapper.vm.$refs.passwordConfirmationValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("min", async () => {
+      test("minエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(7))
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().min).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("confirmed", async () => {
+      test("confirmedエラー", async () => {
+        // 入力データをセット
         form.setValue("password")
         passwordForm.setValue("aaaaaaaa")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().confirmed).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.confirmed).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
   })

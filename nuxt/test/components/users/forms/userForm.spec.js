@@ -1,11 +1,11 @@
 import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
 import Vuetify from "vuetify"
 import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import * as types from "@/store/mutation-types"
-import setConfigData from "@/test/setConfigData"
-import UserForm from "@/components/users/forms/userForm"
-import Form from "@/components/form/form"
+import storeConfig from "~/test/storeConfig"
+import * as types from "~/store/mutation-types"
+import setConfigData from "~/test/setConfigData"
+import UserForm from "~/components/users/forms/userForm"
+import Form from "~/components/form/form"
 import { ValidationObserver } from "vee-validate"
 
 const localVue = createLocalVue()
@@ -19,6 +19,7 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  localVue.prototype.$nuxt = { context: { store } }
 })
 
 afterEach(() => {
@@ -28,81 +29,84 @@ afterEach(() => {
 describe("components/users/userForm", () => {
   describe("テスト", () => {
     let wrapper
-    beforeEach(async () => {
-      wrapper = shallowMount(UserForm, {
+    let mountOptions
+    beforeEach(() => {
+      mountOptions = {
         localVue,
         store,
         vuetify,
-        sync: false,
         stubs: {
           Form
         }
-      })
+      }
     })
 
     test("is a Vue instance", () => {
+      wrapper = shallowMount(UserForm, mountOptions)
+
       expect(wrapper.vm).toBeTruthy()
     })
 
     describe("権限ごとに選択できる権限を変える", () => {
       test("開発者権限", () => {
         // 選択オプションデータをセット
-        wrapper.vm.$store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [
-          1,
-          2,
-          3
-        ])
+        store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
+        wrapper = shallowMount(UserForm, mountOptions)
 
         // 全ての権限を返す
-        expect(wrapper.vm.role.map(item => item.value)).toEqual([1, 2, 3])
+        expect(wrapper.vm.state.role.map(item => item.value)).toEqual([1, 2, 3])
       })
 
       test("それ以外", () => {
         // 選択オプションデータをセット
-        wrapper.vm.$store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [
-          2,
-          3
-        ])
+        store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [2, 3])
+        wrapper = shallowMount(UserForm, mountOptions)
 
         // 管理者以外を返す
-        expect(wrapper.vm.role.map(item => item.value)).toEqual([2, 3])
+        expect(wrapper.vm.state.role.map(item => item.value)).toEqual([2, 3])
       })
     })
   })
 
   describe("項目表示テスト", () => {
     let wrapper
+    let mountOptions
     beforeEach(() => {
-      wrapper = mount(UserForm, {
+      mountOptions = {
         localVue,
         store,
         vuetify,
-        sync: false,
         propsData: {
           drawer: false
         }
-      })
+      }
     })
 
-    test("自ユーザー", async () => {
+    test("自ユーザー", () => {
       // 自ユーザー設定
-      await wrapper.setProps({ myuser: true })
+      mountOptions.propsData = { myuser: true }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // アクセス権限フォーム項目
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeFalsy()
     })
 
-    test("自ユーザー以外", async () => {
-      // 自ユーザー設定
-      await wrapper.setProps({ myuser: false })
+    test("自ユーザー以外", () => {
+      // 自ユーザー以外を設定
+      mountOptions.propsData = { myuser: false }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // アクセス権限フォーム項目
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeTruthy()
     })
 
-    test("フォームタイプ無し", async () => {
-      // createフォームタイプ設定
-      await wrapper.setProps({ formType: "" })
+    test("フォームタイプ無し", () => {
+      // フォームタイプを設定しない
+      mountOptions.propsData = { formType: "" }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()
@@ -113,9 +117,11 @@ describe("components/users/userForm", () => {
       ).toBeFalsy()
     })
 
-    test("createフォームタイプ", async () => {
+    test("createフォームタイプ", () => {
       // createフォームタイプ設定
-      await wrapper.setProps({ formType: "create" })
+      mountOptions.propsData = { formType: "create" }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeTruthy()
@@ -126,9 +132,11 @@ describe("components/users/userForm", () => {
       ).toBeTruthy()
     })
 
-    test("usersCreateフォームタイプ", async () => {
-      // createフォームタイプ設定
-      await wrapper.setProps({ formType: "usersCreate" })
+    test("usersCreateフォームタイプ", () => {
+      // usersCreateフォームタイプ設定
+      mountOptions.propsData = { formType: "usersCreate" }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()
@@ -141,7 +149,9 @@ describe("components/users/userForm", () => {
 
     test("editフォームタイプ", async () => {
       // createフォームタイプ設定
-      await wrapper.setProps({ formType: "edit" })
+      mountOptions.propsData = { formType: "edit" }
+
+      wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()
@@ -155,17 +165,19 @@ describe("components/users/userForm", () => {
 
   describe("フォームバリデーションテスト", () => {
     let wrapper
+    let mountOptions
     let formWrapper
     beforeEach(() => {
-      wrapper = mount(ValidationObserver, {
+      mountOptions = {
         localVue,
         store,
         vuetify,
-        sync: false,
         slots: {
           default: UserForm
         }
-      })
+      }
+      wrapper = mount(ValidationObserver, mountOptions)
+
       formWrapper = wrapper.findComponent(UserForm)
     })
 
@@ -177,22 +189,43 @@ describe("components/users/userForm", () => {
         validation = formWrapper.vm.$refs.nameValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("max", async () => {
+      test("maxエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(256))
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().max).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("テスト")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -204,28 +237,56 @@ describe("components/users/userForm", () => {
         validation = formWrapper.vm.$refs.emailValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("max", async () => {
+      test("maxエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(256))
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().max).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("email", async () => {
+      test("emailエラー", async () => {
+        // 入力データをセット
         form.setValue("aaa")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().email).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.email).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("test@test.com")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -237,22 +298,43 @@ describe("components/users/userForm", () => {
         validation = formWrapper.vm.$refs.passwordValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("min", async () => {
+      test("minエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(7))
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().min).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
 
@@ -266,32 +348,60 @@ describe("components/users/userForm", () => {
         validation = formWrapper.vm.$refs.passwordConfirmationValidation
       })
 
-      test("required", async () => {
+      test("requiredエラー", async () => {
+        // 入力データをセット
         form.setValue("")
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().required).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("min", async () => {
+      test("minエラー", async () => {
+        // 入力データをセット
         form.setValue("a".repeat(7))
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().min).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("confirmed", async () => {
+      test("confirmedエラー", async () => {
+        // 入力データをセット
         form.setValue("password")
         passwordForm.setValue("aaaaaaaa")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(validation.getFailedRules().confirmed).toBeTruthy()
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(validation.failedRules.confirmed).toBeTruthy()
       })
 
-      test("valid", async () => {
+      test("成功", async () => {
+        // 入力データをセット
         form.setValue("password")
         passwordForm.setValue("password")
+
+        // バリデーションを実行
         await wrapper.vm.validate()
-        expect(Object.keys(validation.getFailedRules()).length).toBe(0)
+        jest.runAllTimers()
+        await wrapper.vm.$nextTick()
+
+        // 期待した結果になっているか
+        expect(Object.keys(validation.failedRules).length).toBe(0)
       })
     })
   })

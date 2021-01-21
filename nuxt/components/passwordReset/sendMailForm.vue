@@ -2,34 +2,50 @@
   <Form @submit="$emit('submit')">
     <template>
       <v-container>
-        <ValidationField
+        <!-- メールアドレス -->
+        <ValidationProvider
+          v-slot="props"
           ref="emailValidation"
-          v-model="value.email"
-          :rules="{ required, max: 255, email }"
-          mode="lazy"
-          label="メールアドレス"
-          name="email"
-          type="email"
-          :form-options="{
-            prependIcon: 'mdi-email'
-          }"
-        />
+          v-bind="validationOptions.email"
+        >
+          <v-text-field
+            v-model="value.email"
+            v-bind="formOptions.email"
+            prepend-icon="mdi-account"
+            :error-messages="props.errors"
+          />
+        </ValidationProvider>
       </v-container>
     </template>
   </Form>
 </template>
 
 <script>
-import Form from "@/components/form/form"
-import ValidationField from "@/components/form/validationField"
+import { defineComponent } from "@nuxtjs/composition-api"
+import { createFormOptions } from "~/composition/form/createFormOptions"
+import Form from "~/components/form/form"
 
-export default {
-  components: { Form, ValidationField },
+export default defineComponent({
+  name: "sendMailFormComponent",
+  components: { Form },
   props: {
     value: {
       type: Object,
       default: () => ({})
     }
+  },
+  setup() {
+    const formFields = {
+      email: {
+        rules: { required: true, max: 255, email: true },
+        mode: "lazy",
+        label: "メールアドレス",
+        type: "email"
+      }
+    }
+    const { formOptions, validationOptions } = createFormOptions(formFields)
+
+    return { formOptions, validationOptions }
   }
-}
+})
 </script>

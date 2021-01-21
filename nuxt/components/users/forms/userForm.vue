@@ -4,74 +4,84 @@
       <v-container>
         <v-row dense>
           <v-col>
-            <ValidationField
+            <!-- ユーザー名 -->
+            <ValidationProvider
+              v-slot="props"
               ref="nameValidation"
-              v-model="value.name"
-              :rules="{ required, max: 255 }"
-              mode="lazy"
-              name="name"
-              label="ユーザー名"
-              type="text"
-            />
+              v-bind="validationOptions.name"
+            >
+              <v-text-field
+                v-model="value.name"
+                v-bind="formOptions.name"
+                :error-messages="props.errors"
+              />
+            </ValidationProvider>
           </v-col>
         </v-row>
 
         <v-row dense>
           <v-col>
-            <ValidationField
+            <!-- メールアドレス -->
+            <ValidationProvider
+              v-slot="props"
               ref="emailValidation"
-              v-model="value.email"
-              :rules="{ required, max: 255, email, unique: userUnique }"
-              mode="lazy"
-              name="email"
-              label="メールアドレス"
-              type="email"
-              @change="setUserUnique(value.email)"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row v-if="!myuser" dense data-test="roleForm">
-          <v-col>
-            <header>アクセス権限</header>
-            <ValidationField
-              ref="roleValidation"
-              :rules="{ required }"
-              mode="lazy"
-              name="role"
-              label="アクセス権限"
+              v-bind="validationOptions.email"
             >
-              <template v-slot="{ options, errors }">
-                <v-radio-group
-                  v-model="value.role"
-                  v-bind="options"
-                  row
-                  :error-messages="errors"
-                >
-                  <v-radio
-                    v-for="item in role"
-                    :key="item.value"
-                    :label="item.text"
-                    :value="item.value"
-                    color="primary"
-                  />
-                </v-radio-group>
-              </template>
-            </ValidationField>
+              <v-text-field
+                v-model="value.email"
+                v-bind="formOptions.email"
+                :error-messages="props.errors"
+                @change="$api.users.getUserUnique(value.email)"
+              />
+            </ValidationProvider>
           </v-col>
         </v-row>
 
-        <v-row v-if="formType === 'create'" dense data-test="passwordForm">
+        <v-row v-if="!props.myuser" dense data-test="roleForm">
           <v-col>
-            <ValidationField
+            <!-- アクセス権限 -->
+            <header>アクセス権限</header>
+            <ValidationProvider
+              v-slot="props"
+              ref="roleValidation"
+              v-bind="validationOptions.role"
+            >
+              <v-radio-group
+                v-model="value.role"
+                v-bind="formOptions.role"
+                row
+                :error-messages="props.errors"
+              >
+                <v-radio
+                  v-for="item in state.role"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
+                  color="primary"
+                />
+              </v-radio-group>
+            </ValidationProvider>
+          </v-col>
+        </v-row>
+
+        <v-row
+          v-if="props.formType === 'create'"
+          dense
+          data-test="passwordForm"
+        >
+          <v-col>
+            <!-- パスワード -->
+            <ValidationProvider
+              v-slot="props"
               ref="passwordValidation"
-              v-model="value.password"
-              :rules="{ required, min: 8 }"
-              mode="lazy"
-              label="パスワード"
-              name="password"
-              type="password"
-            />
+              v-bind="validationOptions.password"
+            >
+              <v-text-field
+                v-model="value.password"
+                v-bind="formOptions.password"
+                :error-messages="props.errors"
+              />
+            </ValidationProvider>
           </v-col>
         </v-row>
 
@@ -81,15 +91,18 @@
           data-test="passwordConfirmationForm"
         >
           <v-col>
-            <ValidationField
+            <!-- パスワード(確認) -->
+            <ValidationProvider
+              v-slot="props"
               ref="passwordConfirmationValidation"
-              v-model="value.password_confirmation"
-              :rules="{ required, min: 8, confirmed: 'password' }"
-              mode="lazy"
-              label="パスワード(確認)"
-              name="password_confirmation"
-              type="password"
-            />
+              v-bind="validationOptions.password_confirmation"
+            >
+              <v-text-field
+                v-model="value.password_confirmation"
+                v-bind="formOptions.password_confirmation"
+                :error-messages="props.errors"
+              />
+            </ValidationProvider>
           </v-col>
         </v-row>
       </v-container>
@@ -98,12 +111,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
-import Form from "@/components/form/form"
-import ValidationField from "@/components/form/validationField"
+import { mapGetters } from "vuex"
+import {
+  defineComponent,
+  useContext,
+  reactive,
+  computed
+} from "@nuxtjs/composition-api"
+import { createFormOptions } from "~/composition/form/createFormOptions"
+import Form from "~/components/form/form"
 
-export default {
-  components: { Form, ValidationField },
+export default defineComponent({
+  name: "userFormComponent",
+  components: { Form },
   props: {
     value: {
       type: Object,
@@ -118,23 +138,55 @@ export default {
       default: false
     }
   },
-  computed: {
-    ...mapGetters({
-      config: "config/config",
-      permission: "auth/permission",
-      roleOptions: "users/roleOptions",
-      userUnique: "users/userUnique"
-    }),
 
-    // 権限ごとに選択できる権限を変える
-    role() {
-      return this.config.roleOptions.filter(item =>
-        this.roleOptions.includes(item.value)
-      )
+  setup(props) {
+    const { store } = useContext()
+    const state = {
+      config: computed(() => store.getters["config/config"]).value,
+      roleOptions: computed(() => store.getters["users/roleOptions"]).value,
+      userUnique: computed(() => store.getters["users/userUnique"]).value
     }
-  },
-  methods: {
-    ...mapActions("users", ["setUserUnique"])
+    state.role = computed(() => {
+      return state.config.roleOptions.filter(item =>
+        state.roleOptions.includes(item.value)
+      )
+    }).value
+
+    const userUnique = state.userUnique
+
+    const formFields = {
+      name: {
+        rules: { required: true, max: 255 },
+        mode: "lazy",
+        label: "ユーザー名",
+        type: "text"
+      },
+      email: {
+        rules: { required: true, max: 255, email: true, unique: userUnique },
+        mode: "lazy",
+        label: "メールアドレス",
+        type: "email"
+      },
+      role: {
+        rules: { required: true },
+        mode: "lazy"
+      },
+      password: {
+        rules: { required: true, min: 8 },
+        mode: "lazy",
+        label: "パスワード",
+        type: "password"
+      },
+      password_confirmation: {
+        rules: { required: true, min: 8, confirmed: "password" },
+        mode: "lazy",
+        label: "パスワード(確認)",
+        type: "password"
+      }
+    }
+    const { formOptions, validationOptions } = createFormOptions(formFields)
+
+    return { props, state, formOptions, validationOptions }
   }
-}
+})
 </script>
