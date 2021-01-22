@@ -5,7 +5,7 @@ export default async function({ store, redirect, app }) {
   }
 
   // アクセス権限を取得してストアにセットする
-  await store.dispatch("auth/checkAuth", ["admin-higher"])
+  await app.$api.auth.checkAuth(["admin-higher"])
 
   // 管理者以上でない場合はTopページへリダイレクト
   if (!store.getters["auth/permission"]("admin-higher")) {

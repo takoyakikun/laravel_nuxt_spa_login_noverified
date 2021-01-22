@@ -62,6 +62,7 @@ describe(__filename, () => {
 
       // ミドルウェアを実行
       await Admin({ store: store, redirect: redirect, app: { $api } })
+      jest.runAllTimers()
 
       // ログインしているのでtrue
       expect(store.getters["auth/userExists"]).toBeTruthy()
@@ -92,6 +93,7 @@ describe(__filename, () => {
 
       // ミドルウェアを実行
       await Admin({ store: store, redirect: redirect, app: { $api } })
+      jest.runAllTimers()
 
       // ログインしているのでtrue
       expect(store.getters["auth/userExists"]).toBeTruthy()
