@@ -19,7 +19,7 @@ export default {
       },
       { hid: "robots", name: "robots", content: "noindex" }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    //link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   /*
    ** Customize the progress-bar color
