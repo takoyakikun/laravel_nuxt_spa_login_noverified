@@ -3,6 +3,9 @@ require("dotenv").config()
 
 export default {
   mode: "spa",
+  router: {
+    base: process.env.ROUTER_BASE
+  },
   /*
    ** Headers of the page
    */
@@ -19,7 +22,8 @@ export default {
       },
       { hid: "robots", name: "robots", content: "noindex" }
     ],
-    //link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    //link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    href: "router.base"
   },
   /*
    ** Customize the progress-bar color
