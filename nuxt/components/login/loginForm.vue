@@ -57,13 +57,13 @@ export default defineComponent({
     const formFields = {
       login: {
         rules: { required: true, max: 255, email: true },
-        mode: "lazy",
+        mode: "eager",
         label: "Login",
         type: "email"
       },
       password: {
         rules: { required: true },
-        mode: "lazy",
+        mode: "eager",
         label: "Password",
         type: "password"
       },
