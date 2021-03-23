@@ -38,6 +38,7 @@ export default {
    */
   plugins: [
     "~/plugins/api/setup",
+    '~/plugins/filters',
     "~/plugins/snackbar",
     "~/plugins/dialog",
     "~/plugins/nuxt-client-init",
