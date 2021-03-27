@@ -10,6 +10,6 @@ document.body.append(app)
 
 Vue.use(Vuex)
 
-require("@/plugins/vee-validate")
+require("~/plugins/vee-validate/vee-validate")
 
 registerRequireContextHook()
