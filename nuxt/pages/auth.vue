@@ -10,6 +10,7 @@
 import { mapGetters } from "vuex"
 
 export default {
+  name: "AuthPage",
   middleware: "auth",
   layout: "default",
   computed: {
@@ -17,6 +18,11 @@ export default {
       user: "auth/user",
       userExists: "auth/userExists"
     })
+  },
+  head() {
+    return {
+      title: "ログイン済みページ"
+    }
   }
 }
 </script>

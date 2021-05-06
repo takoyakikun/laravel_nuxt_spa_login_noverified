@@ -10,10 +10,16 @@
 import Login from "~/components/login/login"
 
 export default {
+  name: "LoginPage",
   middleware: "guest",
   layout: "login",
   components: {
     Login
+  },
+  head() {
+    return {
+      title: "ログイン"
+    }
   }
 }
 </script>

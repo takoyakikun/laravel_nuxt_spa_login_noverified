@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import UserList from "@/components/users/userList"
+import UserList from "~/components/users/userList"
 
 export default {
+  name: "UserPage",
   middleware: "admin",
   layout: "default",
   components: {
@@ -19,6 +20,11 @@ export default {
   created() {
     this.$api.users.getList()
     this.$api.users.getRoleOptions()
+  },
+  head() {
+    return {
+      title: "ログインユーザー管理"
+    }
   }
 }
 </script>

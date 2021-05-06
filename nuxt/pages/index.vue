@@ -8,6 +8,12 @@
 
 <script>
 export default {
-  layout: "default"
+  name: "IndexPage",
+  layout: "default",
+  head() {
+    return {
+      title: "Topページ"
+    }
+  }
 }
 </script>

@@ -10,10 +10,16 @@
 import PasswordReset from "~/components/PasswordReset/_token"
 
 export default {
+  name: "PasswordResetTokenPage",
   middleware: "guest",
   layout: "login",
   components: {
     PasswordReset
+  },
+  head() {
+    return {
+      title: "パスワードリセット"
+    }
   }
 }
 </script>

@@ -7,13 +7,19 @@
 </template>
 
 <script>
-import PasswordSet from "@/components/passwordSet/_token"
+import PasswordSet from "~/components/passwordSet/_token"
 
 export default {
+  name: "PasswordSetTokenPage",
   middleware: "guest",
   layout: "login",
   components: {
     PasswordSet
+  },
+  head() {
+    return {
+      title: "パスワード登録"
+    }
   }
 }
 </script>

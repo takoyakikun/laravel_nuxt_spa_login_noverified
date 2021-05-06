@@ -10,10 +10,16 @@
 import Register from "~/components/register/register"
 
 export default {
+  name: "RegisterPage",
   middleware: "guest",
   layout: "login",
   components: {
     Register
+  },
+  head() {
+    return {
+      title: "新規ユーザー登録"
+    }
   }
 }
 </script>

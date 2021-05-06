@@ -10,10 +10,16 @@
 import PasswordReset from "~/components/PasswordReset/index"
 
 export default {
+  name: "PasswordResetIndexPage",
   middleware: "guest",
   layout: "login",
   components: {
     PasswordReset
+  },
+  head() {
+    return {
+      title: "パスワードリセット"
+    }
   }
 }
 </script>
