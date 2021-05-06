@@ -46,7 +46,7 @@ export default {
     "~/plugins/snackbar",
     "~/plugins/dialog",
     "~/plugins/nuxt-client-init",
-    "~/plugins/vee-validate"
+    "~/plugins/vee-validate/vee-validate"
   ],
 
   /*
