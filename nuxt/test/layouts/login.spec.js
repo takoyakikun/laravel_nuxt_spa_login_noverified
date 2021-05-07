@@ -1,8 +1,8 @@
-import { createLocalVue, shallowMount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import storeConfig from "~/test/storeConfig"
-import Login from "~/layouts/login"
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import storeConfig from '~/test/storeConfig'
+import Login from '~/layouts/login'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -32,12 +32,12 @@ describe(__filename, () => {
     }
   })
 
-  describe("", () => {
+  describe('', () => {
     beforeEach(() => {
       wrapper = shallowMount(Login, mountOptions)
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })

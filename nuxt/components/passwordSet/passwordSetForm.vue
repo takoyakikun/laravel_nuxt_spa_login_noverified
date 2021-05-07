@@ -49,12 +49,12 @@
 </template>
 
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
-import { createFormOptions } from "~/composition/form/createFormOptions"
-import Form from "~/components/form/form"
+import { defineComponent } from '@nuxtjs/composition-api'
+import { createFormOptions } from '~/composition/form/createFormOptions'
+import Form from '~/components/form/form'
 
 export default defineComponent({
-  name: "passwordSetFormComponent",
+  name: 'passwordSetFormComponent',
   components: { Form },
   props: {
     value: {
@@ -66,21 +66,21 @@ export default defineComponent({
     const formFields = {
       email: {
         rules: { required: true, max: 255, email: true },
-        mode: "lazy",
-        label: "メールアドレス",
-        type: "email"
+        mode: 'lazy',
+        label: 'メールアドレス',
+        type: 'email'
       },
       password: {
         rules: { required: true, min: 8 },
-        mode: "lazy",
-        label: "パスワード",
-        type: "password"
+        mode: 'lazy',
+        label: 'パスワード',
+        type: 'password'
       },
       password_confirmation: {
-        rules: { required: true, min: 8, confirmed: "password" },
-        mode: "lazy",
-        label: "パスワード(確認)",
-        type: "password"
+        rules: { required: true, min: 8, confirmed: 'password' },
+        mode: 'lazy',
+        label: 'パスワード(確認)',
+        type: 'password'
       }
     }
     const { formOptions, validationOptions } = createFormOptions(formFields)

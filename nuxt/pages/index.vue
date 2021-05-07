@@ -8,11 +8,11 @@
 
 <script>
 export default {
-  name: "IndexPage",
-  layout: "default",
+  name: 'IndexPage',
+  layout: 'default',
   head() {
     return {
-      title: "Topページ"
+      title: 'Topページ'
     }
   }
 }

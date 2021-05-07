@@ -1,6 +1,6 @@
 export default {
   value: false,
-  text: "",
+  text: '',
   options: {},
 
   // snackbarを開く

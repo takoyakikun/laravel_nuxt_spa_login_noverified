@@ -1,8 +1,8 @@
-import colors from "vuetify/es5/util/colors"
-require("dotenv").config()
+import colors from 'vuetify/es5/util/colors'
+require('dotenv').config()
 
 export default {
-  mode: "spa",
+  mode: 'spa',
   router: {
     base: process.env.ROUTER_BASE
   },
@@ -11,56 +11,56 @@ export default {
    */
   head: {
     titleTemplate: titleChunk => {
-      const siteTitle = "ログインテンプレート"
+      const siteTitle = 'ログインテンプレート'
       return titleChunk ? `${siteTitle} - ${titleChunk}` : siteTitle
     },
-    title: "",
+    title: '',
     meta: [
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
-        hid: "description",
-        name: "description",
-        content: process.env.npm_package_description || ""
+        hid: 'description',
+        name: 'description',
+        content: process.env.npm_package_description || ''
       },
-      { hid: "robots", name: "robots", content: "noindex" }
+      { hid: 'robots', name: 'robots', content: 'noindex' }
     ],
     //link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-    href: "router.base"
+    href: 'router.base'
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: "#fff" },
+  loading: { color: '#fff' },
   /*
    ** Global CSS
    */
-  css: ["~/assets/scss/app.scss"],
+  css: ['~/assets/scss/app.scss'],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "~/plugins/api/setup",
-    "~/plugins/filters",
-    "~/plugins/vuetify",
-    "~/plugins/snackbar",
-    "~/plugins/dialog",
-    "~/plugins/nuxt-client-init",
-    "~/plugins/vee-validate/vee-validate"
+    '~/plugins/api/setup',
+    '~/plugins/filters',
+    '~/plugins/vuetify',
+    '~/plugins/snackbar',
+    '~/plugins/dialog',
+    '~/plugins/nuxt-client-init',
+    '~/plugins/vee-validate/vee-validate'
   ],
 
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/vuetify", "@nuxtjs/composition-api"],
+  buildModules: ['@nuxtjs/vuetify', '@nuxtjs/composition-api'],
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios",
+    '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    "@nuxtjs/dotenv"
+    '@nuxtjs/dotenv'
   ],
   /*
    ** Axios module configuration
@@ -75,7 +75,7 @@ export default {
    ** https://github.com/nuxt-community/vuetify-module
    */
   vuetify: {
-    customVariables: ["@/assets/scss/variables.scss"],
+    customVariables: ['@/assets/scss/variables.scss'],
     theme: {
       dark: false,
       themes: {
@@ -101,15 +101,15 @@ export default {
     extend(config, ctx) {
       if (!ctx.isDev) {
         const vueLoader = config.module.rules.find(
-          rule => rule.loader === "vue-loader"
+          rule => rule.loader === 'vue-loader'
         )
         vueLoader.options.compilerModules = [
           {
             preTransformNode(astEl) {
               const { attrsMap, attrsList } = astEl
-              if (attrsMap["data-test"]) {
-                delete attrsMap["data-test"]
-                const index = attrsList.findIndex(x => x.name == "data-test")
+              if (attrsMap['data-test']) {
+                delete attrsMap['data-test']
+                const index = attrsList.findIndex(x => x.name == 'data-test')
                 attrsList.splice(index, 1)
               }
               return astEl
@@ -119,23 +119,23 @@ export default {
       }
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
-          enforce: "pre",
+          enforce: 'pre',
           test: /\.(js|vue)$/,
-          loader: "eslint-loader",
+          loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
       }
     },
-    transpile: ["vee-validate/dist/rules"]
+    transpile: ['vee-validate/dist/rules']
   },
   generate: {
-    dir: "../public/dist",
+    dir: '../public/dist',
     fallback: true,
     interval: 2000
   },
   vue: {
     config: {
-      devtools: process.env.NODE_ENV !== "production"
+      devtools: process.env.NODE_ENV !== 'production'
     }
   }
 }

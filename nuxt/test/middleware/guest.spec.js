@@ -1,9 +1,9 @@
-import Vuex from "vuex"
-import storeConfig from "@/test/storeConfig"
-import Guest from "@/middleware/guest"
+import Vuex from 'vuex'
+import storeConfig from '@/test/storeConfig'
+import Guest from '@/middleware/guest'
 
 jest.useFakeTimers()
-jest.mock("axios")
+jest.mock('axios')
 
 let store
 let redirect
@@ -17,22 +17,22 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  test("ログインしていない", async () => {
+  test('ログインしていない', async () => {
     // ミドルウェアを実行
     await Guest({ store: store, redirect: redirect })
 
     // ログインしていないのでfalse
-    expect(store.getters["auth/userExists"]).toBeFalsy()
+    expect(store.getters['auth/userExists']).toBeFalsy()
 
     // リダイレクトしない
     expect(redirect).not.toHaveBeenCalled()
   })
 
-  test("ログインしている", async () => {
+  test('ログインしている', async () => {
     // ログインユーザーデータをストアに追加
     store.state.auth.user = {
-      name: "テスト",
-      email: "test@test.com",
+      name: 'テスト',
+      email: 'test@test.com',
       role: 10
     }
 
@@ -41,10 +41,10 @@ describe(__filename, () => {
     jest.runAllTimers()
 
     // ログインしているのでtrue
-    expect(store.getters["auth/userExists"]).toBeTruthy()
+    expect(store.getters['auth/userExists']).toBeTruthy()
 
     // Topページへリダイレクト
     expect(redirect).toHaveBeenCalled()
-    expect(redirect).toHaveBeenCalledWith("/")
+    expect(redirect).toHaveBeenCalledWith('/')
   })
 })

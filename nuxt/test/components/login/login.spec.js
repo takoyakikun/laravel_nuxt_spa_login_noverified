@@ -3,15 +3,15 @@ import {
   shallowMount,
   mount,
   RouterLinkStub
-} from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import VueRouter from "vue-router"
-import axios from "axios"
-import api from "~/test/api"
-import setPlugin from "~/test/setPlugin"
-import storeConfig from "~/test/storeConfig"
-import Login from "~/components/login/login"
+} from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+import axios from 'axios'
+import api from '~/test/api'
+import setPlugin from '~/test/setPlugin'
+import storeConfig from '~/test/storeConfig'
+import Login from '~/components/login/login'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -34,7 +34,7 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe("テスト", () => {
+  describe('テスト', () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -49,12 +49,12 @@ describe(__filename, () => {
       })
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })
 
-  describe("フォーム動作テスト", () => {
+  describe('フォーム動作テスト', () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -69,16 +69,16 @@ describe(__filename, () => {
       })
     })
 
-    describe("ログイン", () => {
+    describe('ログイン', () => {
       let loginFormValidation
       let axiosPost
       beforeEach(() => {
         // spyOn
-        loginFormValidation = jest.spyOn(wrapper.vm.$refs.loginForm, "validate")
-        axiosPost = jest.spyOn(axios, "post")
+        loginFormValidation = jest.spyOn(wrapper.vm.$refs.loginForm, 'validate')
+        axiosPost = jest.spyOn(axios, 'post')
       })
 
-      describe("失敗", () => {
+      describe('失敗', () => {
         beforeEach(() => {
           // エラーレスポンス
           const response = {
@@ -90,7 +90,7 @@ describe(__filename, () => {
           })
         })
 
-        test("フロント側エラー", async () => {
+        test('フロント側エラー', async () => {
           // ログイン処理
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -108,10 +108,10 @@ describe(__filename, () => {
           expect(axiosPost).not.toHaveBeenCalled()
         })
 
-        test("API側エラー", async () => {
+        test('API側エラー', async () => {
           // フォームを入力してログイン処理
-          wrapper.find("input[name='login']").setValue("test@test.com")
-          wrapper.find("input[name='password']").setValue("password")
+          wrapper.find("input[name='login']").setValue('test@test.com')
+          wrapper.find("input[name='password']").setValue('password')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -121,20 +121,20 @@ describe(__filename, () => {
 
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
-          expect(axiosPost).toHaveBeenCalledWith("/api/login", {
-            email: "test@test.com",
-            password: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/login', {
+            email: 'test@test.com',
+            password: 'password'
           })
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$snackbar.text).toBe("認証に失敗しました。")
-          expect(wrapper.vm.$snackbar.options.color).toBe("error")
+          expect(wrapper.vm.$snackbar.text).toBe('認証に失敗しました。')
+          expect(wrapper.vm.$snackbar.options.color).toBe('error')
         })
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // spyOn
-        const routerPush = jest.spyOn(wrapper.vm.$router, "push")
+        const routerPush = jest.spyOn(wrapper.vm.$router, 'push')
 
         // 正常なレスポンス
         const response = {
@@ -146,8 +146,8 @@ describe(__filename, () => {
         })
 
         // フォームを入力してログイン処理
-        wrapper.find("input[name='login']").setValue("test@test.com")
-        wrapper.find("input[name='password']").setValue("password")
+        wrapper.find("input[name='login']").setValue('test@test.com')
+        wrapper.find("input[name='password']").setValue('password')
         await wrapper.vm.submit()
         jest.runAllTimers()
         await wrapper.vm.$nextTick()
@@ -157,17 +157,17 @@ describe(__filename, () => {
 
         // API送信をした
         expect(axiosPost).toHaveBeenCalled()
-        expect(axiosPost).toHaveBeenCalledWith("/api/login", {
-          email: "test@test.com",
-          password: "password"
+        expect(axiosPost).toHaveBeenCalledWith('/api/login', {
+          email: 'test@test.com',
+          password: 'password'
         })
 
         // Topへリダイレクトした
         expect(routerPush).toHaveBeenCalled()
-        expect(routerPush).toHaveBeenCalledWith("/")
+        expect(routerPush).toHaveBeenCalledWith('/')
       })
 
-      test("loading中はログイン処理不可", async () => {
+      test('loading中はログイン処理不可', async () => {
         // loading中の設定
         wrapper.setData({
           loading: true
@@ -184,11 +184,11 @@ describe(__filename, () => {
     })
   })
 
-  describe("ボタン動作テスト", () => {
+  describe('ボタン動作テスト', () => {
     let wrapper
     let submit
     beforeEach(() => {
-      submit = jest.spyOn(Login.methods, "submit").mockReturnValue(true)
+      submit = jest.spyOn(Login.methods, 'submit').mockReturnValue(true)
       wrapper = mount(Login, {
         localVue,
         store,
@@ -200,16 +200,16 @@ describe(__filename, () => {
       })
     })
 
-    test("ログインボタン", () => {
+    test('ログインボタン', () => {
       // ボタンをクリック
-      wrapper.find("[data-test='loginButton']").trigger("click")
+      wrapper.find("[data-test='loginButton']").trigger('click')
 
       // メソッドが実行されたか
       expect(submit).toHaveBeenCalled()
     })
   })
 
-  describe("リンク動作テスト", () => {
+  describe('リンク動作テスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = mount(Login, {
@@ -223,15 +223,15 @@ describe(__filename, () => {
       })
     })
 
-    test("トップボタンリンク", () => {
+    test('トップボタンリンク', () => {
       // 正しいリンク先が設定されているか
-      expect(wrapper.find("[data-test='topButtonLink']").props().to).toBe("/")
+      expect(wrapper.find("[data-test='topButtonLink']").props().to).toBe('/')
     })
 
-    test("パスワードリセットリンク", () => {
+    test('パスワードリセットリンク', () => {
       // 正しいリンク先が設定されているか
       expect(wrapper.find("[data-test='passwordResetLink']").props().to).toBe(
-        "passwordReset"
+        'passwordReset'
       )
     })
   })

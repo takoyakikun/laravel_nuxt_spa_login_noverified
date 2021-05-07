@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
-import { form } from "~/composition/form/form"
+import { defineComponent } from '@nuxtjs/composition-api'
+import { form } from '~/composition/form/form'
 
 export default defineComponent({
-  name: "formComponent",
+  name: 'formComponent',
   setup(props, context) {
     const { methods } = form({ context })
 

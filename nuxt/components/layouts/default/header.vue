@@ -90,12 +90,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
-import EditDialog from "~/components/layouts/default/dialogs/editDialog"
-import PasswordChangeDialog from "~/components/layouts/default/dialogs/passwordChangeDialog"
+import { mapGetters, mapActions } from 'vuex'
+import EditDialog from '~/components/layouts/default/dialogs/editDialog'
+import PasswordChangeDialog from '~/components/layouts/default/dialogs/passwordChangeDialog'
 
 export default {
-  name: "DefaultLayoutHeaderComponent",
+  name: 'DefaultLayoutHeaderComponent',
   components: {
     EditDialog,
     PasswordChangeDialog
@@ -112,7 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", ["user", "userExists"])
+    ...mapGetters('auth', ['user', 'userExists'])
   },
   watch: {
     drawer: {
@@ -126,14 +126,14 @@ export default {
     // サイドバーの表示切り替え
     toggleDrawer() {
       this.dataDrawer = !this.dataDrawer
-      this.$emit("drawer", this.dataDrawer)
+      this.$emit('drawer', this.dataDrawer)
     },
 
     // ログアウト
     async logout() {
       await this.$api.auth.logout()
 
-      this.$router.push("/")
+      this.$router.push('/')
     },
 
     // 編集ダイアログを開く

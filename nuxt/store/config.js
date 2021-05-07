@@ -1,4 +1,4 @@
-import * as types from "./mutation-types"
+import * as types from './mutation-types'
 
 export const state = () => ({
   data: {
@@ -14,11 +14,11 @@ export const getters = {
   getConfigData: state => (
     name,
     search,
-    getName = "text",
-    searchName = "value"
+    getName = 'text',
+    searchName = 'value'
   ) => {
     const data = state.data[name].find(item => item[searchName] === search)
-    if (getName === "object") {
+    if (getName === 'object') {
       if (data) {
         return data
       } else {
@@ -28,7 +28,7 @@ export const getters = {
       if (data && data[getName]) {
         return data[getName]
       } else {
-        return ""
+        return ''
       }
     }
   }

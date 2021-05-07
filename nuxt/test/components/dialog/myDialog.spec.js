@@ -1,9 +1,9 @@
-import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import storeConfig from "~/test/storeConfig"
-import setPlugin from "~/test/setPlugin"
-import MyDialog from "~/components/dialog/myDialog"
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import storeConfig from '~/test/storeConfig'
+import setPlugin from '~/test/setPlugin'
+import MyDialog from '~/components/dialog/myDialog'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -31,25 +31,25 @@ describe(__filename, () => {
     }
   })
 
-  describe("", () => {
+  describe('', () => {
     beforeEach(() => {
       wrapper = shallowMount(MyDialog, mountOptions)
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })
 
-  describe("ダイアログの開閉", () => {
-    test("nameなし", () => {
+  describe('ダイアログの開閉', () => {
+    test('nameなし', () => {
       wrapper = shallowMount(MyDialog, mountOptions)
 
       // 初期状態は非表示
       expect(wrapper.vm.state.value).toBeFalsy()
 
       // nameが dialog-○ の形式になっている
-      const name = "dialog-" + Object.keys(wrapper.vm.$dialog.state).length
+      const name = 'dialog-' + Object.keys(wrapper.vm.$dialog.state).length
       expect(wrapper.vm.state.name).toEqual(name)
 
       // ダイアログを開く
@@ -65,9 +65,9 @@ describe(__filename, () => {
       expect(wrapper.vm.state.value).toBeFalsy()
     })
 
-    test("nameあり", () => {
+    test('nameあり', () => {
       // nameをセット
-      const name = "test"
+      const name = 'test'
       mountOptions.propsData = { name: name }
 
       wrapper = shallowMount(MyDialog, mountOptions)
@@ -91,8 +91,8 @@ describe(__filename, () => {
       expect(wrapper.vm.state.value).toBeFalsy()
     })
 
-    describe("ダイアログの外をクリック", () => {
-      test("ダイアログを閉じない設定", () => {
+    describe('ダイアログの外をクリック', () => {
+      test('ダイアログを閉じない設定', () => {
         // ダイアログの外をクリックしてもダイアログを閉じない設定
         mountOptions.propsData = {
           options: { persistent: true }
@@ -111,7 +111,7 @@ describe(__filename, () => {
         expect(wrapper.vm.state.value).toBeTruthy()
       })
 
-      test("ダイアログを閉じる設定", () => {
+      test('ダイアログを閉じる設定', () => {
         wrapper = shallowMount(MyDialog, mountOptions)
 
         // ダイアログを開いた状態にする
@@ -127,12 +127,12 @@ describe(__filename, () => {
     })
   })
 
-  describe("ボタン動作テスト", () => {
-    describe("閉じるボタン", () => {
+  describe('ボタン動作テスト', () => {
+    describe('閉じるボタン', () => {
       let closeDialog
       beforeEach(() => {
         // nameをセット
-        mountOptions.propsData = { name: "test" }
+        mountOptions.propsData = { name: 'test' }
 
         wrapper = mount(MyDialog, mountOptions)
 
@@ -140,17 +140,17 @@ describe(__filename, () => {
         wrapper.vm.openDialog()
 
         // spyOn
-        closeDialog = jest.spyOn(wrapper.vm, "closeDialog")
+        closeDialog = jest.spyOn(wrapper.vm, 'closeDialog')
       })
 
-      test("titleCloseButton", () => {
+      test('titleCloseButton', () => {
         // ボタンをクリック
-        wrapper.find("[data-test='titleCloseButton']").trigger("click")
+        wrapper.find("[data-test='titleCloseButton']").trigger('click')
       })
 
-      test("actionsCloseButton", () => {
+      test('actionsCloseButton', () => {
         // ボタンをクリック
-        wrapper.find("[data-test='actionsCloseButton']").trigger("click")
+        wrapper.find("[data-test='actionsCloseButton']").trigger('click')
       })
 
       afterEach(() => {

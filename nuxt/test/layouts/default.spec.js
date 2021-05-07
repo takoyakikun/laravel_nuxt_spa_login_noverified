@@ -1,10 +1,10 @@
-import { createLocalVue, shallowMount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import axios from "axios"
-import api from "~/test/api"
-import storeConfig from "~/test/storeConfig"
-import Default from "~/layouts/default"
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import axios from 'axios'
+import api from '~/test/api'
+import storeConfig from '~/test/storeConfig'
+import Default from '~/layouts/default'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -35,17 +35,17 @@ describe(__filename, () => {
     }
   })
 
-  describe("", () => {
+  describe('', () => {
     beforeEach(() => {
       wrapper = shallowMount(Default, mountOptions)
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    describe("サイドバー", () => {
-      test("開く", () => {
+    describe('サイドバー', () => {
+      test('開く', () => {
         // 初期値はfalse
         expect(wrapper.vm.drawer).toBeFalsy()
 
@@ -56,7 +56,7 @@ describe(__filename, () => {
         expect(wrapper.vm.drawer).toBeTruthy()
       })
 
-      test("閉じる", () => {
+      test('閉じる', () => {
         // 初期値をtrueにする
         wrapper.setData({
           drawer: true

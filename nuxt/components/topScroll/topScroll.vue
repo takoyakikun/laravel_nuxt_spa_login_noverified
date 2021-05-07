@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import goTo from "vuetify/es5/services/goto"
+import goTo from 'vuetify/es5/services/goto'
 export default {
-  name: "TopScrollComponent",
+  name: 'TopScrollComponent',
   props: {
     scrollOptions: {
       type: Object,
@@ -28,15 +28,15 @@ export default {
     },
     icon: {
       type: String,
-      default: "mdi-chevron-up"
+      default: 'mdi-chevron-up'
     }
   },
   data() {
     return {
       showTopScroll: false,
       defaultButtonOptions: {
-        color: "primary",
-        transition: "fade-transition",
+        color: 'primary',
+        transition: 'fade-transition',
         fixed: true,
         bottom: true,
         right: true,
@@ -51,10 +51,10 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll)
+    window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll)
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     // トップスクロールボタンを表示

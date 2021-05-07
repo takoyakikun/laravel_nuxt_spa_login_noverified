@@ -1,11 +1,11 @@
-import Vuex from "vuex"
-import storeConfig from "~/test/storeConfig"
-import axios from "axios"
-import api from "~/test/api"
-import Auth from "~/middleware/auth"
+import Vuex from 'vuex'
+import storeConfig from '~/test/storeConfig'
+import axios from 'axios'
+import api from '~/test/api'
+import Auth from '~/middleware/auth'
 
 jest.useFakeTimers()
-jest.mock("axios")
+jest.mock('axios')
 
 let store
 let redirect
@@ -23,22 +23,22 @@ afterEach(() => {
 describe(__filename, () => {
   beforeEach(() => {})
 
-  test("ログインしていない", async () => {
+  test('ログインしていない', async () => {
     // ミドルウェアを実行
     await Auth({ store: store, redirect: redirect, app: { $api } })
     jest.runAllTimers()
 
     // ログインしていないのでfalse
-    expect(store.getters["auth/userExists"]).toBeFalsy()
+    expect(store.getters['auth/userExists']).toBeFalsy()
 
     // ログインページへリダイレクト
     expect(redirect).toHaveBeenCalled()
-    expect(redirect).toHaveBeenCalledWith("/login")
+    expect(redirect).toHaveBeenCalledWith('/login')
   })
 
-  test("ログインしている", async () => {
+  test('ログインしている', async () => {
     // spyOn
-    const axiosGet = jest.spyOn(axios, "get")
+    const axiosGet = jest.spyOn(axios, 'get')
 
     // メール認証アクセス権限レスポンス
     const response = {
@@ -53,8 +53,8 @@ describe(__filename, () => {
 
     // ログインユーザーデータをストアに追加
     store.state.auth.user = {
-      name: "テスト",
-      email: "test@test.com",
+      name: 'テスト',
+      email: 'test@test.com',
       role: 3
     }
 
@@ -62,7 +62,7 @@ describe(__filename, () => {
     await Auth({ store: store, redirect: redirect, app: { $api } })
 
     // ログインしているのでtrue
-    expect(store.getters["auth/userExists"]).toBeTruthy()
+    expect(store.getters['auth/userExists']).toBeTruthy()
 
     // リダイレクトしない
     expect(redirect).not.toHaveBeenCalled()

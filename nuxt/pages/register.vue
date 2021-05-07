@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import Register from "~/components/register/register"
+import Register from '~/components/register/register'
 
 export default {
-  name: "RegisterPage",
-  middleware: "guest",
-  layout: "login",
+  name: 'RegisterPage',
+  middleware: 'guest',
+  layout: 'login',
   components: {
     Register
   },
   head() {
     return {
-      title: "新規ユーザー登録"
+      title: '新規ユーザー登録'
     }
   }
 }

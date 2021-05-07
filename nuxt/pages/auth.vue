@@ -7,21 +7,21 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from 'vuex'
 
 export default {
-  name: "AuthPage",
-  middleware: "auth",
-  layout: "default",
+  name: 'AuthPage',
+  middleware: 'auth',
+  layout: 'default',
   computed: {
     ...mapGetters({
-      user: "auth/user",
-      userExists: "auth/userExists"
+      user: 'auth/user',
+      userExists: 'auth/userExists'
     })
   },
   head() {
     return {
-      title: "ログイン済みページ"
+      title: 'ログイン済みページ'
     }
   }
 }

@@ -91,7 +91,7 @@
           </template>
 
           <template #[`item.role`]="{ value }">
-            {{ getConfigData("roleOptions", value) }}
+            {{ getConfigData('roleOptions', value) }}
           </template>
 
           <template #[`item.action`]="{ item }">
@@ -179,15 +179,15 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import CreateDialog from "~/components/users/dialogs/createDialog"
-import EditDialog from "~/components/users/dialogs/editDialog"
-import DeleteDialog from "~/components/users/dialogs/deleteDialog"
-import DeleteMultiDialog from "~/components/users/dialogs/deleteMultiDialog"
-import PasswordSetResendDialog from "~/components/users/dialogs/passwordSetResendDialog"
+import { mapGetters } from 'vuex'
+import CreateDialog from '~/components/users/dialogs/createDialog'
+import EditDialog from '~/components/users/dialogs/editDialog'
+import DeleteDialog from '~/components/users/dialogs/deleteDialog'
+import DeleteMultiDialog from '~/components/users/dialogs/deleteMultiDialog'
+import PasswordSetResendDialog from '~/components/users/dialogs/passwordSetResendDialog'
 
 export default {
-  name: "UserListComponent",
+  name: 'UserListComponent',
   components: {
     CreateDialog,
     EditDialog,
@@ -203,38 +203,38 @@ export default {
   },
   computed: {
     ...mapGetters({
-      config: "config/config",
-      getConfigData: "config/getConfigData",
-      userListStore: "users/list"
+      config: 'config/config',
+      getConfigData: 'config/getConfigData',
+      userListStore: 'users/list'
     }),
 
     // テーブルのヘッダー設定
     headers() {
       return [
         {
-          text: "ユーザー名",
-          value: "name",
+          text: 'ユーザー名',
+          value: 'name',
           filter: value => {
             return this.searchName(value)
           }
         },
         {
-          text: "メールアドレス",
-          value: "email",
+          text: 'メールアドレス',
+          value: 'email',
           filter: value => {
             return this.searchEmail(value)
           }
         },
         {
-          text: "アクセス権限",
-          value: "role",
+          text: 'アクセス権限',
+          value: 'role',
           filter: value => {
             return this.searchRole(value)
           }
         },
         {
-          text: "編集/削除",
-          value: "action"
+          text: '編集/削除',
+          value: 'action'
         }
       ]
     },
@@ -271,7 +271,7 @@ export default {
       if (!this.search.name) return true
       return (
         value != null &&
-        typeof value === "string" &&
+        typeof value === 'string' &&
         value.toString().indexOf(this.search.name) !== -1
       )
     },
@@ -281,7 +281,7 @@ export default {
       if (!this.search.email) return true
       return (
         value != null &&
-        typeof value === "string" &&
+        typeof value === 'string' &&
         value.toString().indexOf(this.search.email) !== -1
       )
     },

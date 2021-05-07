@@ -41,10 +41,10 @@
 </template>
 
 <script>
-import { defineComponent, useContext, reactive } from "@nuxtjs/composition-api"
+import { defineComponent, useContext, reactive } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  name: "myDialogComponent",
+  name: 'myDialogComponent',
   props: {
     options: {
       type: Object,
@@ -56,11 +56,11 @@ export default defineComponent({
     },
     title: {
       type: String,
-      default: ""
+      default: ''
     },
     color: {
       type: String,
-      default: "primary"
+      default: 'primary'
     }
   },
   setup(props) {
@@ -69,7 +69,7 @@ export default defineComponent({
     // デフォルトのoptions
     const defaultOptions = {
       maxWidth: 600,
-      scrollable: "scrollable"
+      scrollable: 'scrollable'
     }
 
     // ダイアログのステータスを作成する

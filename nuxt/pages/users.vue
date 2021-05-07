@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import UserList from "~/components/users/userList"
+import UserList from '~/components/users/userList'
 
 export default {
-  name: "UserPage",
-  middleware: "admin",
-  layout: "default",
+  name: 'UserPage',
+  middleware: 'admin',
+  layout: 'default',
   components: {
     UserList
   },
@@ -23,7 +23,7 @@ export default {
   },
   head() {
     return {
-      title: "ログインユーザー管理"
+      title: 'ログインユーザー管理'
     }
   }
 }

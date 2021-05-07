@@ -40,12 +40,12 @@
 </template>
 
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
-import { createFormOptions } from "~/composition/form/createFormOptions"
-import Form from "~/components/form/form"
+import { defineComponent } from '@nuxtjs/composition-api'
+import { createFormOptions } from '~/composition/form/createFormOptions'
+import Form from '~/components/form/form'
 
 export default defineComponent({
-  name: "loginFormComponent",
+  name: 'loginFormComponent',
   components: { Form },
   props: {
     value: {
@@ -57,18 +57,18 @@ export default defineComponent({
     const formFields = {
       login: {
         rules: { required: true, max: 255, email: true },
-        mode: "eager",
-        label: "Login",
-        type: "email"
+        mode: 'eager',
+        label: 'Login',
+        type: 'email'
       },
       password: {
         rules: { required: true },
-        mode: "eager",
-        label: "Password",
-        type: "password"
+        mode: 'eager',
+        label: 'Password',
+        type: 'password'
       },
       remember: {
-        label: "ログイン状態を保存する"
+        label: 'ログイン状態を保存する'
       }
     }
     const { formOptions, validationOptions } = createFormOptions(formFields)

@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import PasswordResetForm from "~/components/passwordReset/passwordResetForm"
+import PasswordResetForm from '~/components/passwordReset/passwordResetForm'
 
 export default {
-  name: "PasswordResetTokenComponent",
+  name: 'PasswordResetTokenComponent',
   components: {
     PasswordResetForm
   },
@@ -56,14 +56,14 @@ export default {
                 if (res.status === 200) {
                   await this.$api.auth.getUser()
                   this.$snackbar.openSnackbar({
-                    text: "パスワードリセットしました。",
-                    options: { color: "success" }
+                    text: 'パスワードリセットしました。',
+                    options: { color: 'success' }
                   })
-                  this.$router.push("/")
+                  this.$router.push('/')
                 } else {
                   this.$snackbar.openSnackbar({
-                    text: "パスワードリセットに失敗しました。",
-                    options: { color: "error" }
+                    text: 'パスワードリセットに失敗しました。',
+                    options: { color: 'error' }
                   })
                 }
               })

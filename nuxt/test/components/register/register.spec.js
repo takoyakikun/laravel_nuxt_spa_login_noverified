@@ -1,14 +1,14 @@
-import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import VueRouter from "vue-router"
-import axios from "axios"
-import api from "~/test/api"
-import setPlugin from "~/test/setPlugin"
-import * as types from "~/store/mutation-types"
-import storeConfig from "~/test/storeConfig"
-import setConfigData from "~/test/setConfigData"
-import Register from "~/components/register/register"
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+import axios from 'axios'
+import api from '~/test/api'
+import setPlugin from '~/test/setPlugin'
+import * as types from '~/store/mutation-types'
+import storeConfig from '~/test/storeConfig'
+import setConfigData from '~/test/setConfigData'
+import Register from '~/components/register/register'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -23,7 +23,7 @@ let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
   localVue.prototype.$api = api({ $axios: axios, store })
-  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
   setPlugin(localVue)
   localVue.prototype.$nuxt.context.store = store
 })
@@ -33,7 +33,7 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe("テスト", () => {
+  describe('テスト', () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -46,12 +46,12 @@ describe(__filename, () => {
       })
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })
 
-  describe("フォーム送信テスト", () => {
+  describe('フォーム送信テスト', () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -64,19 +64,19 @@ describe(__filename, () => {
       })
     })
 
-    describe("ユーザー追加", () => {
+    describe('ユーザー追加', () => {
       let registerFormValidation
       let axiosPost
       beforeEach(() => {
         // spyOn
         registerFormValidation = jest.spyOn(
           wrapper.vm.$refs.registerForm,
-          "validate"
+          'validate'
         )
-        axiosPost = jest.spyOn(axios, "post")
+        axiosPost = jest.spyOn(axios, 'post')
       })
 
-      describe("失敗", () => {
+      describe('失敗', () => {
         beforeEach(() => {
           // エラーレスポンス
           const response = {
@@ -88,7 +88,7 @@ describe(__filename, () => {
           })
         })
 
-        test("フロント側エラー", async () => {
+        test('フロント側エラー', async () => {
           // ユーザー追加処理
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -106,14 +106,14 @@ describe(__filename, () => {
           expect(axiosPost).not.toHaveBeenCalled()
         })
 
-        test("API側エラー", async () => {
+        test('API側エラー', async () => {
           // フォームを入力してユーザー追加処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='password']").setValue("password")
+          wrapper.find("input[name='name']").setValue('テスト')
+          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='password']").setValue('password')
           wrapper
             .find("input[name='password_confirmation']")
-            .setValue("password")
+            .setValue('password')
           await wrapper.vm.submit()
           jest.runAllTimers()
 
@@ -122,29 +122,29 @@ describe(__filename, () => {
 
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
-          expect(axiosPost).toHaveBeenCalledWith("/api/register", {
-            name: "テスト",
-            email: "test@test.com",
-            password: "password",
-            password_confirmation: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/register', {
+            name: 'テスト',
+            email: 'test@test.com',
+            password: 'password',
+            password_confirmation: 'password'
           })
 
           // snackbarのエラー表示
           expect(wrapper.vm.$snackbar.text).toBe(
-            "新規ユーザーの作成に失敗しました。"
+            '新規ユーザーの作成に失敗しました。'
           )
-          expect(wrapper.vm.$snackbar.options.color).toBe("error")
+          expect(wrapper.vm.$snackbar.options.color).toBe('error')
         })
       })
 
-      describe("成功", () => {
+      describe('成功', () => {
         let routerPush
         beforeEach(() => {
           // spyOn
-          routerPush = jest.spyOn(wrapper.vm.$router, "push")
+          routerPush = jest.spyOn(wrapper.vm.$router, 'push')
         })
 
-        test("認証失敗", async () => {
+        test('認証失敗', async () => {
           // 正常なレスポンス
           const response = {
             status: 200
@@ -164,12 +164,12 @@ describe(__filename, () => {
           wrapper.vm.$store.$axios = axios
 
           // フォームを入力してログイン処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='password']").setValue("password")
+          wrapper.find("input[name='name']").setValue('テスト')
+          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='password']").setValue('password')
           wrapper
             .find("input[name='password_confirmation']")
-            .setValue("password")
+            .setValue('password')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -179,27 +179,27 @@ describe(__filename, () => {
 
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
-          expect(axiosPost).toHaveBeenCalledWith("/api/register", {
-            name: "テスト",
-            email: "test@test.com",
-            password: "password",
-            password_confirmation: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/register', {
+            name: 'テスト',
+            email: 'test@test.com',
+            password: 'password',
+            password_confirmation: 'password'
           })
-          expect(axiosPost).toHaveBeenCalledWith("/api/login", {
-            email: "test@test.com",
-            password: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/login', {
+            email: 'test@test.com',
+            password: 'password'
           })
 
           // ログインページへリダイレクトした
           expect(routerPush).toHaveBeenCalled()
-          expect(routerPush).toHaveBeenCalledWith("/login")
+          expect(routerPush).toHaveBeenCalledWith('/login')
 
           // snackbarのエラー表示
-          expect(wrapper.vm.$snackbar.text).toBe("認証に失敗しました。")
-          expect(wrapper.vm.$snackbar.options.color).toBe("error")
+          expect(wrapper.vm.$snackbar.text).toBe('認証に失敗しました。')
+          expect(wrapper.vm.$snackbar.options.color).toBe('error')
         })
 
-        test("認証成功", async () => {
+        test('認証成功', async () => {
           // 正常なレスポンス
           const response = {
             status: 200
@@ -211,12 +211,12 @@ describe(__filename, () => {
           wrapper.vm.$store.$axios = axios
 
           // フォームを入力してログイン処理
-          wrapper.find("input[name='name']").setValue("テスト")
-          wrapper.find("input[name='email']").setValue("test@test.com")
-          wrapper.find("input[name='password']").setValue("password")
+          wrapper.find("input[name='name']").setValue('テスト')
+          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='password']").setValue('password')
           wrapper
             .find("input[name='password_confirmation']")
-            .setValue("password")
+            .setValue('password')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -226,32 +226,32 @@ describe(__filename, () => {
 
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
-          expect(axiosPost).toHaveBeenCalledWith("/api/register", {
-            name: "テスト",
-            email: "test@test.com",
-            password: "password",
-            password_confirmation: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/register', {
+            name: 'テスト',
+            email: 'test@test.com',
+            password: 'password',
+            password_confirmation: 'password'
           })
-          expect(axiosPost).toHaveBeenCalledWith("/api/login", {
-            email: "test@test.com",
-            password: "password"
+          expect(axiosPost).toHaveBeenCalledWith('/api/login', {
+            email: 'test@test.com',
+            password: 'password'
           })
 
           // メール認証ページへリダイレクトした
           expect(routerPush).toHaveBeenCalled()
-          expect(routerPush).toHaveBeenCalledWith("/resend")
+          expect(routerPush).toHaveBeenCalledWith('/resend')
 
           // snackbarの完了表示
-          expect(wrapper.vm.$snackbar.text).toBe("新規ユーザーを作成しました。")
-          expect(wrapper.vm.$snackbar.options.color).toBe("success")
+          expect(wrapper.vm.$snackbar.text).toBe('新規ユーザーを作成しました。')
+          expect(wrapper.vm.$snackbar.options.color).toBe('success')
         })
       })
 
-      test("loading中はログイン処理不可", async () => {
+      test('loading中はログイン処理不可', async () => {
         // spyOn
         const registerFormValidation = jest.spyOn(
           wrapper.vm.$refs.registerForm,
-          "validate"
+          'validate'
         )
 
         // loading中の設定
@@ -270,11 +270,11 @@ describe(__filename, () => {
     })
   })
 
-  describe("ボタン動作テスト", () => {
+  describe('ボタン動作テスト', () => {
     let wrapper
     let submit
     beforeEach(() => {
-      submit = jest.spyOn(Register.methods, "submit").mockReturnValue(true)
+      submit = jest.spyOn(Register.methods, 'submit').mockReturnValue(true)
       wrapper = mount(Register, {
         localVue,
         store,
@@ -283,16 +283,16 @@ describe(__filename, () => {
       })
     })
 
-    test("パスワードリセットボタン", () => {
+    test('パスワードリセットボタン', () => {
       // ボタンをクリック
-      wrapper.find("[data-test='submitButton']").trigger("click")
+      wrapper.find("[data-test='submitButton']").trigger('click')
 
       // メソッドが実行されたか
       expect(submit).toHaveBeenCalled()
     })
   })
 
-  describe("リンク動作テスト", () => {
+  describe('リンク動作テスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = mount(Register, {
@@ -303,9 +303,9 @@ describe(__filename, () => {
       })
     })
 
-    test("トップボタンリンク", () => {
+    test('トップボタンリンク', () => {
       // 正しいリンク先が設定されているか
-      expect(wrapper.find("[data-test='topButtonLink']").props().to).toBe("/")
+      expect(wrapper.find("[data-test='topButtonLink']").props().to).toBe('/')
     })
   })
 })

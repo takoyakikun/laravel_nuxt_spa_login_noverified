@@ -1,14 +1,14 @@
-import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import VueRouter from "vue-router"
-import axios from "axios"
-import api from "~/test/api"
-import storeConfig from "~/test/storeConfig"
-import setPlugin from "~/test/setPlugin"
-import * as types from "~/store/mutation-types"
-import setConfigData from "~/test/setConfigData"
-import Header from "~/components/layouts/default/header"
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+import axios from 'axios'
+import api from '~/test/api'
+import storeConfig from '~/test/storeConfig'
+import setPlugin from '~/test/setPlugin'
+import * as types from '~/store/mutation-types'
+import setConfigData from '~/test/setConfigData'
+import Header from '~/components/layouts/default/header'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -22,7 +22,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
   localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
   localVue.prototype.$nuxt.context.store = store
@@ -33,7 +33,7 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe("テスト", () => {
+  describe('テスト', () => {
     let wrapper
     beforeEach(() => {
       router.push = jest.fn()
@@ -46,12 +46,12 @@ describe(__filename, () => {
       })
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    describe("サイドバーの表示切り替え", () => {
-      test("閉から開", () => {
+    describe('サイドバーの表示切り替え', () => {
+      test('閉から開', () => {
         // 初期値はfalse
         expect(wrapper.vm.dataDrawer).toBeFalsy()
 
@@ -65,7 +65,7 @@ describe(__filename, () => {
         expect(wrapper.emitted().drawer[0][0]).toBeTruthy()
       })
 
-      test("開から閉", () => {
+      test('開から閉', () => {
         // 初期値をtrueにする
         wrapper.setData({ dataDrawer: true })
         expect(wrapper.vm.dataDrawer).toBeTruthy()
@@ -81,10 +81,10 @@ describe(__filename, () => {
       })
     })
 
-    test("ログアウト", async () => {
+    test('ログアウト', async () => {
       // spyOn
-      const axiosPost = jest.spyOn(axios, "post")
-      const routerPush = jest.spyOn(wrapper.vm.$router, "push")
+      const axiosPost = jest.spyOn(axios, 'post')
+      const routerPush = jest.spyOn(wrapper.vm.$router, 'push')
 
       // 正常なレスポンス
       const response = {
@@ -101,15 +101,15 @@ describe(__filename, () => {
 
       // API送信をした
       expect(axiosPost).toHaveBeenCalled()
-      expect(axiosPost).toHaveBeenCalledWith("/api/logout")
+      expect(axiosPost).toHaveBeenCalledWith('/api/logout')
 
       // Topへリダイレクトした
       expect(routerPush).toHaveBeenCalled()
-      expect(routerPush).toHaveBeenCalledWith("/")
+      expect(routerPush).toHaveBeenCalledWith('/')
     })
   })
 
-  describe("ダイアログオープンテスト", () => {
+  describe('ダイアログオープンテスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = mount(Header, {
@@ -120,7 +120,7 @@ describe(__filename, () => {
       })
     })
 
-    test("編集ダイアログを開く", () => {
+    test('編集ダイアログを開く', () => {
       // ダイアログを開く
       wrapper.vm.openEditDialog()
 
@@ -128,7 +128,7 @@ describe(__filename, () => {
       expect(wrapper.vm.$refs.editDialog.$refs.dialog.state.value).toBeTruthy()
     })
 
-    test("パスワード変更ダイアログを開く", () => {
+    test('パスワード変更ダイアログを開く', () => {
       // ダイアログを開く
       wrapper.vm.openPasswordChangeDialog()
 
@@ -139,16 +139,16 @@ describe(__filename, () => {
     })
   })
 
-  describe("ボタン動作テスト", () => {
+  describe('ボタン動作テスト', () => {
     let wrapper
     let openEditDialog
     let openPasswordChangeDialog
     beforeEach(() => {
       openEditDialog = jest
-        .spyOn(Header.methods, "openEditDialog")
+        .spyOn(Header.methods, 'openEditDialog')
         .mockReturnValue(true)
       openPasswordChangeDialog = jest
-        .spyOn(Header.methods, "openPasswordChangeDialog")
+        .spyOn(Header.methods, 'openPasswordChangeDialog')
         .mockReturnValue(true)
       wrapper = mount(Header, {
         localVue,
@@ -158,26 +158,26 @@ describe(__filename, () => {
       })
     })
 
-    describe("マイユーザー管理メニュー", () => {
+    describe('マイユーザー管理メニュー', () => {
       beforeEach(async () => {
         // ログインデータを登録
-        await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, { id: 1 })
+        await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_USER, { id: 1 })
 
         // マイユーザー管理メニューを開く
-        wrapper.find("[data-test='myuserMenuButton']").trigger("click")
+        wrapper.find("[data-test='myuserMenuButton']").trigger('click')
       })
 
-      test("編集ダイアログ項目", () => {
+      test('編集ダイアログ項目', () => {
         // 項目をクリック
-        wrapper.find("[data-test='editDialogItem']").vm.$emit("click")
+        wrapper.find("[data-test='editDialogItem']").vm.$emit('click')
 
         // メソッドが実行されたか
         expect(openEditDialog).toHaveBeenCalled()
       })
 
-      test("パスワード変更ダイアログ項目", () => {
+      test('パスワード変更ダイアログ項目', () => {
         // 項目をクリック
-        wrapper.find("[data-test='passwordChangeDialogItem']").trigger("click")
+        wrapper.find("[data-test='passwordChangeDialogItem']").trigger('click')
 
         // メソッドが実行されたか
         expect(openPasswordChangeDialog).toHaveBeenCalled()
@@ -185,7 +185,7 @@ describe(__filename, () => {
     })
   })
 
-  describe("項目表示テスト", () => {
+  describe('項目表示テスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = mount(Header, {
@@ -199,7 +199,7 @@ describe(__filename, () => {
       })
     })
 
-    test("ログアウト", () => {
+    test('ログアウト', () => {
       // マイユーザー管理ボタン
       expect(
         wrapper.find("[data-test='myuserMenuButton']").exists()
@@ -215,11 +215,11 @@ describe(__filename, () => {
       expect(wrapper.find("[data-test='loginButton']").exists()).toBeTruthy()
     })
 
-    test("一般権限", async () => {
+    test('一般権限', async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
-        name: "テスト",
-        email: "test@test.com",
+      await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_USER, {
+        name: 'テスト',
+        email: 'test@test.com',
         role: 3
       })
 
@@ -229,7 +229,7 @@ describe(__filename, () => {
       ).toBeTruthy()
 
       // マイユーザー管理メニューを開く
-      await wrapper.find("[data-test='myuserMenuButton']").trigger("click")
+      await wrapper.find("[data-test='myuserMenuButton']").trigger('click')
 
       // マイユーザー編集項目
       expect(wrapper.find("[data-test='editDialogItem']").exists()).toBeTruthy()
@@ -249,17 +249,17 @@ describe(__filename, () => {
       expect(wrapper.find("[data-test='loginButton']").exists()).toBeFalsy()
     })
 
-    test("管理者権限", async () => {
+    test('管理者権限', async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
-        name: "テスト",
-        email: "test@test.com",
+      await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_USER, {
+        name: 'テスト',
+        email: 'test@test.com',
         role: 2
       })
 
       // 権限を管理者以上にする
-      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
-        category: "admin-higher",
+      await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_PERMISSION, {
+        category: 'admin-higher',
         permission: true
       })
 
@@ -269,7 +269,7 @@ describe(__filename, () => {
       ).toBeTruthy()
 
       // マイユーザー管理メニューを開く
-      await wrapper.find("[data-test='myuserMenuButton']").trigger("click")
+      await wrapper.find("[data-test='myuserMenuButton']").trigger('click')
 
       // マイユーザー編集項目
       expect(wrapper.find("[data-test='editDialogItem']").exists()).toBeTruthy()
@@ -289,17 +289,17 @@ describe(__filename, () => {
       expect(wrapper.find("[data-test='loginButton']").exists()).toBeFalsy()
     })
 
-    test("開発者権限", async () => {
+    test('開発者権限', async () => {
       // ログインデータを追加
-      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_USER, {
-        name: "テスト",
-        email: "test@test.com",
+      await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_USER, {
+        name: 'テスト',
+        email: 'test@test.com',
         role: 1
       })
 
       // 権限を開発者にする
-      await wrapper.vm.$store.commit("auth/" + types.AUTH_SET_PERMISSION, {
-        category: "system-only",
+      await wrapper.vm.$store.commit('auth/' + types.AUTH_SET_PERMISSION, {
+        category: 'system-only',
         permission: true
       })
 
@@ -309,7 +309,7 @@ describe(__filename, () => {
       ).toBeTruthy()
 
       // マイユーザー管理メニューを開く
-      await wrapper.find("[data-test='myuserMenuButton']").trigger("click")
+      await wrapper.find("[data-test='myuserMenuButton']").trigger('click')
 
       // マイユーザー編集項目
       expect(wrapper.find("[data-test='editDialogItem']").exists()).toBeTruthy()

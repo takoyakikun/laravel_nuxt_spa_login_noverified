@@ -38,18 +38,18 @@
 </template>
 
 <script>
-import UserForm from "~/components/users/forms/userForm"
+import UserForm from '~/components/users/forms/userForm'
 
 export default {
-  name: "UserRegisterComponent",
+  name: 'UserRegisterComponent',
   components: {
     UserForm
   },
   data() {
     return {
       registerFormValue: {
-        email: "",
-        password: ""
+        email: '',
+        password: ''
       },
       loading: false
     }
@@ -74,22 +74,22 @@ export default {
                     .then(res => {
                       if (res.status === 200) {
                         this.$snackbar.openSnackbar({
-                          text: "新規ユーザーを作成しました。",
-                          options: { color: "success" }
+                          text: '新規ユーザーを作成しました。',
+                          options: { color: 'success' }
                         })
-                        this.$router.push("/resend")
+                        this.$router.push('/resend')
                       } else {
                         this.$snackbar.openSnackbar({
-                          text: "認証に失敗しました。",
-                          options: { color: "error" }
+                          text: '認証に失敗しました。',
+                          options: { color: 'error' }
                         })
-                        this.$router.push("/login")
+                        this.$router.push('/login')
                       }
                     })
                 } else {
                   this.$snackbar.openSnackbar({
-                    text: "新規ユーザーの作成に失敗しました。",
-                    options: { color: "error" }
+                    text: '新規ユーザーの作成に失敗しました。',
+                    options: { color: 'error' }
                   })
                 }
               })

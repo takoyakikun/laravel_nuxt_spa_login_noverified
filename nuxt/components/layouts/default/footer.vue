@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: "DefaultLayoutFooterComponent"
+  name: 'DefaultLayoutFooterComponent'
 }
 </script>

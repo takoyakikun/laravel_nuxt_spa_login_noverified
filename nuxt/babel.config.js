@@ -1,13 +1,13 @@
 module.exports = {
   env: {
     test: {
-      plugins: [["module-resolver"], "require-context-hook"],
+      plugins: [['module-resolver'], 'require-context-hook'],
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
             targets: {
-              node: "current"
+              node: 'current'
             }
           }
         ]

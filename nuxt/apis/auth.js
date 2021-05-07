@@ -1,7 +1,7 @@
-import * as types from "@/store/mutation-types"
-import path from "path"
+import * as types from '@/store/mutation-types'
+import path from 'path'
 
-const moduleName = "auth"
+const moduleName = 'auth'
 
 export default (axios, store) => ({
   // ログイン
@@ -15,7 +15,7 @@ export default (axios, store) => ({
       loginData.remember = remember
     }
     return await axios
-      .post("/api/login", loginData)
+      .post('/api/login', loginData)
       .then(res => {
         store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
         return res
@@ -26,7 +26,7 @@ export default (axios, store) => ({
   // ログアウト
   async logout() {
     return await axios
-      .post("/api/logout")
+      .post('/api/logout')
       .then(res => {
         store.commit(path.join(moduleName, types.AUTH_SET_USER), null)
         store.commit(path.join(moduleName, types.AUTH_RESET_PERMISSION))
@@ -38,7 +38,7 @@ export default (axios, store) => ({
   // ユーザーデータを取得
   async getUser() {
     return await axios
-      .get("/api/user")
+      .get('/api/user')
       .then(res => {
         store.commit(path.join(moduleName, types.AUTH_SET_USER), res.data)
         return res
@@ -56,11 +56,11 @@ export default (axios, store) => ({
     }
     for (let value of categories) {
       if (
-        store.getters[path.join(moduleName, "userExists")] &&
-        !store.getters[path.join(moduleName, "permission")](value)
+        store.getters[path.join(moduleName, 'userExists')] &&
+        !store.getters[path.join(moduleName, 'permission')](value)
       ) {
         await axios
-          .get("/api/permission/" + value)
+          .get('/api/permission/' + value)
           .then(res => {
             // 権限がある場合は true ない場合は false
             return res.data[0]

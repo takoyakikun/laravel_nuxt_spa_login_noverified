@@ -40,10 +40,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from 'vuex'
 
 export default {
-  name: "DefaultLayoutSideBarComponent",
+  name: 'DefaultLayoutSideBarComponent',
   props: {
     value: {
       type: Boolean,
@@ -52,11 +52,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", [
-      "user",
-      "userExists",
-      "permission",
-      "permissionExists"
+    ...mapGetters('auth', [
+      'user',
+      'userExists',
+      'permission',
+      'permissionExists'
     ])
   }
 }

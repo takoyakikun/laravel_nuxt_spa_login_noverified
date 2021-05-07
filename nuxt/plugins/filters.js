@@ -1,9 +1,9 @@
-import Vue from "vue"
+import Vue from 'vue'
 
 // 文字数省略
-Vue.filter("truncate", (text, length, clamp) => {
-  text = text || ""
-  clamp = clamp || "..."
+Vue.filter('truncate', (text, length, clamp) => {
+  text = text || ''
+  clamp = clamp || '...'
   length = length || 30
 
   if (text.length <= length) {

@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import PasswordReset from "~/components/PasswordReset/index"
+import PasswordReset from '~/components/PasswordReset/index'
 
 export default {
-  name: "PasswordResetIndexPage",
-  middleware: "guest",
-  layout: "login",
+  name: 'PasswordResetIndexPage',
+  middleware: 'guest',
+  layout: 'login',
   components: {
     PasswordReset
   },
   head() {
     return {
-      title: "パスワードリセット"
+      title: 'パスワードリセット'
     }
   }
 }

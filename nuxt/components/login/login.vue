@@ -42,18 +42,18 @@
 </template>
 
 <script>
-import LoginForm from "~/components/login/loginForm"
+import LoginForm from '~/components/login/loginForm'
 
 export default {
-  name: "LoginComponent",
+  name: 'LoginComponent',
   components: {
     LoginForm
   },
   data() {
     return {
       loginForm: {
-        email: "",
-        password: "",
+        email: '',
+        password: '',
         remember: false
       },
       loading: false
@@ -74,13 +74,13 @@ export default {
               })
               .then(res => {
                 if (res.status === 200) {
-                  this.$router.push("/")
+                  this.$router.push('/')
                 } else {
-                  this.loginForm.password = ""
+                  this.loginForm.password = ''
                   this.$refs.loginForm.reset()
                   this.$snackbar.openSnackbar({
-                    text: "認証に失敗しました。",
-                    options: { color: "error" }
+                    text: '認証に失敗しました。',
+                    options: { color: 'error' }
                   })
                 }
               })

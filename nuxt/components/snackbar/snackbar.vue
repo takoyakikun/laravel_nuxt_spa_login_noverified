@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import { defineComponent, useContext, reactive } from "@nuxtjs/composition-api"
+import { defineComponent, useContext, reactive } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  name: "snackbarComponent",
+  name: 'snackbarComponent',
   setup() {
     const { app } = useContext()
     const snackbar = reactive(app.$snackbar)

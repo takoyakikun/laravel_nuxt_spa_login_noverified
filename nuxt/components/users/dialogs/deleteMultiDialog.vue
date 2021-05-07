@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import MyDialog from "~/components/dialog/myDialog"
+import MyDialog from '~/components/dialog/myDialog'
 
 export default {
-  name: "UserDeleteMultiDialogComponent",
+  name: 'UserDeleteMultiDialogComponent',
   components: {
     MyDialog
   },
@@ -69,14 +69,14 @@ export default {
         await this.$api.users.deleteMultiData(deleteUsersId).then(res => {
           if (res.status === 200) {
             this.$snackbar.openSnackbar({
-              text: "ユーザーデータを削除しました。",
-              options: { color: "success" }
+              text: 'ユーザーデータを削除しました。',
+              options: { color: 'success' }
             })
             this.$refs.dialog.closeDialog()
           } else {
             this.$snackbar.openSnackbar({
-              text: "ユーザーデータの削除に失敗しました。",
-              options: { color: "error" }
+              text: 'ユーザーデータの削除に失敗しました。',
+              options: { color: 'error' }
             })
           }
         })

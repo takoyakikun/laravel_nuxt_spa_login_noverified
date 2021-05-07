@@ -33,12 +33,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import MyDialog from "~/components/dialog/myDialog"
-import PasswordChangeForm from "~/components/users/forms/passwordChangeForm"
+import { mapGetters } from 'vuex'
+import MyDialog from '~/components/dialog/myDialog'
+import PasswordChangeForm from '~/components/users/forms/passwordChangeForm'
 
 export default {
-  name: "DefaultLayoutPasswordChangeComponent",
+  name: 'DefaultLayoutPasswordChangeComponent',
   components: {
     MyDialog,
     PasswordChangeForm
@@ -50,7 +50,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", ["user"])
+    ...mapGetters('auth', ['user'])
   },
   methods: {
     // ダイアログを開く
@@ -67,19 +67,19 @@ export default {
             await this.$api.users.passwordChange(this.formValue).then(res => {
               if (res.status === 200) {
                 this.$snackbar.openSnackbar({
-                  text: "パスワードを変更しました。",
-                  options: { color: "success" }
+                  text: 'パスワードを変更しました。',
+                  options: { color: 'success' }
                 })
                 this.$refs.dialog.closeDialog()
                 this.$refs.validate.reset()
               } else {
-                let text = "パスワードの変更に失敗しました。"
+                let text = 'パスワードの変更に失敗しました。'
                 if (res.data.error_message) {
                   text = res.data.error_message
                 }
                 this.$snackbar.openSnackbar({
                   text: text,
-                  options: { color: "error" }
+                  options: { color: 'error' }
                 })
               }
             })

@@ -1,13 +1,13 @@
-import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import axios from "axios"
-import api from "~/test/api"
-import setPlugin from "~/test/setPlugin"
-import storeConfig from "~/test/storeConfig"
-import * as types from "~/store/mutation-types"
-import setConfigData from "~/test/setConfigData"
-import PasswordSetResendDialog from "~/components/users/dialogs/passwordSetResendDialog"
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import axios from 'axios'
+import api from '~/test/api'
+import setPlugin from '~/test/setPlugin'
+import storeConfig from '~/test/storeConfig'
+import * as types from '~/store/mutation-types'
+import setConfigData from '~/test/setConfigData'
+import PasswordSetResendDialog from '~/components/users/dialogs/passwordSetResendDialog'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -19,7 +19,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
   localVue.prototype.$api = api({ $axios: axios, store })
   setPlugin(localVue)
   localVue.prototype.$nuxt.context.store = store
@@ -30,7 +30,7 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe("テスト", () => {
+  describe('テスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = shallowMount(PasswordSetResendDialog, {
@@ -40,12 +40,12 @@ describe(__filename, () => {
       })
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })
 
-  describe("フォーム動作テスト", () => {
+  describe('フォーム動作テスト', () => {
     let wrapper
     beforeEach(() => {
       wrapper = mount(PasswordSetResendDialog, {
@@ -55,11 +55,11 @@ describe(__filename, () => {
       })
     })
 
-    describe("パスワード設定メール再送信", () => {
+    describe('パスワード設定メール再送信', () => {
       const passwordSetResendUser = {
         id: 1,
-        name: "テスト",
-        email: "test@test.com",
+        name: 'テスト',
+        email: 'test@test.com',
         role: 3,
         password_set_flg: 0
       }
@@ -67,13 +67,13 @@ describe(__filename, () => {
       let axiosPost
       beforeEach(() => {
         // spyOn
-        axiosPost = jest.spyOn(axios, "post")
+        axiosPost = jest.spyOn(axios, 'post')
 
         // ダイアログを開く
         wrapper.vm.openDialog(passwordSetResendUser)
       })
 
-      test("失敗", async () => {
+      test('失敗', async () => {
         // エラーレスポンス
         const response = {
           status: 403
@@ -91,12 +91,12 @@ describe(__filename, () => {
 
         // snackbarのエラー表示
         expect(wrapper.vm.$snackbar.text).toBe(
-          "パスワード設定メールの再送信に失敗しました。"
+          'パスワード設定メールの再送信に失敗しました。'
         )
-        expect(wrapper.vm.$snackbar.options.color).toBe("error")
+        expect(wrapper.vm.$snackbar.options.color).toBe('error')
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // 正常なレスポンス
         const response = {
           status: 200
@@ -114,12 +114,12 @@ describe(__filename, () => {
 
         // snackbarの完了表示
         expect(wrapper.vm.$snackbar.text).toBe(
-          "パスワード設定メールを再送信しました。"
+          'パスワード設定メールを再送信しました。'
         )
-        expect(wrapper.vm.$snackbar.options.color).toBe("success")
+        expect(wrapper.vm.$snackbar.options.color).toBe('success')
       })
 
-      test("loading中は処理不可", async () => {
+      test('loading中は処理不可', async () => {
         // loading中の設定
         wrapper.setData({
           loading: true
@@ -143,12 +143,12 @@ describe(__filename, () => {
     })
   })
 
-  describe("ボタン動作テスト", () => {
+  describe('ボタン動作テスト', () => {
     let wrapper
     let submit
     beforeEach(() => {
       submit = jest
-        .spyOn(PasswordSetResendDialog.methods, "submit")
+        .spyOn(PasswordSetResendDialog.methods, 'submit')
         .mockReturnValue(true)
       wrapper = mount(PasswordSetResendDialog, {
         localVue,
@@ -157,12 +157,12 @@ describe(__filename, () => {
       })
     })
 
-    test("パスワード設定メール再送信ボタン", async () => {
+    test('パスワード設定メール再送信ボタン', async () => {
       // ダイアログを開く
       await wrapper.vm.$refs.dialog.openDialog()
 
       // ボタンをクリック
-      wrapper.find("[data-test='submitButton']").trigger("click")
+      wrapper.find("[data-test='submitButton']").trigger('click')
 
       // メソッドが実行されたか
       expect(submit).toHaveBeenCalled()

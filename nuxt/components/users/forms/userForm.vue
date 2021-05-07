@@ -111,18 +111,18 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from 'vuex'
 import {
   defineComponent,
   useContext,
   reactive,
   computed
-} from "@nuxtjs/composition-api"
-import { createFormOptions } from "~/composition/form/createFormOptions"
-import Form from "~/components/form/form"
+} from '@nuxtjs/composition-api'
+import { createFormOptions } from '~/composition/form/createFormOptions'
+import Form from '~/components/form/form'
 
 export default defineComponent({
-  name: "userFormComponent",
+  name: 'userFormComponent',
   components: { Form },
   props: {
     value: {
@@ -131,7 +131,7 @@ export default defineComponent({
     },
     formType: {
       type: String,
-      default: "create"
+      default: 'create'
     },
     myuser: {
       type: Boolean,
@@ -142,9 +142,9 @@ export default defineComponent({
   setup(props) {
     const { store } = useContext()
     const state = {
-      config: computed(() => store.getters["config/config"]).value,
-      roleOptions: computed(() => store.getters["users/roleOptions"]).value,
-      userUnique: computed(() => store.getters["users/userUnique"]).value
+      config: computed(() => store.getters['config/config']).value,
+      roleOptions: computed(() => store.getters['users/roleOptions']).value,
+      userUnique: computed(() => store.getters['users/userUnique']).value
     }
     state.role = computed(() => {
       return state.config.roleOptions.filter(item =>
@@ -157,31 +157,31 @@ export default defineComponent({
     const formFields = {
       name: {
         rules: { required: true, max: 255 },
-        mode: "lazy",
-        label: "ユーザー名",
-        type: "text"
+        mode: 'lazy',
+        label: 'ユーザー名',
+        type: 'text'
       },
       email: {
         rules: { required: true, max: 255, email: true, unique: userUnique },
-        mode: "lazy",
-        label: "メールアドレス",
-        type: "email"
+        mode: 'lazy',
+        label: 'メールアドレス',
+        type: 'email'
       },
       role: {
         rules: { required: true },
-        mode: "lazy"
+        mode: 'lazy'
       },
       password: {
         rules: { required: true, min: 8 },
-        mode: "lazy",
-        label: "パスワード",
-        type: "password"
+        mode: 'lazy',
+        label: 'パスワード',
+        type: 'password'
       },
       password_confirmation: {
-        rules: { required: true, min: 8, confirmed: "password" },
-        mode: "lazy",
-        label: "パスワード(確認)",
-        type: "password"
+        rules: { required: true, min: 8, confirmed: 'password' },
+        mode: 'lazy',
+        label: 'パスワード(確認)',
+        type: 'password'
       }
     }
     const { formOptions, validationOptions } = createFormOptions(formFields)

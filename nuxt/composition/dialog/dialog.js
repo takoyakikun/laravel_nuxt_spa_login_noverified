@@ -12,7 +12,7 @@ export default {
       state.name = props.name
     } else {
       // propsからnameの設定が無かった場合は dialog-○ の形式でセット
-      state.name = "dialog-" + (Object.keys(this.state).length + 1)
+      state.name = 'dialog-' + (Object.keys(this.state).length + 1)
     }
 
     // color をセット

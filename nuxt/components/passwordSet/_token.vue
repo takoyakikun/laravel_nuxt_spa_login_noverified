@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import PasswordSetForm from "~/components/passwordSet/passwordSetForm"
+import PasswordSetForm from '~/components/passwordSet/passwordSetForm'
 
 export default {
-  name: "PasswordSetTokenComponent",
+  name: 'PasswordSetTokenComponent',
   components: {
     PasswordSetForm
   },
@@ -56,14 +56,14 @@ export default {
                 if (res.status === 200) {
                   await this.$api.auth.getUser()
                   this.$snackbar.openSnackbar({
-                    text: "パスワードを登録しました。",
-                    options: { color: "success" }
+                    text: 'パスワードを登録しました。',
+                    options: { color: 'success' }
                   })
-                  this.$router.push("/")
+                  this.$router.push('/')
                 } else {
                   this.$snackbar.openSnackbar({
-                    text: "パスワードの登録に失敗しました。",
-                    options: { color: "error" }
+                    text: 'パスワードの登録に失敗しました。',
+                    options: { color: 'error' }
                   })
                 }
               })

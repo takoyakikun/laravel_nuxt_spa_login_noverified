@@ -58,12 +58,12 @@
 </template>
 
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
-import { createFormOptions } from "~/composition/form/createFormOptions"
-import Form from "~/components/form/form"
+import { defineComponent } from '@nuxtjs/composition-api'
+import { createFormOptions } from '~/composition/form/createFormOptions'
+import Form from '~/components/form/form'
 
 export default defineComponent({
-  name: "passwordChangeFormComponent",
+  name: 'passwordChangeFormComponent',
   components: { Form },
   props: {
     value: {
@@ -75,21 +75,21 @@ export default defineComponent({
     const formFields = {
       current_password: {
         rules: { required: true },
-        mode: "lazy",
-        label: "現在のパスワード",
-        type: "password"
+        mode: 'lazy',
+        label: '現在のパスワード',
+        type: 'password'
       },
       password: {
         rules: { required: true, min: 8 },
-        mode: "lazy",
-        label: "変更後のパスワード",
-        type: "password"
+        mode: 'lazy',
+        label: '変更後のパスワード',
+        type: 'password'
       },
       password_confirmation: {
-        rules: { required: true, min: 8, confirmed: "password" },
-        mode: "lazy",
-        label: "変更後のパスワード(確認)",
-        type: "password"
+        rules: { required: true, min: 8, confirmed: 'password' },
+        mode: 'lazy',
+        label: '変更後のパスワード(確認)',
+        type: 'password'
       }
     }
     const { formOptions, validationOptions } = createFormOptions(formFields)

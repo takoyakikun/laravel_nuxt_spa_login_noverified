@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import MyDialog from "~/components/dialog/myDialog"
+import MyDialog from '~/components/dialog/myDialog'
 
 export default {
-  name: "UserPasswordSetResendDialogComponent",
+  name: 'UserPasswordSetResendDialogComponent',
   components: {
     MyDialog
   },
@@ -51,14 +51,14 @@ export default {
         await this.$api.users.passwordSetResend(this.userData.id).then(res => {
           if (res.status === 200) {
             this.$snackbar.openSnackbar({
-              text: "パスワード設定メールを再送信しました。",
-              options: { color: "success" }
+              text: 'パスワード設定メールを再送信しました。',
+              options: { color: 'success' }
             })
             this.$refs.dialog.closeDialog()
           } else {
             this.$snackbar.openSnackbar({
-              text: "パスワード設定メールの再送信に失敗しました。",
-              options: { color: "error" }
+              text: 'パスワード設定メールの再送信に失敗しました。',
+              options: { color: 'error' }
             })
           }
         })

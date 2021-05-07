@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import { defineComponent } from "@nuxtjs/composition-api"
-import { createFormOptions } from "~/composition/form/createFormOptions"
-import Form from "~/components/form/form"
+import { defineComponent } from '@nuxtjs/composition-api'
+import { createFormOptions } from '~/composition/form/createFormOptions'
+import Form from '~/components/form/form'
 
 export default defineComponent({
-  name: "passwordResetSendMailFormComponent",
+  name: 'passwordResetSendMailFormComponent',
   components: { Form },
   props: {
     value: {
@@ -38,9 +38,9 @@ export default defineComponent({
     const formFields = {
       email: {
         rules: { required: true, max: 255, email: true },
-        mode: "lazy",
-        label: "メールアドレス",
-        type: "email"
+        mode: 'lazy',
+        label: 'メールアドレス',
+        type: 'email'
       }
     }
     const { formOptions, validationOptions } = createFormOptions(formFields)

@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import lodash from "lodash"
-import MyDialog from "~/components/dialog/myDialog"
-import UserForm from "~/components/users/forms/userForm"
+import { mapGetters } from 'vuex'
+import lodash from 'lodash'
+import MyDialog from '~/components/dialog/myDialog'
+import UserForm from '~/components/users/forms/userForm'
 
 export default {
-  name: "UserEditDialogComponent",
+  name: 'UserEditDialogComponent',
   components: {
     MyDialog,
     UserForm
@@ -56,7 +56,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", ["user"]),
+    ...mapGetters('auth', ['user']),
 
     // 自ユーザーかどうか
     myuser() {
@@ -87,8 +87,8 @@ export default {
             await this.$api.users.editData(option).then(res => {
               if (res.status === 200) {
                 this.$snackbar.openSnackbar({
-                  text: "ユーザーデータを更新しました。",
-                  options: { color: "success" }
+                  text: 'ユーザーデータを更新しました。',
+                  options: { color: 'success' }
                 })
                 this.$refs.dialog.closeDialog()
                 this.$refs.validate.reset()
@@ -98,8 +98,8 @@ export default {
                 }
               } else {
                 this.$snackbar.openSnackbar({
-                  text: "ユーザーデータの更新に失敗しました。",
-                  options: { color: "error" }
+                  text: 'ユーザーデータの更新に失敗しました。',
+                  options: { color: 'error' }
                 })
               }
             })

@@ -1,8 +1,8 @@
-import { createLocalVue, shallowMount, RouterLinkStub } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import storeConfig from "~/test/storeConfig"
-import Error from "~/layouts/error"
+import { createLocalVue, shallowMount, RouterLinkStub } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import storeConfig from '~/test/storeConfig'
+import Error from '~/layouts/error'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -38,16 +38,16 @@ describe(__filename, () => {
     }
   })
 
-  describe("", () => {
+  describe('', () => {
     beforeEach(() => {
       wrapper = shallowMount(Error, mountOptions)
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    test("statusCodeが404", () => {
+    test('statusCodeが404', () => {
       // statusCodeを404にする
       wrapper.setProps({
         error: {
@@ -57,10 +57,10 @@ describe(__filename, () => {
 
       // "404 Not Found" を返す
       const head = wrapper.vm.$options.head.call(wrapper.vm)
-      expect(head.title).toBe("404 Not Found")
+      expect(head.title).toBe('404 Not Found')
     })
 
-    test("statusCodeが404以外", () => {
+    test('statusCodeが404以外', () => {
       // statusCodeを404以外にする
       wrapper.setProps({
         error: {
@@ -70,7 +70,7 @@ describe(__filename, () => {
 
       // "An error occurred" を返す
       const head = wrapper.vm.$options.head.call(wrapper.vm)
-      expect(head.title).toBe("An error occurred")
+      expect(head.title).toBe('An error occurred')
     })
   })
 })

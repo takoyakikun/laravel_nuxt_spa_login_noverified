@@ -1,7 +1,7 @@
-import { createLocalVue, shallowMount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import Form from "~/components/form/form"
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import Form from '~/components/form/form'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -22,16 +22,16 @@ describe(__filename, () => {
     }
   })
 
-  describe("", () => {
+  describe('', () => {
     beforeEach(() => {
       wrapper = shallowMount(Form, mountOptions)
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    test("フォーム送信", () => {
+    test('フォーム送信', () => {
       // フォーム送信
       wrapper.vm.methods.submit()
 

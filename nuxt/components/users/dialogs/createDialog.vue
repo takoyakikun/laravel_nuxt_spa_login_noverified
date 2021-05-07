@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import MyDialog from "~/components/dialog/myDialog"
-import UserForm from "~/components/users/forms/userForm"
+import MyDialog from '~/components/dialog/myDialog'
+import UserForm from '~/components/users/forms/userForm'
 
 export default {
-  name: "UserCreateDialogComponent",
+  name: 'UserCreateDialogComponent',
   components: {
     MyDialog,
     UserForm
@@ -65,16 +65,16 @@ export default {
             await this.$api.users.createData(this.formValue).then(res => {
               if (res.status === 200) {
                 this.$snackbar.openSnackbar({
-                  text: "ユーザーデータを追加しました。",
-                  options: { color: "success" }
+                  text: 'ユーザーデータを追加しました。',
+                  options: { color: 'success' }
                 })
                 this.$refs.dialog.closeDialog()
                 this.formValue = {}
                 this.$refs.validate.reset()
               } else {
                 this.$snackbar.openSnackbar({
-                  text: "ユーザーデータの追加に失敗しました。",
-                  options: { color: "error" }
+                  text: 'ユーザーデータの追加に失敗しました。',
+                  options: { color: 'error' }
                 })
               }
             })

@@ -1,4 +1,4 @@
-import lodash from "lodash"
+import lodash from 'lodash'
 
 /*
 下記の様にフォームフィールドデータを設定するとバリデーションとフォームフィールドのオプションデータが生成される
@@ -52,10 +52,10 @@ export const createFormOptions = formFields => {
             options.required = true
           },
           max_value() {
-            options.max = rules["max_value"]
+            options.max = rules['max_value']
           },
           min_value() {
-            options.min = rules["min_value"]
+            options.min = rules['min_value']
           }
         }
         for (let key in rules) {

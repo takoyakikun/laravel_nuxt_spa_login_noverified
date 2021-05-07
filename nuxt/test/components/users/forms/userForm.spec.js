@@ -1,12 +1,12 @@
-import { createLocalVue, shallowMount, mount } from "@vue/test-utils"
-import Vuetify from "vuetify"
-import Vuex from "vuex"
-import storeConfig from "~/test/storeConfig"
-import * as types from "~/store/mutation-types"
-import setConfigData from "~/test/setConfigData"
-import UserForm from "~/components/users/forms/userForm"
-import Form from "~/components/form/form"
-import { ValidationObserver } from "vee-validate"
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import Vuetify from 'vuetify'
+import Vuex from 'vuex'
+import storeConfig from '~/test/storeConfig'
+import * as types from '~/store/mutation-types'
+import setConfigData from '~/test/setConfigData'
+import UserForm from '~/components/users/forms/userForm'
+import Form from '~/components/form/form'
+import { ValidationObserver } from 'vee-validate'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -18,7 +18,7 @@ jest.useFakeTimers()
 let store
 beforeEach(() => {
   store = new Vuex.Store(storeConfig)
-  store.commit("config/" + types.CONFIG_SET_CONFIG, setConfigData)
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
   localVue.prototype.$nuxt = { context: { store } }
 })
 
@@ -27,7 +27,7 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe("テスト", () => {
+  describe('テスト', () => {
     let wrapper
     let mountOptions
     beforeEach(() => {
@@ -41,25 +41,25 @@ describe(__filename, () => {
       }
     })
 
-    test("is a Vue instance", () => {
+    test('is a Vue instance', () => {
       wrapper = shallowMount(UserForm, mountOptions)
 
       expect(wrapper.vm).toBeTruthy()
     })
 
-    describe("権限ごとに選択できる権限を変える", () => {
-      test("開発者権限", () => {
+    describe('権限ごとに選択できる権限を変える', () => {
+      test('開発者権限', () => {
         // 選択オプションデータをセット
-        store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
+        store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
         wrapper = shallowMount(UserForm, mountOptions)
 
         // 全ての権限を返す
         expect(wrapper.vm.state.role.map(item => item.value)).toEqual([1, 2, 3])
       })
 
-      test("それ以外", () => {
+      test('それ以外', () => {
         // 選択オプションデータをセット
-        store.commit("users/" + types.USERS_SET_ROLE_OPTIONS, [2, 3])
+        store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, [2, 3])
         wrapper = shallowMount(UserForm, mountOptions)
 
         // 管理者以外を返す
@@ -68,7 +68,7 @@ describe(__filename, () => {
     })
   })
 
-  describe("項目表示テスト", () => {
+  describe('項目表示テスト', () => {
     let wrapper
     let mountOptions
     beforeEach(() => {
@@ -82,7 +82,7 @@ describe(__filename, () => {
       }
     })
 
-    test("自ユーザー", () => {
+    test('自ユーザー', () => {
       // 自ユーザー設定
       mountOptions.propsData = { myuser: true }
 
@@ -92,7 +92,7 @@ describe(__filename, () => {
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeFalsy()
     })
 
-    test("自ユーザー以外", () => {
+    test('自ユーザー以外', () => {
       // 自ユーザー以外を設定
       mountOptions.propsData = { myuser: false }
 
@@ -102,9 +102,9 @@ describe(__filename, () => {
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeTruthy()
     })
 
-    test("フォームタイプ無し", () => {
+    test('フォームタイプ無し', () => {
       // フォームタイプを設定しない
-      mountOptions.propsData = { formType: "" }
+      mountOptions.propsData = { formType: '' }
 
       wrapper = mount(UserForm, mountOptions)
 
@@ -117,9 +117,9 @@ describe(__filename, () => {
       ).toBeFalsy()
     })
 
-    test("createフォームタイプ", () => {
+    test('createフォームタイプ', () => {
       // createフォームタイプ設定
-      mountOptions.propsData = { formType: "create" }
+      mountOptions.propsData = { formType: 'create' }
 
       wrapper = mount(UserForm, mountOptions)
 
@@ -132,9 +132,9 @@ describe(__filename, () => {
       ).toBeTruthy()
     })
 
-    test("usersCreateフォームタイプ", () => {
+    test('usersCreateフォームタイプ', () => {
       // usersCreateフォームタイプ設定
-      mountOptions.propsData = { formType: "usersCreate" }
+      mountOptions.propsData = { formType: 'usersCreate' }
 
       wrapper = mount(UserForm, mountOptions)
 
@@ -147,9 +147,9 @@ describe(__filename, () => {
       ).toBeFalsy()
     })
 
-    test("editフォームタイプ", async () => {
+    test('editフォームタイプ', async () => {
       // createフォームタイプ設定
-      mountOptions.propsData = { formType: "edit" }
+      mountOptions.propsData = { formType: 'edit' }
 
       wrapper = mount(UserForm, mountOptions)
 
@@ -163,7 +163,7 @@ describe(__filename, () => {
     })
   })
 
-  describe("フォームバリデーションテスト", () => {
+  describe('フォームバリデーションテスト', () => {
     let wrapper
     let mountOptions
     let formWrapper
@@ -181,7 +181,7 @@ describe(__filename, () => {
       formWrapper = wrapper.findComponent(UserForm)
     })
 
-    describe("ユーザー名", () => {
+    describe('ユーザー名', () => {
       let form
       let validation
       beforeEach(() => {
@@ -189,9 +189,9 @@ describe(__filename, () => {
         validation = formWrapper.vm.$refs.nameValidation
       })
 
-      test("requiredエラー", async () => {
+      test('requiredエラー', async () => {
         // 入力データをセット
-        form.setValue("")
+        form.setValue('')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -202,9 +202,9 @@ describe(__filename, () => {
         expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("maxエラー", async () => {
+      test('maxエラー', async () => {
         // 入力データをセット
-        form.setValue("a".repeat(256))
+        form.setValue('a'.repeat(256))
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -215,9 +215,9 @@ describe(__filename, () => {
         expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // 入力データをセット
-        form.setValue("テスト")
+        form.setValue('テスト')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -229,7 +229,7 @@ describe(__filename, () => {
       })
     })
 
-    describe("メールアドレス", () => {
+    describe('メールアドレス', () => {
       let form
       let validation
       beforeEach(() => {
@@ -237,9 +237,9 @@ describe(__filename, () => {
         validation = formWrapper.vm.$refs.emailValidation
       })
 
-      test("requiredエラー", async () => {
+      test('requiredエラー', async () => {
         // 入力データをセット
-        form.setValue("")
+        form.setValue('')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -250,9 +250,9 @@ describe(__filename, () => {
         expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("maxエラー", async () => {
+      test('maxエラー', async () => {
         // 入力データをセット
-        form.setValue("a".repeat(256))
+        form.setValue('a'.repeat(256))
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -263,9 +263,9 @@ describe(__filename, () => {
         expect(validation.failedRules.max).toBeTruthy()
       })
 
-      test("emailエラー", async () => {
+      test('emailエラー', async () => {
         // 入力データをセット
-        form.setValue("aaa")
+        form.setValue('aaa')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -276,9 +276,9 @@ describe(__filename, () => {
         expect(validation.failedRules.email).toBeTruthy()
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // 入力データをセット
-        form.setValue("test@test.com")
+        form.setValue('test@test.com')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -290,7 +290,7 @@ describe(__filename, () => {
       })
     })
 
-    describe("パスワード", () => {
+    describe('パスワード', () => {
       let form
       let validation
       beforeEach(() => {
@@ -298,9 +298,9 @@ describe(__filename, () => {
         validation = formWrapper.vm.$refs.passwordValidation
       })
 
-      test("requiredエラー", async () => {
+      test('requiredエラー', async () => {
         // 入力データをセット
-        form.setValue("")
+        form.setValue('')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -311,9 +311,9 @@ describe(__filename, () => {
         expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("minエラー", async () => {
+      test('minエラー', async () => {
         // 入力データをセット
-        form.setValue("a".repeat(7))
+        form.setValue('a'.repeat(7))
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -324,9 +324,9 @@ describe(__filename, () => {
         expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // 入力データをセット
-        form.setValue("password")
+        form.setValue('password')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -338,7 +338,7 @@ describe(__filename, () => {
       })
     })
 
-    describe("パスワード(確認)", () => {
+    describe('パスワード(確認)', () => {
       let form
       let passwordForm
       let validation
@@ -348,10 +348,10 @@ describe(__filename, () => {
         validation = formWrapper.vm.$refs.passwordConfirmationValidation
       })
 
-      test("requiredエラー", async () => {
+      test('requiredエラー', async () => {
         // 入力データをセット
-        form.setValue("")
-        passwordForm.setValue("password")
+        form.setValue('')
+        passwordForm.setValue('password')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -362,10 +362,10 @@ describe(__filename, () => {
         expect(validation.failedRules.required).toBeTruthy()
       })
 
-      test("minエラー", async () => {
+      test('minエラー', async () => {
         // 入力データをセット
-        form.setValue("a".repeat(7))
-        passwordForm.setValue("password")
+        form.setValue('a'.repeat(7))
+        passwordForm.setValue('password')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -376,10 +376,10 @@ describe(__filename, () => {
         expect(validation.failedRules.min).toBeTruthy()
       })
 
-      test("confirmedエラー", async () => {
+      test('confirmedエラー', async () => {
         // 入力データをセット
-        form.setValue("password")
-        passwordForm.setValue("aaaaaaaa")
+        form.setValue('password')
+        passwordForm.setValue('aaaaaaaa')
 
         // バリデーションを実行
         await wrapper.vm.validate()
@@ -390,10 +390,10 @@ describe(__filename, () => {
         expect(validation.failedRules.confirmed).toBeTruthy()
       })
 
-      test("成功", async () => {
+      test('成功', async () => {
         // 入力データをセット
-        form.setValue("password")
-        passwordForm.setValue("password")
+        form.setValue('password')
+        passwordForm.setValue('password')
 
         // バリデーションを実行
         await wrapper.vm.validate()

@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import SendMailForm from "~/components/passwordReset/sendMailForm"
+import SendMailForm from '~/components/passwordReset/sendMailForm'
 
 export default {
-  name: "PasswordResetIndexComponent",
+  name: 'PasswordResetIndexComponent',
   components: {
     SendMailForm
   },
@@ -66,8 +66,8 @@ export default {
                   this.send = true
                 } else {
                   this.$snackbar.openSnackbar({
-                    text: "パスワードリセットメール送信に失敗しました。",
-                    options: { color: "error" }
+                    text: 'パスワードリセットメール送信に失敗しました。',
+                    options: { color: 'error' }
                   })
                 }
               })

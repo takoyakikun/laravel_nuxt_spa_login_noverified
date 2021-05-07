@@ -32,6 +32,9 @@ module.exports = {
         "void": "always",
       }
     }],
-    "prettier/prettier": ["error", { "semi": false }],
+    "prettier/prettier": ["error", {
+      "semi": false ,
+      "singleQuote": true
+    }],
   }
 }
