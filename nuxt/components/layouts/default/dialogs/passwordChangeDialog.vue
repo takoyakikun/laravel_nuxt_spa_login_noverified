@@ -12,7 +12,7 @@
           <PasswordChangeForm v-model="formValue" @submit="submit" />
         </template>
 
-        <template #actionsLeft="{ state }">
+        <template #actionsRight="{ state }">
           <v-btn
             data-test="submitButton"
             :disabled="invalid"
@@ -25,7 +25,6 @@
             </v-icon>
             変更
           </v-btn>
-          <v-spacer />
         </template>
       </MyDialog>
     </ValidationObserver>

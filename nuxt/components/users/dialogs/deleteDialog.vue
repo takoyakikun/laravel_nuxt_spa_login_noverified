@@ -5,7 +5,7 @@
         {{ userData.name }} ({{ userData.email }}) を削除しますか？
       </template>
 
-      <template #actionsLeft="{ state }">
+      <template #actionsRight="{ state }">
         <v-btn
           data-test="submitButton"
           :color="state.color"
@@ -17,7 +17,6 @@
           </v-icon>
           削除
         </v-btn>
-        <v-spacer />
       </template>
     </MyDialog>
   </div>

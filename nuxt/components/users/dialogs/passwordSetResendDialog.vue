@@ -6,7 +6,7 @@
         のパスワード設定メールを再送信しますか？
       </template>
 
-      <template #actionsLeft="{ state }">
+      <template #actionsRight="{ state }">
         <v-btn
           data-test="submitButton"
           :color="state.color"
@@ -18,7 +18,6 @@
           </v-icon>
           再送信
         </v-btn>
-        <v-spacer />
       </template>
     </MyDialog>
   </div>

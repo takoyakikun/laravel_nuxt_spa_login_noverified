@@ -13,6 +13,13 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-btn data-test="topButtonLink" to="/">
+          <v-icon left>
+            mdi-home
+          </v-icon>
+          Top
+        </v-btn>
+        <v-spacer />
         <v-btn
           data-test="sendMailButton"
           :disabled="invalid"
@@ -24,13 +31,6 @@
             mdi-email-send-outline
           </v-icon>
           パスワードリセットメール送信
-        </v-btn>
-        <v-spacer />
-        <v-btn data-test="topButtonLink" to="/">
-          <v-icon left>
-            mdi-home
-          </v-icon>
-          Top
         </v-btn>
       </v-card-actions>
     </validation-observer>

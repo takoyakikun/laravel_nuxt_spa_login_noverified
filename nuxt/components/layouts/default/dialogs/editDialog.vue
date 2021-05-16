@@ -17,7 +17,7 @@
           />
         </template>
 
-        <template #actionsLeft="{ state }">
+        <template #actionsRight="{ state }">
           <v-btn
             data-test="submitButton"
             :disabled="invalid"
@@ -30,7 +30,6 @@
             </v-icon>
             更新
           </v-btn>
-          <v-spacer />
         </template>
       </MyDialog>
     </ValidationObserver>

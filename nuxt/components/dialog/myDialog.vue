@@ -11,8 +11,7 @@
           {{ state.title }}
         </slot>
         <v-spacer />
-        <slot name="titleRight" v-bind="{ state, closeDialog }" />
-        <slot name="titleClose" v-bind="{ state, closeDialog }">
+        <slot name="titleRight" v-bind="{ state, closeDialog }">
           <v-btn data-test="titleCloseButton" icon="icon" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -24,10 +23,7 @@
       </v-card-text>
 
       <v-card-actions>
-        <slot name="actionsLeft" v-bind="{ state, closeDialog }" />
-        <v-spacer />
-        <slot name="actionsRight" v-bind="{ state, closeDialog }" />
-        <slot name="actionsClose" v-bind="{ state, closeDialog }">
+        <slot name="actionsLeft" v-bind="{ state, closeDialog }">
           <v-btn data-test="actionsCloseButton" @click="closeDialog">
             <v-icon left>
               mdi-close
@@ -35,6 +31,8 @@
             閉じる
           </v-btn>
         </slot>
+        <v-spacer />
+        <slot name="actionsRight" v-bind="{ state, closeDialog }" />
       </v-card-actions>
     </v-card>
   </v-dialog>

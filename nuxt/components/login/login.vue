@@ -2,7 +2,7 @@
   <v-card class="elevation-12">
     <validation-observer ref="loginForm" v-slot="{ invalid }">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title>Login form</v-toolbar-title>
+        <v-toolbar-title>Login</v-toolbar-title>
       </v-toolbar>
 
       <v-card-text>
@@ -17,6 +17,13 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-btn data-test="topButtonLink" to="/">
+          <v-icon left>
+            mdi-home
+          </v-icon>
+          Top
+        </v-btn>
+        <v-spacer />
         <v-btn
           data-test="loginButton"
           :disabled="invalid"
@@ -28,13 +35,6 @@
             mdi-login-variant
           </v-icon>
           Login
-        </v-btn>
-        <v-spacer />
-        <v-btn data-test="topButtonLink" to="/">
-          <v-icon left>
-            mdi-home
-          </v-icon>
-          Top
         </v-btn>
       </v-card-actions>
     </validation-observer>

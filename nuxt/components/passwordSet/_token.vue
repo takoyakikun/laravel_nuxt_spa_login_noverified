@@ -10,6 +10,7 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-spacer />
         <v-btn
           data-test="passwordSetButton"
           :disabled="invalid"
@@ -22,7 +23,6 @@
           </v-icon>
           パスワードを登録
         </v-btn>
-        <v-spacer />
       </v-card-actions>
     </validation-observer>
   </v-card>
