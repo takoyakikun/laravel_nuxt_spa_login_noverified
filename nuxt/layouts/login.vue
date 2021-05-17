@@ -1,9 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-content>
-      <v-container class="fill-height" fluid>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
 
     <!-- snackbar -->
@@ -12,7 +10,7 @@
 </template>
 
 <script>
-import Snackbar from '@/components/snackbar/snackbar'
+import Snackbar from '~/components/snackbar/snackbar'
 
 export default {
   components: {

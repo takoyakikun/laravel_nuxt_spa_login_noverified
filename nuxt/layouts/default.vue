@@ -8,9 +8,7 @@
 
     <!-- メインコンテンツ -->
     <v-content>
-      <v-container class="fill-height" fluid>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
 
     <!-- フッター -->
@@ -26,11 +24,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TopScroll from '@/components/topScroll/topScroll'
-import Snackbar from '@/components/snackbar/snackbar'
-import SideBar from '@/components/layouts/default/sideBar'
-import Header from '@/components/layouts/default/header'
-import Footer from '@/components/layouts/default/footer'
+import TopScroll from '~/components/topScroll/topScroll'
+import Snackbar from '~/components/snackbar/snackbar'
+import SideBar from '~/components/layouts/default/sideBar'
+import Header from '~/components/layouts/default/header'
+import Footer from '~/components/layouts/default/footer'
 
 export default {
   components: {
