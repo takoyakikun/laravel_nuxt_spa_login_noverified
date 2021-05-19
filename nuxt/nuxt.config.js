@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 require('dotenv').config()
 
 export default {
-  mode: 'spa',
+  ssr: false,
   router: {
     base: process.env.ROUTER_BASE
   },
@@ -101,7 +101,7 @@ export default {
     extend(config, ctx) {
       if (!ctx.isDev) {
         const vueLoader = config.module.rules.find(
-          rule => rule.loader === 'vue-loader'
+          rule => ~rule.loader.indexOf('vue-loader')
         )
         vueLoader.options.compilerModules = [
           {

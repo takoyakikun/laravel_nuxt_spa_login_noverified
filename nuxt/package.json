@@ -48,7 +48,7 @@
     "require-extension-hooks-babel": "^1.0.0",
     "require-extension-hooks-vue": "^2.0.0",
     "sass": "^1.30.0",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^10.1.1",
     "vue-jest": "^3.0.6"
   }
 }
