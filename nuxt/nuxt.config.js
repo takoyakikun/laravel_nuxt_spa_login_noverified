@@ -3,6 +3,7 @@ require('dotenv').config()
 
 export default {
   ssr: false,
+  env: process.env,
   router: {
     base: process.env.ROUTER_BASE
   },
