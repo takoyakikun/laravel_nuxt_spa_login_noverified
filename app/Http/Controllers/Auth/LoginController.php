@@ -57,6 +57,18 @@ class LoginController extends Controller
     }
 
     /**
+     * ログインした後に失敗判定が出た場合はログアウトしてログイン失敗のレスポンスを返す
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function afterFaildLogin(Request $request)
+    {
+        $this->logout($request);
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
      * ログアウト成功
      *
      * @return Response
