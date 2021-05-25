@@ -1,11 +1,23 @@
 import colors from 'vuetify/es5/util/colors'
-require('dotenv').config()
+
+const fs = require('fs')
+
+// 共通の設定
+const baseEnv = fs.existsSync('./config/env.js')
+  ? require('./config/env.js')
+  : {}
+// 各環境ごとの設定
+const addEnv = fs.existsSync(`./config/env.${process.env.NODE_ENV}.js`)
+  ? require(`./config/env.${process.env.NODE_ENV}.js`)
+  : {}
+// 共通の設定と各環境ごとの設定を併合する(同じ項目は各環境ごとの設定優先)
+const env = { ...baseEnv, ...addEnv }
 
 export default {
   ssr: false,
-  env: process.env,
+  publicRuntimeConfig: {},
   router: {
-    base: process.env.ROUTER_BASE
+    base: env.ROUTER_BASE || '/'
   },
   /*
    ** Headers of the page
@@ -59,16 +71,14 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/axios'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.API_URL,
+    baseURL: env.API_URL,
     credentials: true
   },
   /*
@@ -130,7 +140,7 @@ export default {
     transpile: ['vee-validate/dist/rules']
   },
   generate: {
-    dir: '../public/dist',
+    dir: env.GENERATE_DIR,
     fallback: true,
     interval: 2000
   },
