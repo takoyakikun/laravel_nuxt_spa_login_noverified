@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
-    <v-content>
+    <v-main>
       <nuxt />
-    </v-content>
+    </v-main>
 
     <!-- snackbar -->
     <Snackbar />

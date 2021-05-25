@@ -7,9 +7,9 @@
     <Header :drawer="drawer" @drawer="setDrawer" />
 
     <!-- メインコンテンツ -->
-    <v-content>
+    <v-main>
       <nuxt />
-    </v-content>
+    </v-main>
 
     <!-- フッター -->
     <Footer />
