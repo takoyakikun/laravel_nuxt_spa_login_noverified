@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Unit\Requests;
+namespace Tests\Unit\Requests\User;
 
-use App\Http\Requests\MyuserUpdateRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class MyuserUpdateRequestTest extends TestCase
+class UpdateRequestTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -38,7 +38,7 @@ class MyuserUpdateRequestTest extends TestCase
      */
     public function testValidation($item, $data, $expect, $options = array()): void
     {
-        $request  = new MyuserUpdateRequest();
+        $request  = new UpdateRequest();
         $rules    = $request->rules();
         $rule     = \Arr::only($rules, $item);
 
@@ -73,6 +73,13 @@ class MyuserUpdateRequestTest extends TestCase
             'email_max_false' => ['email', str_repeat('a', 247) . '@test.com', false],
             'email_max_true' => ['email', str_repeat('a', 246) . '@test.com', true],
             'email_unique' => ['email', 'test@test.com', false],
+
+            // 権限
+            'role_true' => ['role', 1, true],
+            'role_required_null' => ['role', null, false],
+            'role_required_empty' => ['role', '', false],
+            'role_numeric_string' => ['role', 'test', false],
+
         ];
     }
 }

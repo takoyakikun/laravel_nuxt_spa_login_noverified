@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Unit\Requests;
+namespace Tests\Unit\Requests\User;
 
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\User\StoreRequest;
 use App\Models\User;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class UserUpdateRequestTest extends TestCase
+class StoreRequestTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -38,7 +38,7 @@ class UserUpdateRequestTest extends TestCase
      */
     public function testValidation($item, $data, $expect, $options = array()): void
     {
-        $request  = new UserUpdateRequest();
+        $request  = new StoreRequest();
         $rules    = $request->rules();
         $rule     = \Arr::only($rules, $item);
 

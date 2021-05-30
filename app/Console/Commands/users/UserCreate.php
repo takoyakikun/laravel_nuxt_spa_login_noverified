@@ -6,7 +6,7 @@ namespace App\Console\Commands\Users;
 use App\Models\User;
 
 // 追加フォームバリデーション
-use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\User\StoreRequest;
 
 use Illuminate\Console\Command;
 use Cerbero\CommandValidator\ValidatesInput;
@@ -49,7 +49,7 @@ class UserCreate extends Command
      */
     protected function rules(): array
     {
-        return (new UserStoreRequest())->rules();
+        return (new StoreRequest())->rules();
     }
 
     /**

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 // 追加フォームバリデーション
-use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\User\StoreRequest;
 
 // 更新フォームバリデーション
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\User\UpdateRequest;
 
 // ユーザーモデル
 use App\Models\User;
@@ -37,10 +37,10 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\UserStoreRequest  $request
+     * @param  \App\Http\Requests\User\StoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserStoreRequest $request)
+    public function store(StoreRequest $request)
     {
         if ((int)Auth::user()->role_level['auth'] <= (int)resolve(User::class)->roleLevel($request->input('role'), 'auth')) {
             // 入力者より権限が同じか下の場合は入力値を設定
@@ -77,11 +77,11 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UserUpdateRequest  $request
+     * @param  \App\Http\Requests\User\UpdateRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $user = resolve(User::class)->find($id);
 
@@ -113,7 +113,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int|array  $id
+     * @param  int|string  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 
-class MyuserUpdateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,9 +15,12 @@ class MyuserUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        // 一般ユーザ以上を許可
-        if (Gate::allows('user-higher')) {
-            return true;
+        // 管理者以上を許可
+        if (Gate::allows('admin-higher')) {
+            // 自ユーザー以外を許可
+            if ($this->user !== \Auth::user()->id) {
+                return true;
+            }
         }
         return false;
     }
@@ -31,7 +34,8 @@ class MyuserUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(\Auth::user())],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
+            'role' => ['required', 'numeric', Rule::in(array_keys(\Config::get('settings.roleOptions')))],
         ];
     }
 }

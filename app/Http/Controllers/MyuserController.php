@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
 // 追加フォームバリデーション
-use App\Http\Requests\MyuserStoreRequest;
+use App\Http\Requests\Myuser\StoreRequest;
 
 // 更新フォームバリデーション
-use App\Http\Requests\MyuserUpdateRequest;
+use App\Http\Requests\Myuser\UpdateRequest;
 
 // パスワード変更フォームバリデーション
-use App\Http\Requests\MyuserPasswordChangeRequest;
+use App\Http\Requests\Myuser\PasswordChangeRequest;
 
 // ユーザーモデル
 use App\Models\User;
@@ -24,10 +24,10 @@ class MyuserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\MyuserStoreRequest  $request
+     * @param  \App\Http\Requests\Myuser\StoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MyuserStoreRequest $request)
+    public function store(StoreRequest $request)
     {
         
         \DB::beginTransaction();
@@ -56,10 +56,10 @@ class MyuserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\MyuserUpdateRequest  $request
+     * @param  \App\Http\Requests\Myuser\UpdateRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(MyuserUpdateRequest $request)
+    public function update(UpdateRequest $request)
     {
         $updateData = [
             'name' => $request->input('name'),
@@ -83,10 +83,10 @@ class MyuserController extends Controller
     /**
      * パスワード変更
      *
-     * @param \App\Http\Requests\MyuserPasswordChangeRequest $request
+     * @param \App\Http\Requests\Myuser\PasswordChangeRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function passwordChange (MyuserPasswordChangeRequest $request)
+    public function passwordChange (PasswordChangeRequest $request)
     {
         // 現在のパスワードが正しいかチェック
         if (!(Hash::check($request->get('current_password'), \Auth::user()->password))) {
