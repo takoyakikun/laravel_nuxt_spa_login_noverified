@@ -20,7 +20,8 @@
     "cross-env": "^7.0.3",
     "lodash": "^4.17.19",
     "nuxt": "^2.0.0",
-    "vee-validate": "^3.2.5"
+    "vee-validate": "^3.2.5",
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@babel/helper-validator-option": "^7.12.11",
