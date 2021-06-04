@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Commands;
 
-use Tests\Feature\Common\UsersTestTrait;
+use Tests\Feature\Common\UserTestTrait;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Notification;
 class UserCreateTest extends TestCase
 {
     use RefreshDatabase;
-    use UsersTestTrait;
+    use UserTestTrait;
 
     /**
      * ログインユーザー追加コマンドテスト

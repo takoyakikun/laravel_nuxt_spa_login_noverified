@@ -8,8 +8,35 @@ use App\Notifications\CustomResetPassword;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Assert;
 
-trait UsersTestTrait
+trait UserTestTrait
 {
+    // テスト一般ユーザ
+    protected $user;
+
+    // テスト管理者ユーザ
+    protected $adminUser;
+
+    // テスト開発者ユーザ
+    protected $systemUser;
+
+    /**
+     * テストユーザーを作成してセットする
+     *
+     * @return void
+     */
+    public function userSetUp()
+    {
+        // テスト一般ユーザ作成
+        $this->user = factory(User::class)->states('test_user')->create();
+
+        // テスト管理者ユーザ作成
+        $this->adminUser = factory(User::class)->states('test_admin')->create();
+
+        // テスト開発者ユーザ作成
+        $this->systemUser = factory(User::class)->states('test_system')->create();
+
+    }
+
     /**
      * ログインユーザーパスワード設定メール送信共通のテスト
      *

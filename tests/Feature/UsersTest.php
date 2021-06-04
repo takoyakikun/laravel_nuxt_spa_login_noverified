@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Notifications\CustomResetPassword;
-use Tests\Feature\Common\UsersTestTrait;
+use Tests\Feature\Common\UserTestTrait;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,29 +15,14 @@ use Mockery;
 class UsersTest extends TestCase
 {
     use RefreshDatabase;
-    use UsersTestTrait;
-
-    // テスト一般ユーザ
-    protected $user;
-
-    // テスト管理者ユーザ
-    protected $adminUser;
-
-    // テスト開発者ユーザ
-    protected $systemUser;
+    use UserTestTrait;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // テスト一般ユーザ作成
-        $this->user = factory(User::class)->states('test_user')->create();
-
-        // テスト管理者ユーザ作成
-        $this->adminUser = factory(User::class)->states('test_admin')->create();
-
-        // テスト開発者ユーザ作成
-        $this->systemUser = factory(User::class)->states('test_system')->create();
+        // テストユーザーをセット
+        $this->userSetUp();
     }
 
     public function tearDown(): void
@@ -183,7 +168,7 @@ class UsersTest extends TestCase
         ];
 
         // モデルをモックする
-        $userMock = Mockery::mock(User::class)->makePartial();
+        $userMock = Mockery::mock(resolve(User::class))->makePartial();
         $userMock->shouldReceive('find')->andReturnUsing(function ($arg) {
             $user = Mockery::mock(User::find($arg));
             $user->shouldReceive('fill->save');
@@ -247,14 +232,14 @@ class UsersTest extends TestCase
             ->json('DELETE', route('users.destroy', $sample->id), [], ['X-Requested-With' => 'XMLHttpRequest']);
 
          // 正常レスポンスを返す
-         $response->assertStatus(200);
+        $response->assertStatus(200);
 
         // ユーザーが削除されているか確認
         $this->assertDeleted($sample);
 
     }
 
-     /**
+    /**
      * ログインユーザー複数削除テスト
      *
      * @return void
@@ -279,7 +264,7 @@ class UsersTest extends TestCase
             ->json('DELETE', route('users.destroy', json_encode($finds)), [], ['X-Requested-With' => 'XMLHttpRequest']);
 
          // 正常レスポンスを返す
-         $response->assertStatus(200);
+        $response->assertStatus(200);
 
         // ユーザーが削除されているか確認
         foreach($sample as $user) {
@@ -310,7 +295,7 @@ class UsersTest extends TestCase
         ]);
 
         // モデルをモックする
-        $userMock = Mockery::mock(User::class);
+        $userMock = Mockery::mock(resolve(User::class));
         $userMock->shouldReceive('destroy');
         $userMock->shouldReceive('find')->andReturnUsing(function ($arg) {
             return User::find($arg);
