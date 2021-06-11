@@ -9,9 +9,11 @@ export default localVue => {
 
   Object.keys(plugin).map(key => (localVue.prototype[key] = plugin[key]))
 
-  localVue.prototype.$nuxt = {
-    context: {
-      app: plugin
+  if (!localVue.prototype.$nuxt) {
+    localVue.prototype.$nuxt = {
+      context: {}
     }
   }
+
+  localVue.prototype.$nuxt.context.app = plugin
 }
