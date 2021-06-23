@@ -1,20 +1,16 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
+import { shallowMount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
 import axios from 'axios'
-import api from '~/test/api'
-import storeConfig from '~/test/storeConfig'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
+import setPlugin from '~/test/setPlugin'
 import Default from '~/layouts/default'
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-let vuetify = new Vuetify()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  localVue.prototype.$api = api({ $axios: axios, store })
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
 })
 
 afterEach(() => {

@@ -1,10 +1,9 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import storeConfig from '~/test/storeConfig'
+import { shallowMount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
 import axios from 'axios'
-import VueMeta from 'vue-meta'
-import api from '~/test/api'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
+import setPlugin from '~/test/setPlugin'
 import Index from '~/pages/index'
 import Auth from '~/pages/auth'
 import Login from '~/pages/login'
@@ -14,20 +13,13 @@ import PasswordReset from '~/pages/passwordReset/index'
 import PasswordResetToken from '~/pages/passwordReset/_token'
 import PasswordSetToken from '~/pages/passwordSet/_token'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueMeta, { keyName: 'head' })
-
-const vuetify = new Vuetify()
-
 jest.mock('vuex')
 
 let store
-let $api
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  $api = api({ $axios: axios, store })
-  localVue.prototype.$api = $api
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
 })
 
 afterEach(() => {
@@ -97,8 +89,11 @@ describe(__filename, () => {
     let getRoleOptions
     beforeEach(() => {
       // spyOn
-      getList = jest.spyOn($api.users, 'getList')
-      getRoleOptions = jest.spyOn($api.users, 'getRoleOptions')
+      getList = jest.spyOn(localVue.prototype.$api.users, 'getList')
+      getRoleOptions = jest.spyOn(
+        localVue.prototype.$api.users,
+        'getRoleOptions'
+      )
 
       wrapper = shallowMount(Users, { localVue, store, vuetify })
     })

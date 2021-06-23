@@ -1,25 +1,19 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import VueRouter from 'vue-router'
-import storeConfig from '~/test/storeConfig'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue, router, vuetify } from '~/test/setLocalVue'
+import axios from 'axios'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
 import SideBar from '~/components/layouts/default/sideBar'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueRouter)
-
-const router = new VueRouter()
-const vuetify = new Vuetify()
-
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
   setPlugin(localVue)
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {

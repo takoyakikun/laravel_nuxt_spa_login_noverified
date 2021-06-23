@@ -1,12 +1,17 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
+import { shallowMount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
+import axios from 'axios'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
+import setPlugin from '~/test/setPlugin'
 import Form from '~/components/form/form'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-let vuetify = new Vuetify()
+let store
+beforeEach(() => {
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
+})
 
 afterEach(() => {
   jest.clearAllMocks()

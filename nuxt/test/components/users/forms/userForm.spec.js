@@ -1,25 +1,23 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import storeConfig from '~/test/storeConfig'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
+import axios from 'axios'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
+import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
 import UserForm from '~/components/users/forms/userForm'
 import Form from '~/components/form/form'
 import { ValidationObserver } from 'vee-validate'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-let vuetify = new Vuetify()
-
 jest.useFakeTimers()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
   store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
-  localVue.prototype.$nuxt = { context: { store } }
 })
 
 afterEach(() => {

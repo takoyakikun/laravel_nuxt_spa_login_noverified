@@ -1,26 +1,21 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import storeConfig from '~/test/storeConfig'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
+import axios from 'axios'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
 import UserList from '~/components/users/userList'
-import DeleteMultiDialog from '~/components/users/dialogs/deleteMultiDialog'
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-let vuetify = new Vuetify()
 
 jest.useFakeTimers()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
   setPlugin(localVue)
-  localVue.prototype.$nuxt.context.store = store
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {
@@ -28,119 +23,117 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe('テスト', () => {
-    let wrapper
-    beforeEach(() => {
-      wrapper = shallowMount(UserList, {
-        localVue,
-        store,
-        vuetify
-      })
+  let mountOptions
+  beforeEach(() => {
+    mountOptions = {
+      localVue,
+      store,
+      vuetify
+    }
+  })
+
+  test('is a Vue instance', () => {
+    const wrapper = shallowMount(UserList, mountOptions)
+
+    expect(wrapper.vm).toBeTruthy()
+  })
+
+  test('ユーザーデータが更新されたら選択を初期化', async () => {
+    const wrapper = shallowMount(UserList, mountOptions)
+
+    // テーブルにデータを追加
+    const userData = [
+      {
+        id: 1,
+        name: 'テスト開発者',
+        email: 'test_system@test.com',
+        role: 1
+      },
+      {
+        id: 2,
+        name: 'テスト管理者',
+        email: 'test_admin@test.com',
+        role: 2
+      },
+      {
+        id: 3,
+        name: 'テスト一般',
+        email: 'test_user@test.com',
+        role: 3
+      },
+      {
+        id: 4,
+        name: '一般',
+        email: 'user@test.com',
+        role: 3
+      }
+    ]
+    await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, userData)
+
+    // 選択ユーザーを追加
+    wrapper.setData({
+      selected: userData
     })
 
-    test('is a Vue instance', () => {
-      expect(wrapper.vm).toBeTruthy()
+    // 全て選択されている
+    expect(wrapper.vm.selected).toHaveLength(4)
+
+    // 新しいユーザーデータで更新
+    const newUserData = [
+      {
+        id: 1,
+        name: 'テスト開発者',
+        email: 'test_system@test.com',
+        role: 1
+      },
+      {
+        id: 2,
+        name: 'テスト管理者',
+        email: 'test_admin@test.com',
+        role: 2
+      },
+      {
+        id: 3,
+        name: 'テスト一般',
+        email: 'test_user@test.com',
+        role: 3
+      }
+    ]
+    await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, newUserData)
+
+    // 選択が初期化されている
+    expect(wrapper.vm.selected).toHaveLength(0)
+  })
+
+  describe('選択可能ユーザーの判定テスト', () => {
+    test('プロパティなし', () => {
+      const wrapper = shallowMount(UserList, mountOptions)
+
+      expect(wrapper.vm.selectedUser({})).toBeFalsy()
     })
 
-    test('ユーザーデータが更新されたら選択を初期化', async () => {
-      // テーブルにデータを追加
-      const userData = [
-        {
-          id: 1,
-          name: 'テスト開発者',
-          email: 'test_system@test.com',
-          role: 1
-        },
-        {
-          id: 2,
-          name: 'テスト管理者',
-          email: 'test_admin@test.com',
-          role: 2
-        },
-        {
-          id: 3,
-          name: 'テスト一般',
-          email: 'test_user@test.com',
-          role: 3
-        },
-        {
-          id: 4,
-          name: '一般',
-          email: 'user@test.com',
-          role: 3
-        }
-      ]
-      await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, userData)
+    test('全てのメニューバーアクション不可', () => {
+      const wrapper = shallowMount(UserList, mountOptions)
 
-      // 選択ユーザーを追加
-      wrapper.setData({
-        selected: userData
-      })
-
-      // 全て選択されている
-      expect(wrapper.vm.selected).toHaveLength(4)
-
-      // 新しいユーザーデータで更新
-      const newUserData = [
-        {
-          id: 1,
-          name: 'テスト開発者',
-          email: 'test_system@test.com',
-          role: 1
-        },
-        {
-          id: 2,
-          name: 'テスト管理者',
-          email: 'test_admin@test.com',
-          role: 2
-        },
-        {
-          id: 3,
-          name: 'テスト一般',
-          email: 'test_user@test.com',
-          role: 3
-        }
-      ]
-      await wrapper.vm.$store.commit(
-        'users/' + types.USERS_SET_LIST,
-        newUserData
-      )
-
-      // 選択が初期化されている
-      expect(wrapper.vm.selected).toHaveLength(0)
+      const user = {
+        delete_flg: 0
+      }
+      expect(wrapper.vm.selectedUser(user)).toBeFalsy()
     })
 
-    describe('選択可能ユーザーの判定テスト', () => {
-      test('プロパティなし', () => {
-        expect(wrapper.vm.selectedUser({})).toBeFalsy()
-      })
+    test('全てのメニューバーアクション可能', () => {
+      const wrapper = shallowMount(UserList, mountOptions)
 
-      test('全てのメニューバーアクション不可', () => {
-        const user = {
-          delete_flg: 0
-        }
-        expect(wrapper.vm.selectedUser(user)).toBeFalsy()
-      })
-
-      test('全てのメニューバーアクション可能', () => {
-        const user = {
-          delete_flg: 1
-        }
-        expect(wrapper.vm.selectedUser(user)).toBeTruthy()
-      })
+      const user = {
+        delete_flg: 1
+      }
+      expect(wrapper.vm.selectedUser(user)).toBeTruthy()
     })
   })
 
   describe('ダイアログオープンテスト', () => {
-    let wrapper
     let testUser
     beforeEach(() => {
-      wrapper = mount(UserList, {
-        localVue,
-        store,
-        vuetify
-      })
-
       // テストユーザーを追加
       testUser = {
         id: 1,
@@ -153,6 +146,8 @@ describe(__filename, () => {
     })
 
     test('新規追加ダイアログを開く', () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // ダイアログを開く
       wrapper.vm.openCreateDialog()
 
@@ -163,6 +158,8 @@ describe(__filename, () => {
     })
 
     test('編集ダイアログを開く', () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // ダイアログを開く
       wrapper.vm.openEditDialog(testUser)
 
@@ -177,6 +174,8 @@ describe(__filename, () => {
     })
 
     test('削除ダイアログを開く', () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // ダイアログを開く
       wrapper.vm.openDeleteDialog(testUser)
 
@@ -191,6 +190,8 @@ describe(__filename, () => {
 
     describe('複数削除ダイアログを開く', () => {
       test('選択ユーザーなし', () => {
+        const wrapper = mount(UserList, mountOptions)
+
         // ダイアログを開く
         wrapper.vm.openDeleteMultiDialog()
 
@@ -200,11 +201,11 @@ describe(__filename, () => {
         ).toBeFalsy()
       })
 
-      test('選択ユーザーあり', () => {
+      test('選択ユーザーあり', async () => {
+        const wrapper = mount(UserList, mountOptions)
+
         // 選択ユーザーを追加
-        wrapper
-          .findComponent(DeleteMultiDialog)
-          .setProps({ deleteUsers: [testUser] })
+        await wrapper.setData({ selected: [testUser] })
 
         // ダイアログを開く
         wrapper.vm.openDeleteMultiDialog()
@@ -217,6 +218,8 @@ describe(__filename, () => {
     })
 
     test('パスワード設定メール再送信ダイアログを開く', () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // ダイアログを開く
       wrapper.vm.openPasswordSetResendDialog(testUser)
 
@@ -233,7 +236,6 @@ describe(__filename, () => {
   })
 
   describe('ボタン動作テスト', () => {
-    let wrapper
     let openCreateDialog
     let openEditDialog
     let openDeleteDialog
@@ -255,14 +257,11 @@ describe(__filename, () => {
       openPasswordSetResendDialog = jest
         .spyOn(UserList.methods, 'openPasswordSetResendDialog')
         .mockReturnValue(true)
-      wrapper = mount(UserList, {
-        localVue,
-        store,
-        vuetify
-      })
     })
 
     test('新規追加ダイアログボタン', () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // ボタンをクリック
       wrapper.find("[data-test='createDialogButton']").trigger('click')
 
@@ -271,6 +270,8 @@ describe(__filename, () => {
     })
 
     test('編集ダイアログボタン', async () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // テーブルにデータを追加
       await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, [
         {
@@ -290,6 +291,8 @@ describe(__filename, () => {
     })
 
     test('削除ダイアログボタン', async () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // テーブルにデータを追加
       await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, [
         {
@@ -309,6 +312,8 @@ describe(__filename, () => {
     })
 
     test('複数削除ダイアログボタン', async () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // 選択ユーザーを追加
       wrapper.setData({
         selected: [
@@ -330,6 +335,8 @@ describe(__filename, () => {
     })
 
     test('パスワード設定メール再送信ダイアログボタン', async () => {
+      const wrapper = mount(UserList, mountOptions)
+
       // テーブルにデータを追加
       await wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, [
         {
@@ -352,11 +359,7 @@ describe(__filename, () => {
   describe('ユーザー検索動作テスト', () => {
     let wrapper
     beforeEach(() => {
-      wrapper = shallowMount(UserList, {
-        localVue,
-        store,
-        vuetify
-      })
+      wrapper = shallowMount(UserList, mountOptions)
 
       // テーブルにデータを追加
       wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, [
@@ -508,11 +511,7 @@ describe(__filename, () => {
   describe('ユーザーテーブル選択テスト', () => {
     let wrapper
     beforeEach(() => {
-      wrapper = shallowMount(UserList, {
-        localVue,
-        store,
-        vuetify
-      })
+      wrapper = shallowMount(UserList, mountOptions)
 
       // テーブルにデータを追加
       wrapper.vm.$store.commit('users/' + types.USERS_SET_LIST, [

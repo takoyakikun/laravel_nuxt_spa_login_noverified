@@ -1,7 +1,5 @@
-import Vuex from 'vuex'
-import storeConfig from '~/test/storeConfig'
 import axios from 'axios'
-import api from '~/test/api'
+import makeMiddlewareOptions from '~/test/makeMiddlewareOptions'
 import Admin from '~/middleware/admin'
 
 jest.useFakeTimers()
@@ -9,11 +7,11 @@ jest.mock('axios')
 
 let store
 let redirect
-let $api
+let middlewareOptions
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  redirect = jest.fn()
-  $api = api({ $axios: axios, store })
+  middlewareOptions = makeMiddlewareOptions(axios)
+  store = middlewareOptions.store
+  redirect = middlewareOptions.redirect
 })
 
 afterEach(() => {
@@ -23,7 +21,7 @@ afterEach(() => {
 describe(__filename, () => {
   test('ログインしていない', async () => {
     // ミドルウェアを実行
-    await Admin({ store: store, redirect: redirect, app: { $api } })
+    await Admin(middlewareOptions)
     jest.runAllTimers()
 
     // ログインしていないのでfalse
@@ -61,7 +59,7 @@ describe(__filename, () => {
       store.$axios = axios
 
       // ミドルウェアを実行
-      await Admin({ store: store, redirect: redirect, app: { $api } })
+      await Admin(middlewareOptions)
       jest.runAllTimers()
 
       // ログインしているのでtrue
@@ -92,7 +90,7 @@ describe(__filename, () => {
       store.$axios = axios
 
       // ミドルウェアを実行
-      await Admin({ store: store, redirect: redirect, app: { $api } })
+      await Admin(middlewareOptions)
       jest.runAllTimers()
 
       // ログインしているのでtrue

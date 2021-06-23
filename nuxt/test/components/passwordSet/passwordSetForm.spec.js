@@ -1,21 +1,20 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import storeConfig from '~/test/storeConfig'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue, vuetify } from '~/test/setLocalVue'
+import axios from 'axios'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
+import setPlugin from '~/test/setPlugin'
 import PasswordSetForm from '~/components/passwordSet/passwordSetForm'
 import Form from '~/components/form/form'
 import { ValidationObserver } from 'vee-validate'
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-const vuetify = new Vuetify()
 
 jest.useFakeTimers()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
 })
 
 afterEach(() => {

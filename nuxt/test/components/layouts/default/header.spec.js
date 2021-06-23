@@ -1,31 +1,21 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import VueRouter from 'vue-router'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue, router, vuetify } from '~/test/setLocalVue'
 import axios from 'axios'
-import api from '~/test/api'
-import storeConfig from '~/test/storeConfig'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
 import Header from '~/components/layouts/default/header'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueRouter)
-
-const router = new VueRouter()
-const vuetify = new Vuetify()
-
 jest.useFakeTimers()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
-  localVue.prototype.$api = api({ $axios: axios, store })
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
   setPlugin(localVue)
-  localVue.prototype.$nuxt.context.store = store
+  store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
 })
 
 afterEach(() => {

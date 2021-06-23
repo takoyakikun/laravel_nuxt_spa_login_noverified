@@ -1,29 +1,25 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
+import { shallowMount, mount } from '@vue/test-utils'
+import { localVue } from '~/test/setLocalVue'
 import axios from 'axios'
-import api from '~/test/api'
+import Vuetify from 'vuetify'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
-import storeConfig from '~/test/storeConfig'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
 import CreateDialog from '~/components/users/dialogs/createDialog'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-const vuetify = new Vuetify()
-
 jest.useFakeTimers()
 
 let store
+let vuetify
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
+  setPlugin(localVue)
+  vuetify = new Vuetify()
   store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
   store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
-  localVue.prototype.$api = api({ $axios: axios, store })
-  setPlugin(localVue)
-  localVue.prototype.$nuxt.context.store = store
 })
 
 afterEach(() => {

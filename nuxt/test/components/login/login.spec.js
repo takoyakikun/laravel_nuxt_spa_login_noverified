@@ -1,31 +1,17 @@
-import {
-  createLocalVue,
-  shallowMount,
-  mount,
-  RouterLinkStub
-} from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import Vuex from 'vuex'
-import VueRouter from 'vue-router'
+import { shallowMount, mount, RouterLinkStub } from '@vue/test-utils'
+import { localVue, router, vuetify } from '~/test/setLocalVue'
 import axios from 'axios'
-import api from '~/test/api'
+import setStore from '~/test/setStore'
+import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
-import storeConfig from '~/test/storeConfig'
 import Login from '~/components/login/login'
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueRouter)
-
-const router = new VueRouter()
-const vuetify = new Vuetify()
 
 jest.useFakeTimers()
 
 let store
 beforeEach(() => {
-  store = new Vuex.Store(storeConfig)
-  localVue.prototype.$api = api({ $axios: axios, store })
+  store = setStore(localVue)
+  setApi(localVue, axios, store)
   setPlugin(localVue)
 })
 
