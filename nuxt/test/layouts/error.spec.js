@@ -37,39 +37,39 @@ describe(__filename, () => {
     }
   })
 
-  describe('', () => {
-    beforeEach(() => {
-      wrapper = shallowMount(Error, mountOptions)
-    })
+  test('is a Vue instance', () => {
+    wrapper = shallowMount(Error, mountOptions)
 
-    test('is a Vue instance', () => {
-      expect(wrapper.vm).toBeTruthy()
-    })
+    expect(wrapper.vm).toBeTruthy()
+  })
 
-    test('statusCodeが404', () => {
-      // statusCodeを404にする
-      wrapper.setProps({
-        error: {
-          statusCode: 404
-        }
-      })
+  test('statusCodeが404', () => {
+    // statusCodeを404にする
+    mountOptions.propsData = {
+      error: {
+        statusCode: 404
+      }
+    }
 
-      // "404 Not Found" を返す
-      const head = wrapper.vm.$options.head.call(wrapper.vm)
-      expect(head.title).toBe('404 Not Found')
-    })
+    wrapper = shallowMount(Error, mountOptions)
 
-    test('statusCodeが404以外', () => {
-      // statusCodeを404以外にする
-      wrapper.setProps({
-        error: {
-          statusCode: 403
-        }
-      })
+    // "404 Not Found" を返す
+    const head = wrapper.vm.$options.head.call(wrapper.vm)
+    expect(head.title).toBe('404 Not Found')
+  })
 
-      // "An error occurred" を返す
-      const head = wrapper.vm.$options.head.call(wrapper.vm)
-      expect(head.title).toBe('An error occurred')
-    })
+  test('statusCodeが404以外', () => {
+    // statusCodeを404以外にする
+    mountOptions.propsData = {
+      error: {
+        statusCode: 403
+      }
+    }
+
+    wrapper = shallowMount(Error, mountOptions)
+
+    // "An error occurred" を返す
+    const head = wrapper.vm.$options.head.call(wrapper.vm)
+    expect(head.title).toBe('An error occurred')
   })
 })
