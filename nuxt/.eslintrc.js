@@ -36,5 +36,6 @@ module.exports = {
       "semi": false ,
       "singleQuote": true
     }],
-  }
+  },
+  ignorePatterns: ["hygen/generator/**"],
 }
