@@ -7,9 +7,12 @@ import axios from 'axios'
 import setStore from '~/test/setStore'
 import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
+import * as types from '~/store/mutation-types'
+import setConfigData from '~/test/setConfigData'
 import <%= h.changeCase.pascal(name) %> from '~/components/<%= directory %>/<%= name ? name : "index" %>'
 
 jest.useFakeTimers()
+jest.mock('vuex')
 
 let store
 beforeEach(() => {
