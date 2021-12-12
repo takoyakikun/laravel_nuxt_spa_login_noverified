@@ -22,14 +22,14 @@ class UserDeleteTest extends TestCase
         // サンプルデータを追加
         $sample = factory(User::class)->create([
             'name' => 'テスト',
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 1
         ]);
 
         // コマンドを実行
         $this->artisan('command:user-delete', [
-            'email' => $sample->email,
-        ])->expectsOutput($sample->name. '(' . $sample->email . ') を削除しました。');
+            'login_id' => $sample->login_id,
+        ])->expectsOutput($sample->name. '(' . $sample->login_id . ') を削除しました。');
 
         // ユーザーが削除されているか確認
         $this->assertDeleted($sample);

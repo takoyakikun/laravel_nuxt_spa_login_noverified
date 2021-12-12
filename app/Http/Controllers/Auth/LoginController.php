@@ -77,4 +77,14 @@ class LoginController extends Controller
     {
         return response()->json();
     }
+
+    /**
+     * ログインIDのカラムをlogin_idに変更
+     *
+     * @return void
+     */
+    public function username()
+    {
+        return 'login_id';
+    }
 }

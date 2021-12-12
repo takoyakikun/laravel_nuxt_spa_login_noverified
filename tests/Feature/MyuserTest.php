@@ -37,7 +37,7 @@ class MyuserTest extends TestCase
         // 追加するデータ
         $newData = [
             'name'  => 'テスト',
-            'email' => 'test@test.com',
+            'login_id' => 'test@test.com',
             'password' => 'password',
             'password_confirmation' => 'password'
         ];
@@ -51,7 +51,7 @@ class MyuserTest extends TestCase
         // データベースに追加したユーザーデータが入っているか確認
         $this->assertDatabaseHas('users', [
             'name'  => $newData['name'],
-            'email' => $newData['email'],
+            'login_id' => $newData['login_id'],
         ]);
 
         // データベースにパスワード設定時刻が入っているか確認
@@ -72,7 +72,7 @@ class MyuserTest extends TestCase
         // 追加するデータ
         $newData = [
             'name'  => 'テスト編集',
-            'email' => 'test_edit@test.com',
+            'login_id' => 'test_edit@test.com',
         ];
 
         // ユーザー編集リクエストを送信
@@ -114,7 +114,7 @@ class MyuserTest extends TestCase
 
         // 変更したパスワードで認証リクエスト
         $loginResponse = $actingAs->json('POST', route('login'), [
-            'email' => $this->user->email, 'password' => $newData['password']
+            'login_id' => $this->user->login_id, 'password' => $newData['password']
         ], ['X-Requested-With' => 'XMLHttpRequest']);
 
         // 正しいレスポンスが返ってくることを確認

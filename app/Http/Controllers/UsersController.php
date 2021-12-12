@@ -57,12 +57,12 @@ class UsersController extends Controller
         try {
             $user = resolve(User::class)->create([
                 'name' => $request->input('name'),
-                'email' => $request->input('email'),
+                'login_id' => $request->input('login_id'),
                 'password' => Hash::make(\Str::random(32)),
                 'role' => $role,
             ]);
             $this->broker()->sendResetLink(
-                $this->credentials($request)
+                $request->only('login_id')
             );
 
             \DB::commit();
@@ -91,7 +91,7 @@ class UsersController extends Controller
 
         $updateData = [
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'login_id' => $request->input('login_id'),
         ];
         if ((int)Auth::user()->role_level['auth'] <= (int)resolve(User::class)->roleLevel($request->input('role'), 'auth')) {
             // 入力者より権限が同じか下の場合は入力値を設定
@@ -168,7 +168,7 @@ class UsersController extends Controller
 
         try {
             $this->broker()->sendResetLink(
-                ['email' => $user->email]
+                ['login_id' => $user->login_id]
             );
         } catch (\Exception $e) {
             throw $e;
@@ -204,7 +204,7 @@ class UsersController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'unique:users',
+                'login_id' => 'unique:users',
             ]);
         } catch (\Exception $e) {
             // バリデーションエラーの場合は false を返す

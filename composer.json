@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "cerbero/command-validator": "^2.3",
+        "doctrine/dbal": "^2.6",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
         "laravel/framework": "^6.20.26",

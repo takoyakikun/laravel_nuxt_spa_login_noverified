@@ -97,7 +97,7 @@ describe(__filename, () => {
         test('API側エラー', async () => {
           // フォームを入力してユーザー追加処理
           wrapper.find("input[name='name']").setValue('テスト')
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           wrapper.find("input[name='role'][value='3']").setChecked()
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -110,7 +110,7 @@ describe(__filename, () => {
           expect(axiosPost).toHaveBeenCalled()
           expect(axiosPost).toHaveBeenCalledWith('/api/users', {
             name: 'テスト',
-            email: 'test@test.com',
+            login_id: 'test@test.com',
             role: 3
           })
 
@@ -134,7 +134,7 @@ describe(__filename, () => {
 
         // フォームを入力してユーザー追加処理
         wrapper.find("input[name='name']").setValue('テスト')
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         wrapper.find("input[name='role'][value='3']").setChecked()
         await wrapper.vm.submit()
         jest.runAllTimers()
@@ -147,7 +147,7 @@ describe(__filename, () => {
         expect(axiosPost).toHaveBeenCalled()
         expect(axiosPost).toHaveBeenCalledWith('/api/users', {
           name: 'テスト',
-          email: 'test@test.com',
+          login_id: 'test@test.com',
           role: 3
         })
 
@@ -172,7 +172,7 @@ describe(__filename, () => {
 
         // フォームを入力してユーザー追加処理
         wrapper.find("input[name='name']").setValue('テスト')
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         wrapper.find("input[name='role'][value='3']").setChecked()
         await wrapper.vm.submit()
         jest.runAllTimers()

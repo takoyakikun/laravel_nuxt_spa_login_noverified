@@ -17,7 +17,7 @@ class UserDelete extends Command
      *
      * @var string
      */
-    protected $signature = 'command:user-delete {email : メールアドレスを入力}';
+    protected $signature = 'command:user-delete {login_id : ログインIDを入力}';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class UserDelete extends Command
     protected function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:255']
+            'login_id' => ['required', 'string', 'email', 'max:255']
         ];
     }
 
@@ -55,7 +55,7 @@ class UserDelete extends Command
      */
     public function handle()
     {
-        $user = resolve(User::class)->where('email', $this->argument('email'))->first();
+        $user = resolve(User::class)->where('login_id', $this->argument('login_id'))->first();
 
         \DB::beginTransaction();
         try {
@@ -65,8 +65,8 @@ class UserDelete extends Command
             \DB::rollback();
             throw $e;
         }
- 
-        $this->info($user->name . '(' . $user->email . ') を削除しました。');
+
+        $this->info($user->name . '(' . $user->login_id . ') を削除しました。');
 
         return config('command.exit_code.SUCCESS');
     }

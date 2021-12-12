@@ -77,7 +77,7 @@ describe(__filename, () => {
         test('フロント側エラー', async () => {
           // フォームを空にしてユーザー編集処理
           wrapper.find("input[name='name']").setValue('')
-          wrapper.find("input[name='email']").setValue('')
+          wrapper.find("input[name='login_id']").setValue('')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -97,7 +97,7 @@ describe(__filename, () => {
         test('API側エラー', async () => {
           // フォームを入力してユーザー編集処理
           wrapper.find("input[name='name']").setValue('テスト')
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -110,7 +110,7 @@ describe(__filename, () => {
           expect(axiosPatch).toHaveBeenCalledWith('/api/myuser/update', {
             id: 1,
             name: 'テスト',
-            email: 'test@test.com'
+            login_id: 'test@test.com'
           })
 
           // snackbarのエラー表示
@@ -133,7 +133,7 @@ describe(__filename, () => {
 
         // フォームを入力してユーザー編集処理
         wrapper.find("input[name='name']").setValue('テスト')
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         await wrapper.vm.submit()
         jest.runAllTimers()
         await wrapper.vm.$nextTick()
@@ -146,7 +146,7 @@ describe(__filename, () => {
         expect(axiosPatch).toHaveBeenCalledWith('/api/myuser/update', {
           id: 1,
           name: 'テスト',
-          email: 'test@test.com'
+          login_id: 'test@test.com'
         })
 
         // snackbarの完了表示
@@ -170,7 +170,7 @@ describe(__filename, () => {
 
         // フォームを入力してユーザー編集処理
         wrapper.find("input[name='name']").setValue('テスト')
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         await wrapper.vm.submit()
         jest.runAllTimers()
         await wrapper.vm.$nextTick()

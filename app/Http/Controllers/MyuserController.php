@@ -34,7 +34,7 @@ class MyuserController extends Controller
         try {
             $user = User::create([
                 'name' => $request->input('name'),
-                'email' => $request->input('email'),
+                'login_id' => $request->input('login_id'),
                 'password' => Hash::make($request->input('password')),
                 'role' => 3,
             ]);
@@ -63,7 +63,7 @@ class MyuserController extends Controller
     {
         $updateData = [
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'login_id' => $request->input('login_id'),
         ];
 
         $user = User::find(\Auth::user()->id);

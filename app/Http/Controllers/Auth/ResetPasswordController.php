@@ -31,6 +31,33 @@ class ResetPasswordController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
+     * バリデートするカラム名を変更
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'login_id' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ];
+    }
+
+    /**
+     * 送信するカラム名を変更
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return $request->only(
+            'login_id', 'password', 'password_confirmation', 'token'
+        );
+    }
+
+    /**
      * パスワードリセット(apiなのでリダイレクトさせない)
      *
      * @param  \Illuminate\Http\Request  $request

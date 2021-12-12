@@ -96,7 +96,7 @@ describe(__filename, () => {
 
         test('API側エラー', async () => {
           // フォームを入力してログイン処理
-          wrapper.find("input[name='login']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           wrapper.find("input[name='password']").setValue('password')
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -108,7 +108,7 @@ describe(__filename, () => {
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
           expect(axiosPost).toHaveBeenCalledWith('/api/login', {
-            email: 'test@test.com',
+            login_id: 'test@test.com',
             password: 'password'
           })
 
@@ -132,7 +132,7 @@ describe(__filename, () => {
         })
 
         // フォームを入力してログイン処理
-        wrapper.find("input[name='login']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         wrapper.find("input[name='password']").setValue('password')
         await wrapper.vm.submit()
         jest.runAllTimers()
@@ -144,7 +144,7 @@ describe(__filename, () => {
         // API送信をした
         expect(axiosPost).toHaveBeenCalled()
         expect(axiosPost).toHaveBeenCalledWith('/api/login', {
-          email: 'test@test.com',
+          login_id: 'test@test.com',
           password: 'password'
         })
 

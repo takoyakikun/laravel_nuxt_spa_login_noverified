@@ -59,8 +59,8 @@ describe(__filename, () => {
       let form
       let validation
       beforeEach(() => {
-        form = wrapper.find("input[name='login']")
-        validation = formWrapper.vm.$refs.loginValidation
+        form = wrapper.find("input[name='login_id']")
+        validation = formWrapper.vm.$refs.loginIdValidation
       })
 
       test('requiredエラー', async () => {

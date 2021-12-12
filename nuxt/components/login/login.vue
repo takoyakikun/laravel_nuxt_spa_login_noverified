@@ -68,7 +68,7 @@ export default {
           if (result) {
             await this.$api.auth
               .login({
-                email: this.loginForm.email,
+                login_id: this.loginForm.login_id,
                 password: this.loginForm.password,
                 remember: this.loginForm.remember
               })

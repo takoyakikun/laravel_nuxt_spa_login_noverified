@@ -21,7 +21,7 @@ class StoreRequestTest extends TestCase
 
         // テストユーザ作成
         $this->user = factory(User::class)->create([
-            'email' => 'test@test.com',
+            'login_id' => 'test@test.com',
         ]);
 
     }
@@ -74,13 +74,13 @@ class StoreRequestTest extends TestCase
             'name_max_true' => ['name', str_repeat('a', 255), true],
 
             // メールアドレス
-            'email_true' => ['email', 'test_validation@test.com', true],
-            'email_required_null' => ['email', null, false],
-            'email_required_empty' => ['email', '', false],
-            'email_email' => ['email', 'test', false],
-            'email_max_false' => ['email', str_repeat('a', 247) . '@test.com', false],
-            'email_max_true' => ['email', str_repeat('a', 246) . '@test.com', true],
-            'email_unique' => ['email', 'test@test.com', false],
+            'login_id_true' => ['login_id', 'test_validation@test.com', true],
+            'login_id_required_null' => ['login_id', null, false],
+            'login_id_required_empty' => ['login_id', '', false],
+            'login_id_email' => ['login_id', 'test', false],
+            'login_id_max_false' => ['login_id', str_repeat('a', 247) . '@test.com', false],
+            'login_id_max_true' => ['login_id', str_repeat('a', 246) . '@test.com', true],
+            'login_id_unique' => ['login_id', 'test@test.com', false],
 
             // パスワード
             'password_true' => ['password', 'password', true],

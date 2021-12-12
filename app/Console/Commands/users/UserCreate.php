@@ -23,7 +23,7 @@ class UserCreate extends Command
      *
      * @var string
      */
-    protected $signature = 'command:user-create {name : ユーザー名を入力} {email : メールアドレスを入力} {role=1 : 権限を入力}';
+    protected $signature = 'command:user-create {name : ユーザー名を入力} {login_id : ログインIDを入力} {role=1 : 権限を入力}';
 
     /**
      * The console command description.
@@ -66,12 +66,12 @@ class UserCreate extends Command
         try {
             $user = resolve(User::class)->create([
                 'name' => $this->argument('name'),
-                'email' => $this->argument('email'),
+                'login_id' => $this->argument('login_id'),
                 'password' => Hash::make(\Str::random(32)),
                 'role' => $this->argument('role'),
             ]);
             $this->broker()->sendResetLink(
-                ['email' => $this->argument('email')]
+                ['login_id' => $this->argument('login_id')]
             );
 
             \DB::commit();
@@ -80,7 +80,7 @@ class UserCreate extends Command
             throw $e;
         }
 
-        $this->info($user->name . '(' . $user->email . ') を追加しました。');
+        $this->info($user->name . '(' . $user->login_id . ') を追加しました。');
 
         return config('command.exit_code.SUCCESS');
     }

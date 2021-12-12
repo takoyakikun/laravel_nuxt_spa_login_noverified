@@ -4,12 +4,12 @@
       <!-- Loginメールアドレス -->
       <ValidationProvider
         v-slot="props"
-        ref="loginValidation"
-        v-bind="validationOptions.login"
+        ref="loginIdValidation"
+        v-bind="validationOptions.login_id"
       >
         <v-text-field
-          v-model="value.email"
-          v-bind="formOptions.login"
+          v-model="value.login_id"
+          v-bind="formOptions.login_id"
           prepend-icon="mdi-account"
           :error-messages="props.errors"
         />
@@ -55,7 +55,7 @@ export default defineComponent({
   },
   setup() {
     const formFields = {
-      login: {
+      login_id: {
         rules: { required: true, max: 255, email: true },
         mode: 'eager',
         label: 'Login',

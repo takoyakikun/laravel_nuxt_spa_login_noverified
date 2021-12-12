@@ -70,7 +70,7 @@ trait UserTestTrait
         // 設定するパスワードデータ
         $newPasswordData = [
             'token'  => $token,
-            'email' => $user->email,
+            'login_id' => $user->login_id,
             'password' => 'password',
             'password_confirmation' => 'password'
         ];

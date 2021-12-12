@@ -74,7 +74,7 @@ describe(__filename, () => {
       const editUser = {
         id: 1,
         name: 'テスト',
-        email: 'test@test.com',
+        login_id: 'test@test.com',
         role: 3,
         modify_flg: 1
       }
@@ -105,7 +105,7 @@ describe(__filename, () => {
         test('フロント側エラー', async () => {
           // フォームを空にしてユーザー編集処理
           wrapper.find("input[name='name']").setValue('')
-          wrapper.find("input[name='email']").setValue('')
+          wrapper.find("input[name='login_id']").setValue('')
           await wrapper.vm.submit()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -125,7 +125,7 @@ describe(__filename, () => {
         test('API側エラー', async () => {
           // フォームを入力してユーザー編集処理
           wrapper.find("input[name='name']").setValue('テスト')
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           wrapper.find("input[name='role'][value='3']").setChecked()
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -163,7 +163,7 @@ describe(__filename, () => {
 
           // フォームを入力してユーザー編集処理
           wrapper.find("input[name='name']").setValue('テスト')
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           wrapper.find("input[name='role'][value='3']").setChecked()
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -189,7 +189,7 @@ describe(__filename, () => {
         test('それ以外', async () => {
           // フォームを入力してユーザー編集処理
           wrapper.find("input[name='name']").setValue('テスト')
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           wrapper.find("input[name='role'][value='3']").setChecked()
           await wrapper.vm.submit()
           jest.runAllTimers()
@@ -226,7 +226,7 @@ describe(__filename, () => {
 
         // フォームを入力してユーザー編集処理
         wrapper.find("input[name='name']").setValue('テスト')
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         wrapper.find("input[name='role'][value='3']").setChecked()
         await wrapper.vm.submit()
         jest.runAllTimers()

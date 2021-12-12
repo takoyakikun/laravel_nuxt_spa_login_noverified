@@ -41,7 +41,7 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
         ]);
 
         // 一般ユーザーはアクセス不可
@@ -57,7 +57,7 @@ class UsersTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonCount(4)
             ->assertJsonFragment([
-                'email' => 'sample@test.com',
+                'login_id' => 'sample@test.com',
             ]);
 
     }
@@ -75,7 +75,7 @@ class UsersTest extends TestCase
         // 追加するデータ
         $newData = [
             'name'  => 'テスト',
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ];
 
@@ -94,7 +94,7 @@ class UsersTest extends TestCase
         // データベースに追加したユーザーデータが入っているか確認
         $this->assertDatabaseHas('users', [
             'name'  => $newData['name'],
-            'email' => $newData['email'],
+            'login_id' => $newData['login_id'],
             'role' => $newData['role']
         ]);
 
@@ -112,14 +112,14 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         $sample = factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ]);
 
         // 編集するデータ
         $newData = [
             'name'  => '編集テスト',
-            'email' => 'change@test.com',
+            'login_id' => 'change@test.com',
             'role' => 2
         ];
 
@@ -133,7 +133,7 @@ class UsersTest extends TestCase
         // データベースに編集したユーザーデータが入っているか確認
         $this->assertDatabaseHas('users', [
             'name'  => $newData['name'],
-            'email' => $newData['email'],
+            'login_id' => $newData['login_id'],
             'role' => $newData['role']
         ]);
 
@@ -148,22 +148,22 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         $sample = factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ]);
         $sampleAdmin = factory(User::class)->create([
-            'email' => 'sample_admin@test.com',
+            'login_id' => 'sample_admin@test.com',
             'role' => 2
         ]);
         $sampleSystem = factory(User::class)->create([
-            'email' => 'sample_system@test.com',
+            'login_id' => 'sample_system@test.com',
             'role' => 1
         ]);
 
         // 編集するデータ
         $newData = [
             'name'  => '編集テスト',
-            'email' => 'change@test.com',
+            'login_id' => 'change@test.com',
             'role' => 3
         ];
 
@@ -223,7 +223,7 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         $sample = factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ]);
 
@@ -248,11 +248,11 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         $sample[] = factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ]);
         $sample[] = factory(User::class)->create([
-            'email' => 'sample2@test.com',
+            'login_id' => 'sample2@test.com',
             'role' => 3
         ]);
         foreach($sample as $user) {
@@ -282,15 +282,15 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         $sample = factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ]);
         $sampleAdmin = factory(User::class)->create([
-            'email' => 'sample_admin@test.com',
+            'login_id' => 'sample_admin@test.com',
             'role' => 2
         ]);
         $sampleSystem = factory(User::class)->create([
-            'email' => 'sample_system@test.com',
+            'login_id' => 'sample_system@test.com',
             'role' => 1
         ]);
 
@@ -364,9 +364,9 @@ class UsersTest extends TestCase
         // サンプルデータを追加
         $sample = factory(User::class)->create([
             'name'  => 'テスト',
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3,
-            'email_verified_at' => null,
+            'login_id_verified_at' => null,
             'password_set_at' => null,
             ]);
 
@@ -422,17 +422,17 @@ class UsersTest extends TestCase
     {
         // サンプルデータを追加
         factory(User::class)->create([
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
         ]);
 
         // 入力されたメールアドレスがユニークの場合 true を返す
-        $postData = [ 'email' => 'unique@test.com' ];
+        $postData = [ 'login_id' => 'unique@test.com' ];
         $response = $this->json('POST', route('users.unique'), $postData, ['X-Requested-With' => 'XMLHttpRequest']);
         $response->assertStatus(200)
             ->assertJson([true]);
 
         // 入力されたメールアドレスがユニークでない場合 false を返す
-        $postData = [ 'email' => 'sample@test.com' ];
+        $postData = [ 'login_id' => 'sample@test.com' ];
         $response = $this->json('POST', route('users.unique'), $postData, ['X-Requested-With' => 'XMLHttpRequest']);
         $response->assertStatus(200)
             ->assertJson([false]);

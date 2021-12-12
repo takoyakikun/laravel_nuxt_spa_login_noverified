@@ -24,14 +24,14 @@
             <!-- メールアドレス -->
             <ValidationProvider
               v-slot="props"
-              ref="emailValidation"
-              v-bind="validationOptions.email"
+              ref="loginIdValidation"
+              v-bind="validationOptions.login_id"
             >
               <v-text-field
-                v-model="value.email"
-                v-bind="formOptions.email"
+                v-model="value.login_id"
+                v-bind="formOptions.login_id"
                 :error-messages="props.errors"
-                @change="$api.users.getUserUnique(value.email)"
+                @change="$api.users.getUserUnique(value.login_id)"
               />
             </ValidationProvider>
           </v-col>
@@ -111,7 +111,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import {
   defineComponent,
   useContext,
@@ -141,18 +140,25 @@ export default defineComponent({
 
   setup(props) {
     const { store } = useContext()
-    const state = {
-      config: computed(() => store.getters['config/config']).value,
-      roleOptions: computed(() => store.getters['users/roleOptions']).value,
-      userUnique: computed(() => store.getters['users/userUnique']).value
-    }
-    state.role = computed(() => {
-      return state.config.roleOptions.filter(item =>
-        state.roleOptions.includes(item.value)
-      )
-    }).value
 
-    const userUnique = state.userUnique
+    const config = computed(() => store.getters['config/config'])
+    const roleOptions = computed(() => store.getters['users/roleOptions'])
+    const userUnique = computed(() => store.getters['users/userUnique'])
+    const role = computed(() => {
+      if (config.value.roleOptions) {
+        return config.value.roleOptions.filter(item =>
+          roleOptions.value.includes(item.value)
+        )
+      } else {
+        return []
+      }
+    })
+    const state = reactive({
+      config,
+      roleOptions,
+      userUnique,
+      role
+    })
 
     const formFields = {
       name: {
@@ -161,8 +167,13 @@ export default defineComponent({
         label: 'ユーザー名',
         type: 'text'
       },
-      email: {
-        rules: { required: true, max: 255, email: true, unique: userUnique },
+      login_id: {
+        rules: {
+          required: true,
+          max: 255,
+          email: true,
+          unique: state.userUnique
+        },
         mode: 'lazy',
         label: 'メールアドレス',
         type: 'email'

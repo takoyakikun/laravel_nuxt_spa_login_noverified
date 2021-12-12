@@ -36,7 +36,7 @@ class ForgotPasswordController extends Controller
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
         $response = $this->broker()->sendResetLink(
-            $this->credentials($request)
+            $request->only('login_id')
         );
 
         return $response == Password::RESET_LINK_SENT
@@ -44,5 +44,15 @@ class ForgotPasswordController extends Controller
                     : response([], 422);
     }
 
+    /**
+     * バリデートするカラム名を変更
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateEmail(Request $request)
+    {
+        $request->validate(['login_id' => 'required|email']);
+    }
 
 }

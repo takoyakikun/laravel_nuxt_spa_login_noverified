@@ -5,9 +5,9 @@ const moduleName = 'auth'
 
 export default (axios, store) => ({
   // ログイン
-  async login({ email, password, remember }) {
+  async login({ login_id, password, remember }) {
     const loginData = {
-      email: email,
+      login_id: login_id,
       password: password
     }
     // remember me にチェックが入っている場合は remember オプションを追加

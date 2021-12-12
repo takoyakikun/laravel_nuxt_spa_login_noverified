@@ -27,21 +27,21 @@ class UserCreateTest extends TestCase
         // 追加するデータ
         $newData = [
             'name'  => 'テスト',
-            'email' => 'sample@test.com',
+            'login_id' => 'sample@test.com',
             'role' => 3
         ];
 
         // コマンドを実行
         $this->artisan('command:user-create', [
             'name' => $newData['name'],
-            'email' => $newData['email'],
+            'login_id' => $newData['login_id'],
             'role' => $newData['role'],
-        ])->expectsOutput($newData['name'] . '(' . $newData['email'] . ') を追加しました。');
+        ])->expectsOutput($newData['name'] . '(' . $newData['login_id'] . ') を追加しました。');
 
         // データベースに追加したユーザーデータが入っているか確認
         $this->assertDatabaseHas('users', [
             'name'  => $newData['name'],
-            'email' => $newData['email'],
+            'login_id' => $newData['login_id'],
             'role' => $newData['role']
         ]);
 

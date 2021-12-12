@@ -31,7 +31,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(\Auth::user())],
+            'login_id' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(\Auth::user())],
         ];
     }
 }

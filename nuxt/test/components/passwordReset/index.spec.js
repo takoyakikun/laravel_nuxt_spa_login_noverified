@@ -94,7 +94,7 @@ describe(__filename, () => {
 
         test('API側エラー', async () => {
           // フォームを入力してパスワードリセットメール送信処理
-          wrapper.find("input[name='email']").setValue('test@test.com')
+          wrapper.find("input[name='login_id']").setValue('test@test.com')
           await wrapper.vm.sendMail()
           jest.runAllTimers()
           await wrapper.vm.$nextTick()
@@ -105,7 +105,7 @@ describe(__filename, () => {
           // API送信をした
           expect(axiosPost).toHaveBeenCalled()
           expect(axiosPost).toHaveBeenCalledWith('/api/password/email', {
-            email: 'test@test.com'
+            login_id: 'test@test.com'
           })
 
           // snackbarのエラー表示
@@ -128,7 +128,7 @@ describe(__filename, () => {
         wrapper.vm.$store.$axios = axios
 
         // フォームを入力してパスワードリセットメール送信処理
-        wrapper.find("input[name='email']").setValue('test@test.com')
+        wrapper.find("input[name='login_id']").setValue('test@test.com')
         await wrapper.vm.sendMail()
         jest.runAllTimers()
         await wrapper.vm.$nextTick()
@@ -139,7 +139,7 @@ describe(__filename, () => {
         // API送信をした
         expect(axiosPost).toHaveBeenCalled()
         expect(axiosPost).toHaveBeenCalledWith('/api/password/email', {
-          email: 'test@test.com'
+          login_id: 'test@test.com'
         })
 
         // 送信済みメッセージを表示

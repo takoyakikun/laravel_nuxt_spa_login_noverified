@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       registerFormValue: {
-        email: '',
+        login_id: '',
         password: ''
       },
       loading: false
@@ -68,7 +68,7 @@ export default {
                   // ユーザー追加した後にログインする
                   await this.$api.auth
                     .login({
-                      email: this.registerFormValue.email,
+                      login_id: this.registerFormValue.login_id,
                       password: this.registerFormValue.password
                     })
                     .then(res => {
