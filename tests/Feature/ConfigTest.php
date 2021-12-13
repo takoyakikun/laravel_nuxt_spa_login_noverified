@@ -7,7 +7,6 @@ use App\Http\Controllers\ConfigController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Mockery;
 
 class ConfigTest extends TestCase
 {
@@ -54,12 +53,16 @@ class ConfigTest extends TestCase
                     'key2' => 'value2-2',
                 ]
             ],
+        ];
+
+        $testHiddenConfig = [
             // 取得しないデータ
             'test6' => 'hidden'
         ];
 
         // テストコンフィグデータをセット
         \Config::set('settings', $testConfig);
+        \Config::set('settings_hidden', $testHiddenConfig);
 
         // 正しいレスポンスデータ
         $trueResponse = [
@@ -93,23 +96,15 @@ class ConfigTest extends TestCase
             ]
         ];
 
-        // hiddenプロパティをテストデータに書き換える
-        $mock = Mockery::mock(ConfigController::class)->makePartial();
-        $reflectionClass = new \ReflectionClass($mock);
-        $property = $reflectionClass->getProperty('hidden');
-        $property->setAccessible(true);
-        $property->setValue($mock, ['test6']);
-        $this->instance(ConfigController::class, $mock);
-
         // コンフィグ取得のリクエストを送信
         $response = $this->json('GET', route('config'), [], ['X-Requested-With' => 'XMLHttpRequest']);
 
-        // 正しいレスポンスが返ってくることを確認
+        // 正常のレスポンスが返ってくることを確認
         $response->assertStatus(200);
 
         // 正しいレスポンスデータが返っているか確認
         $response->assertJson($trueResponse, true);
         $response->assertJsonCount(5);
-        
+
     }
 }

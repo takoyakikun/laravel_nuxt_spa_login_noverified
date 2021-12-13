@@ -8,45 +8,49 @@ class ConfigController extends Controller
 {
 
     /**
-     * 取得しないコンフィグデータのキー
-     *
-     * @var array
-     */
-    protected $hidden = ['roleLevel', 'role'];
-
-    /**
      * コンフィグを取得する
      *
      * @return \Illuminate\Http\Response
      */
     public function index ()
     {
+        // 共通で使える設定を追加
+        $allConfigData = config('settings', []);
+
+        // 各権限で使える設定を追加
+        $authTypes = ['user-higher', 'admin-higher', 'system-only'];
+        foreach ($authTypes as $type) {
+            if (\Gate::allows($type)) {
+                foreach(config('settings_'.$type, []) as $key => $item) {
+                    $allConfigData[$key] = $item;
+                }
+            }
+        }
+
         $config = [];
         // javascriptで使う形に整形し直す
-        foreach (\Config::get('settings', []) as $configKey => $configValue) {
-            if (in_array($configKey, $this->hidden, true) === false) {
-                if (is_array($configValue)) {
-                    // javascriptだとキー順に勝手に並び替えられてしまうのでキーはあえて指定しないで配列に追加する
-                    foreach ($configValue as $key => $value) {
-                        $newValue = [];
-                        if (is_array($value)){
-                            if (array_values($value) === $value) {
-                                // 配列の場合は array に入れる
-                                $newValue['array'] = $value;
-                            } else {
-                                // 連想配列の場合はそのまま入れる
-                                $newValue = $value;
-                            }
+        foreach ($allConfigData as $configKey => $configValue) {
+            if (is_array($configValue)) {
+                // javascriptだとキー順に勝手に並び替えられてしまうのでキーはあえて指定しないで配列に追加する
+                foreach ($configValue as $key => $value) {
+                    $newValue = [];
+                    if (is_array($value)){
+                        if (array_values($value) === $value) {
+                            // 配列の場合は array に入れる
+                            $newValue['array'] = $value;
                         } else {
-                            // 配列以外の場合は text に入れる
-                            $newValue['text'] = $value;
+                            // 連想配列の場合はそのまま入れる
+                            $newValue = $value;
                         }
-                        $newValue['value'] = $key; // キーをvalueに追加する
-                        $config[$configKey][] = $newValue;
+                    } else {
+                        // 配列以外の場合は text に入れる
+                        $newValue['text'] = $value;
                     }
-                } else{
-                    $config[$configKey] = $configValue;
+                    $newValue['value'] = $key; // キーをvalueに追加する
+                    $config[$configKey][] = $newValue;
                 }
+            } else{
+                $config[$configKey] = $configValue;
             }
         }
         return response($config);
