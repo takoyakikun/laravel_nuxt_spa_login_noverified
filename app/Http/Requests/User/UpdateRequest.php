@@ -35,7 +35,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'login_id' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
-            'role' => ['required', 'numeric', Rule::in(array_keys(\Config::get('settings.roleOptions')))],
+            'role' => ['required', 'numeric', Rule::in(array_keys(config('role.role')))],
         ];
     }
 }
