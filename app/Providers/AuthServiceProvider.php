@@ -31,15 +31,15 @@ class AuthServiceProvider extends ServiceProvider
         });
         // 開発者のみ許可
         Gate::define('system-only', function ($user) {
-            return ($user->role_level['auth'] === \Config::get('settings.roleLevel.auth.system'));
+            return ((int)$user->role_level['auth'] === (int)\Config::get('role.roleLevel.auth.system'));
         });
         // 管理者以上（管理者＆開発者）に許可
         Gate::define('admin-higher', function ($user) {
-            return ($user->role_level['auth'] > 0 && $user->role_level['auth'] <= \Config::get('settings.roleLevel.auth.admin'));
+            return ((int)$user->role_level['auth'] > 0 && (int)$user->role_level['auth'] <= (int)\Config::get('role.roleLevel.auth.admin'));
         });
         // 一般ユーザ以上（つまり全権限）に許可
         Gate::define('user-higher', function ($user) {
-            return ($user->role_level['auth'] > 0 && $user->role_level['auth'] <= \Config::get('settings.roleLevel.auth.user'));
+            return ((int)$user->role_level['auth'] > 0 && (int)$user->role_level['auth'] <= (int)\Config::get('role.roleLevel.auth.user'));
         });
 
     }

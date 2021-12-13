@@ -25,50 +25,25 @@ afterEach(() => {
 })
 
 describe(__filename, () => {
-  describe('テスト', () => {
-    let wrapper
-    let mountOptions
-    beforeEach(() => {
-      mountOptions = {
-        localVue,
-        store,
-        vuetify,
-        stubs: {
-          Form
-        }
+  let mountOptions
+  beforeEach(() => {
+    mountOptions = {
+      localVue,
+      store,
+      vuetify,
+      stubs: {
+        Form
       }
-    })
+    }
+  })
 
-    test('is a Vue instance', () => {
-      wrapper = shallowMount(UserForm, mountOptions)
+  test('is a Vue instance', () => {
+    const wrapper = shallowMount(UserForm, mountOptions)
 
-      expect(wrapper.vm).toBeTruthy()
-    })
-
-    describe('権限ごとに選択できる権限を変える', () => {
-      test('開発者権限', () => {
-        // 選択オプションデータをセット
-        store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, [1, 2, 3])
-        wrapper = shallowMount(UserForm, mountOptions)
-
-        // 全ての権限を返す
-        expect(wrapper.vm.state.role.map(item => item.value)).toEqual([1, 2, 3])
-      })
-
-      test('それ以外', () => {
-        // 選択オプションデータをセット
-        store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, [2, 3])
-        wrapper = shallowMount(UserForm, mountOptions)
-
-        // 管理者以外を返す
-        expect(wrapper.vm.state.role.map(item => item.value)).toEqual([2, 3])
-      })
-    })
+    expect(wrapper.vm).toBeTruthy()
   })
 
   describe('項目表示テスト', () => {
-    let wrapper
-    let mountOptions
     beforeEach(() => {
       mountOptions = {
         localVue,
@@ -84,7 +59,7 @@ describe(__filename, () => {
       // 自ユーザー設定
       mountOptions.propsData = { myuser: true }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // アクセス権限フォーム項目
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeFalsy()
@@ -94,7 +69,7 @@ describe(__filename, () => {
       // 自ユーザー以外を設定
       mountOptions.propsData = { myuser: false }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // アクセス権限フォーム項目
       expect(wrapper.find("[data-test='roleForm']").exists()).toBeTruthy()
@@ -104,7 +79,7 @@ describe(__filename, () => {
       // フォームタイプを設定しない
       mountOptions.propsData = { formType: '' }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()
@@ -119,7 +94,7 @@ describe(__filename, () => {
       // createフォームタイプ設定
       mountOptions.propsData = { formType: 'create' }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeTruthy()
@@ -134,7 +109,7 @@ describe(__filename, () => {
       // usersCreateフォームタイプ設定
       mountOptions.propsData = { formType: 'usersCreate' }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()
@@ -149,7 +124,7 @@ describe(__filename, () => {
       // createフォームタイプ設定
       mountOptions.propsData = { formType: 'edit' }
 
-      wrapper = mount(UserForm, mountOptions)
+      const wrapper = mount(UserForm, mountOptions)
 
       // パスワードフォーム項目
       expect(wrapper.find("[data-test='passwordForm']").exists()).toBeFalsy()

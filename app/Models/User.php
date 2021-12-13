@@ -112,7 +112,7 @@ class User extends Authenticatable
     public function getRoleLevelAttribute ()
     {
         $roleLevels = [];
-        foreach (array_keys(\Config::get('settings.roleLevel')) as $roleTypeKey) {
+        foreach (array_keys(\Config::get('role.roleLevel')) as $roleTypeKey) {
             $roleLevels[$roleTypeKey] = $this->roleLevel($this->role, $roleTypeKey);
         }
 
@@ -187,14 +187,19 @@ class User extends Authenticatable
      */
     public function roleLevel ($role, $roleType = 'auth')
     {
-        $roleTypeLevel = \Config::get('settings.roleLevel.'.$roleType);
-        if (\Config::get('settings.role.'.$role.'.'.$roleType)) {
-            $roleKey = \Config::get('settings.role.'.$role.'.'.$roleType);
-        } else {
-            $roleTypeLevelMax = array_keys($roleTypeLevel, max($roleTypeLevel));
-            $roleKey = $roleTypeLevelMax[0];
+        // 指定した権限タイプのレベルリスト
+        $roleTypeLevelList = config('role.roleLevel.'.$roleType);
+
+        // デフォルトは一番弱い(数字が大きい)レベル
+        $roleLevel = max($roleTypeLevelList);
+
+        // 該当する権限レベルがある場合はそのレベルに変更
+        if (config('role.role.'.$role.'.level.'.$roleType)) {
+            $roleKey = config('role.role.'.$role.'.level.'.$roleType);
+            if (isset($roleTypeLevelList[$roleKey]) && is_numeric($roleTypeLevelList[$roleKey])) {
+                $roleLevel = $roleTypeLevelList[$roleKey];
+            }
         }
-        $roleLevel = $roleTypeLevel[$roleKey];
 
         return $roleLevel;
     }

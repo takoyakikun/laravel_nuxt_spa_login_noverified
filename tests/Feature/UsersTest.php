@@ -394,6 +394,13 @@ class UsersTest extends TestCase
      */
     public function testRoleOptions()
     {
+        $roleOptions = [];
+        foreach (config('role.role') as $key => $item) {
+            if (isset($item['name'])) {
+                $roleOptions[] = ['value' => $key, 'text' => $item['name']];
+            }
+        }
+
         // 一般ユーザーはアクセス不可
         $response = $this->actingAs($this->user)
             ->json('GET', route('users.roleOptions'), [], ['X-Requested-With' => 'XMLHttpRequest']);
@@ -403,13 +410,18 @@ class UsersTest extends TestCase
         $response = $this->actingAs($this->adminUser)
             ->json('GET', route('users.roleOptions'), [], ['X-Requested-With' => 'XMLHttpRequest']);
         $response->assertStatus(200)
-            ->assertJson([2,3]);
+            ->assertJson([
+                'all' => $roleOptions,
+                'form' => array_filter($roleOptions, function($key, $item) {
+                    return in_array((int)$item['value'], [2, 3], true);
+                }, ARRAY_FILTER_USE_BOTH)
+            ]);
 
         // 開発者ユーザーは全選択オプションを返す
         $response = $this->actingAs($this->systemUser)
             ->json('GET', route('users.roleOptions'), [], ['X-Requested-With' => 'XMLHttpRequest']);
         $response->assertStatus(200)
-            ->assertJson(array_keys(\Config::get('settings.roleOptions')));
+            ->assertJson(['all' => $roleOptions, 'form' => $roleOptions]);
 
     }
 

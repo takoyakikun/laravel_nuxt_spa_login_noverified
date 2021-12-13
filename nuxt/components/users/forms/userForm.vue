@@ -53,7 +53,7 @@
                 :error-messages="props.errors"
               >
                 <v-radio
-                  v-for="item in state.role"
+                  v-for="item in state.roleOptions"
                   :key="item.value"
                   :label="item.text"
                   :value="item.value"
@@ -141,23 +141,11 @@ export default defineComponent({
   setup(props) {
     const { store } = useContext()
 
-    const config = computed(() => store.getters['config/config'])
-    const roleOptions = computed(() => store.getters['users/roleOptions'])
+    const roleOptions = computed(() => store.getters['users/roleFormOptions'])
     const userUnique = computed(() => store.getters['users/userUnique'])
-    const role = computed(() => {
-      if (config.value.roleOptions) {
-        return config.value.roleOptions.filter(item =>
-          roleOptions.value.includes(item.value)
-        )
-      } else {
-        return []
-      }
-    })
     const state = reactive({
-      config,
       roleOptions,
-      userUnique,
-      role
+      userUnique
     })
 
     const formFields = {

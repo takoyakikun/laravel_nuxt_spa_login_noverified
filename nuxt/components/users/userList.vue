@@ -49,7 +49,7 @@
               <v-col>
                 <v-combobox
                   v-model="search.role"
-                  :items="config.roleOptions"
+                  :items="roleOptions"
                   label="アクセス権限検索"
                   multiple
                   chips
@@ -91,7 +91,7 @@
           </template>
 
           <template #[`item.role`]="{ value }">
-            {{ getConfigData('roleOptions', value) }}
+            {{ getRoleName(value) }}
           </template>
 
           <template #[`item.action`]="{ item }">
@@ -205,6 +205,7 @@ export default {
     ...mapGetters({
       config: 'config/config',
       getConfigData: 'config/getConfigData',
+      roleOptions: 'users/roleOptions',
       userListStore: 'users/list'
     }),
 
@@ -322,6 +323,15 @@ export default {
       } else {
         return false
       }
+    },
+
+    // 権限名を取得
+    getRoleName(value) {
+      const role = this.roleOptions.find(item => item.value === value)
+      if (role !== null && typeof role === 'object' && 'text' in role) {
+        return role.text
+      }
+      return ''
     }
   }
 }

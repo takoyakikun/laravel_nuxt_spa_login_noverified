@@ -177,17 +177,22 @@ class UsersController extends Controller
     }
 
     /**
-     * 権限の選択オプションを返す
+     * 権限の選択オプションを取得
      *
      * @return \Illuminate\Http\Response
      */
     public function roleOptions()
     {
         $roleOptions = [];
-        foreach(array_keys(\Config::get('settings.roleOptions')) as $key) {
-            // ログインしているユーザーと同じか下の権限レベルのユーザー権限を返す
-            if (resolve(User::class)->roleLevel($key, 'auth') >= (int)Auth::user()->role_level['auth']) {
-                $roleOptions[] = $key;
+        foreach(config('role.role') as $key => $item) {
+            // nameが設定されている権限のみ取得
+            if (isset($item['name'])) {
+                $roleOptions['all'][] = ['value' => $key, 'text' => $item['name']];
+
+                // フォームの選択オプションはログインしているユーザーと同じか下の権限レベルのユーザー権限を取得
+                if (resolve(User::class)->roleLevel($key, 'auth') >= (int)Auth::user()->role_level['auth']) {
+                    $roleOptions['form'][] = ['value' => $key, 'text' => $item['name']];
+                }
             }
         }
 
@@ -196,7 +201,7 @@ class UsersController extends Controller
     }
 
     /**
-     * ユーザーのメールアドレスがユニークかの判定を取得
+     * ユーザーのログインIDがユニークかの判定を取得
      *
      * @return \Illuminate\Http\Response
      */

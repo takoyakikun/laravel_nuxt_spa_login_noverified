@@ -16,6 +16,15 @@ beforeEach(() => {
   setApi(localVue, axios, store)
   setPlugin(localVue)
   store.commit('config/' + types.CONFIG_SET_CONFIG, setConfigData)
+  const roleOptions = [
+    { value: 1, text: '開発者' },
+    { value: 2, text: '管理者' },
+    { value: 3, text: '一般' }
+  ]
+  store.commit('users/' + types.USERS_SET_ROLE_OPTIONS, {
+    all: roleOptions,
+    form: roleOptions
+  })
 })
 
 afterEach(() => {
@@ -36,6 +45,15 @@ describe(__filename, () => {
     const wrapper = shallowMount(UserList, mountOptions)
 
     expect(wrapper.vm).toBeTruthy()
+  })
+
+  test('権限名が正しく取得されているか', () => {
+    const wrapper = shallowMount(UserList, mountOptions)
+
+    expect(wrapper.vm.getRoleName(0)).toEqual('')
+    for (let role of wrapper.vm.roleOptions) {
+      expect(wrapper.vm.getRoleName(role.value)).toEqual(role.text)
+    }
   })
 
   test('ユーザーデータが更新されたら選択を初期化', async () => {
