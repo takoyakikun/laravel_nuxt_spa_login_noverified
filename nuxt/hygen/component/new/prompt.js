@@ -14,6 +14,7 @@ module.exports = [
     name: 'test',
     message: 'テストファイルを作成',
     enabled: 'Yes',
-    disabled: 'No'
+    disabled: 'No',
+    initial: 'Yes'
   }
 ]

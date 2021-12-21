@@ -17,6 +17,7 @@ export default defineComponent({
   name: '<%= h.changeCase.pascal(directory) + h.changeCase.pascal(name) %>Page',
   middleware: '<%= middleware %>',
   layout: '<%= layout %>',
+  components: {},
   setup() {
     const { app } = useContext()
     const state = reactive({})

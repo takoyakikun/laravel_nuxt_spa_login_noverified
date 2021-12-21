@@ -10,6 +10,7 @@ import { defineComponent, useContext, reactive } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: '<%= h.changeCase.pascal(directory) + h.changeCase.pascal(name) %>Component',
   props: {},
+  components: {},
   setup(props) {
     const { app } = useContext()
     const state = reactive({})
