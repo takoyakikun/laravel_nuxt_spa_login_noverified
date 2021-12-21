@@ -65,7 +65,11 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxtjs/vuetify', '@nuxtjs/composition-api'],
+  buildModules: [
+    '@nuxtjs/vuetify',
+    '@nuxtjs/composition-api',
+    '@nuxtjs/date-fns'
+  ],
   /*
    ** Nuxt.js modules
    */
