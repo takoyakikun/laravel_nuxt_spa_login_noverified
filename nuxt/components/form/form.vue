@@ -7,7 +7,7 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
-import { form } from '~/composition/form/form'
+import { form } from '~/composables/form/form'
 
 export default defineComponent({
   name: 'formComponent',

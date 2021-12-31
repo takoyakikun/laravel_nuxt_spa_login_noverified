@@ -117,7 +117,7 @@ import {
   reactive,
   computed
 } from '@nuxtjs/composition-api'
-import { createFormOptions } from '~/composition/form/createFormOptions'
+import { createFormOptions } from '~/composables/form/createFormOptions'
 import Form from '~/components/form/form'
 
 export default defineComponent({
