@@ -6,9 +6,17 @@ import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
+import UniqueValidation from '~/composables/form/uniqueValidation'
 import Register from '~/components/register/register'
 
 jest.useFakeTimers()
+jest.mock('axios')
+
+// ユニークのバリデーションをモック
+jest.mock('~/composables/form/uniqueValidation')
+UniqueValidation.mockImplementation(() => {
+  return { userUnique: value => 1 }
+})
 
 let store
 beforeEach(() => {
@@ -151,7 +159,6 @@ describe(__filename, () => {
             .mockImplementationOnce(url => {
               return Promise.resolve(responseError)
             })
-          wrapper.vm.$store.$axios = axios
 
           // フォームを入力してログイン処理
           wrapper.find("input[name='name']").setValue('テスト')
@@ -198,7 +205,6 @@ describe(__filename, () => {
           axios.post.mockImplementation(url => {
             return Promise.resolve(response)
           })
-          wrapper.vm.$store.$axios = axios
 
           // フォームを入力してログイン処理
           wrapper.find("input[name='name']").setValue('テスト')

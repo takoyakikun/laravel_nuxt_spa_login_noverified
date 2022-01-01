@@ -11,6 +11,7 @@ import Form from '~/components/form/form'
 import { ValidationObserver } from 'vee-validate'
 
 jest.useFakeTimers()
+jest.mock('axios')
 
 let store
 beforeEach(() => {

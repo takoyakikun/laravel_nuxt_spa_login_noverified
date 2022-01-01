@@ -6,11 +6,19 @@ import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
+import UniqueValidation from '~/composables/form/uniqueValidation'
 import UserForm from '~/components/users/forms/userForm'
 import Form from '~/components/form/form'
 import { ValidationObserver } from 'vee-validate'
 
 jest.useFakeTimers()
+jest.mock('axios')
+
+// ユニークのバリデーションをモック
+jest.mock('~/composables/form/uniqueValidation')
+UniqueValidation.mockImplementation(() => {
+  return { userUnique: value => 1 }
+})
 
 let store
 beforeEach(() => {

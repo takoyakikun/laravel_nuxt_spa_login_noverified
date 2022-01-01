@@ -6,9 +6,17 @@ import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
+import UniqueValidation from '~/composables/form/uniqueValidation'
 import EditDialog from '~/components/layouts/default/dialogs/editDialog'
 
 jest.useFakeTimers()
+jest.mock('axios')
+
+// ユニークのバリデーションをモック
+jest.mock('~/composables/form/uniqueValidation')
+UniqueValidation.mockImplementation(() => {
+  return { userUnique: value => 1 }
+})
 
 let store
 beforeEach(() => {

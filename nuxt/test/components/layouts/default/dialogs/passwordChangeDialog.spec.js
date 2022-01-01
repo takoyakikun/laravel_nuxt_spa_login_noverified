@@ -9,6 +9,7 @@ import setConfigData from '~/test/setConfigData'
 import PasswordChangeDialog from '~/components/layouts/default/dialogs/passwordChangeDialog'
 
 jest.useFakeTimers()
+jest.mock('axios')
 
 let store
 beforeEach(() => {

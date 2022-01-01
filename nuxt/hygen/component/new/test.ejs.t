@@ -13,6 +13,7 @@ import <%= h.changeCase.pascal(name) %> from '~/components/<%= directory %>/<%= 
 
 jest.useFakeTimers()
 jest.mock('vuex')
+jest.mock('axios')
 
 let store
 beforeEach(() => {
