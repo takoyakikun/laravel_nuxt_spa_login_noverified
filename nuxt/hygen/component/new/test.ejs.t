@@ -9,7 +9,7 @@ import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
-import <%= h.changeCase.pascal(name) %> from '~/components/<%= directory %>/<%= name ? name : "index" %>'
+import Component from '~/components/<%= directory %>/<%= name ? name : "index" %>'
 
 jest.useFakeTimers()
 jest.mock('vuex')
@@ -38,7 +38,7 @@ describe(__filename, () => {
   })
 
   test('is a Vue instance', () => {
-    const wrapper = shallowMount(<%= h.changeCase.pascal(name) %>, mountOptions)
+    const wrapper = shallowMount(Component, mountOptions)
 
     expect(wrapper.vm).toBeTruthy()
   })
