@@ -1,31 +1,33 @@
 <template>
-  <v-card>
-    <validation-observer ref="passwordSetValidate" v-slot="{ invalid }">
-      <v-toolbar color="primary" dark flat>
-        <v-toolbar-title>パスワード登録</v-toolbar-title>
-      </v-toolbar>
+  <div>
+    <ValidationObserver ref="passwordSetValidate" v-slot="{ invalid }">
+      <v-card>
+        <v-toolbar color="primary" dark flat>
+          <v-toolbar-title>パスワード登録</v-toolbar-title>
+        </v-toolbar>
 
-      <v-card-text>
-        <PasswordSetForm v-model="formValue" @submit="passwordSet" />
-      </v-card-text>
+        <v-card-text>
+          <PasswordSetForm v-model="formValue" @submit="passwordSet" />
+        </v-card-text>
 
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          data-test="passwordSetButton"
-          :disabled="invalid"
-          :loading="loading"
-          color="primary"
-          @click="passwordSet"
-        >
-          <v-icon left>
-            mdi-pencil-lock
-          </v-icon>
-          パスワードを登録
-        </v-btn>
-      </v-card-actions>
-    </validation-observer>
-  </v-card>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            data-test="passwordSetButton"
+            :disabled="invalid"
+            :loading="loading"
+            color="primary"
+            @click="passwordSet"
+          >
+            <v-icon left>
+              mdi-pencil-lock
+            </v-icon>
+            パスワードを登録
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </ValidationObserver>
+  </div>
 </template>
 
 <script>

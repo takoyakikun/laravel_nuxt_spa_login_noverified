@@ -1,40 +1,42 @@
 <template>
-  <v-card class="elevation-12">
+  <div>
     <ValidationObserver ref="registerForm" v-slot="{ invalid }">
-      <v-toolbar color="primary" dark flat>
-        <v-toolbar-title>新規ユーザー登録</v-toolbar-title>
-      </v-toolbar>
-      <v-card-text>
-        <UserForm
-          v-model="registerFormValue"
-          form-type="create"
-          myuser
-          @submit="submit"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn data-test="topButtonLink" to="/">
-          <v-icon left>
-            mdi-home
-          </v-icon>
-          Top
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          data-test="submitButton"
-          :disabled="invalid"
-          :loading="loading"
-          color="primary"
-          @click="submit"
-        >
-          <v-icon left>
-            mdi-account-plus
-          </v-icon>
-          新規登録
-        </v-btn>
-      </v-card-actions>
+      <v-card class="elevation-12">
+        <v-toolbar color="primary" dark flat>
+          <v-toolbar-title>新規ユーザー登録</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <UserForm
+            v-model="registerFormValue"
+            form-type="create"
+            myuser
+            @submit="submit"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn data-test="topButtonLink" to="/">
+            <v-icon left>
+              mdi-home
+            </v-icon>
+            Top
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            data-test="submitButton"
+            :disabled="invalid"
+            :loading="loading"
+            color="primary"
+            @click="submit"
+          >
+            <v-icon left>
+              mdi-account-plus
+            </v-icon>
+            新規登録
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </ValidationObserver>
-  </v-card>
+  </div>
 </template>
 
 <script>

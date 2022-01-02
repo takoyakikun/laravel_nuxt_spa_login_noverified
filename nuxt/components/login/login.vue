@@ -1,44 +1,46 @@
 <template>
-  <v-card class="elevation-12">
-    <validation-observer ref="loginForm" v-slot="{ invalid }">
-      <v-toolbar color="primary" dark flat>
-        <v-toolbar-title>Login</v-toolbar-title>
-      </v-toolbar>
+  <div>
+    <ValidationObserver ref="loginForm" v-slot="{ invalid }">
+      <v-card class="elevation-12">
+        <v-toolbar color="primary" dark flat>
+          <v-toolbar-title>Login</v-toolbar-title>
+        </v-toolbar>
 
-      <v-card-text>
-        <LoginForm v-model="loginForm" @submit="submit" />
-        <nuxt-link
-          data-test="passwordResetLink"
-          to="passwordReset"
-          @click.native="$router.push('passwordReset')"
-        >
-          パスワードを忘れた方はこちら
-        </nuxt-link>
-      </v-card-text>
+        <v-card-text>
+          <LoginForm v-model="loginForm" @submit="submit" />
+          <nuxt-link
+            data-test="passwordResetLink"
+            to="passwordReset"
+            @click.native="$router.push('passwordReset')"
+          >
+            パスワードを忘れた方はこちら
+          </nuxt-link>
+        </v-card-text>
 
-      <v-card-actions>
-        <v-btn data-test="topButtonLink" to="/">
-          <v-icon left>
-            mdi-home
-          </v-icon>
-          Top
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          data-test="loginButton"
-          :disabled="invalid"
-          :loading="loading"
-          color="primary"
-          @click="submit"
-        >
-          <v-icon left>
-            mdi-login-variant
-          </v-icon>
-          Login
-        </v-btn>
-      </v-card-actions>
-    </validation-observer>
-  </v-card>
+        <v-card-actions>
+          <v-btn data-test="topButtonLink" to="/">
+            <v-icon left>
+              mdi-home
+            </v-icon>
+            Top
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            data-test="loginButton"
+            :disabled="invalid"
+            :loading="loading"
+            color="primary"
+            @click="submit"
+          >
+            <v-icon left>
+              mdi-login-variant
+            </v-icon>
+            Login
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </ValidationObserver>
+  </div>
 </template>
 
 <script>
@@ -52,7 +54,7 @@ export default {
   data() {
     return {
       loginForm: {
-        email: '',
+        login_id: '',
         password: '',
         remember: false
       },
