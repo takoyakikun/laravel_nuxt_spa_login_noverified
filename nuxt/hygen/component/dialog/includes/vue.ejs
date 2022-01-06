@@ -1,0 +1,62 @@
+<template>
+  <v-dialog
+    v-model="dialogData.state.value"
+    max-width="600"
+    scrollable
+    :persistent="<%= locals.persistent %>"
+  >
+    <v-card>
+      <v-app-bar dark color="primary" class="headline">
+        <span><%= locals.title %></span>
+        <v-spacer />
+        <v-btn
+          data-test="titleCloseButton"
+          icon="icon"
+          @click="closeDialog"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-app-bar>
+
+      <v-card-text>
+        
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn data-test="actionsCloseButton" @click="dialogData.closeDialog">
+          <v-icon left>
+            mdi-close
+          </v-icon>
+          閉じる
+        </v-btn>
+        <v-spacer />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+import {
+  defineComponent,
+  useContext,
+  inject
+} from '@nuxtjs/composition-api'
+export default defineComponent({
+  name: '<%= h.changeCase.pascal(locals.directory) + h.changeCase.pascal(locals.name) %>Component',
+  props: {},
+  components: {},
+  setup(props, context) {
+    const { app } = useContext()
+
+    const state = reactive({})
+
+    // ダイアログデータ
+    const dialogData = inject(<%= locals.name %> + 'DialogData')
+
+    return {
+      state,
+      dialogData
+    }
+  }
+})
+</script>

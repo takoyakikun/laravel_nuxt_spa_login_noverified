@@ -1,0 +1,123 @@
+<template>
+  <div>
+    <ValidationObserver ref="validate">
+      <v-dialog
+        v-model="dialogData.state.value"
+        max-width="600"
+        scrollable
+        :persistent="<%= locals.persistent %>"
+      >
+        <v-card>
+          <v-app-bar dark color="<%= locals.color ? locals.color : 'primary' %>" class="headline">
+            <span><%= locals.title %><%= locals.actionText %></span>
+            <v-spacer />
+            <v-btn
+              data-test="titleCloseButton"
+              icon="icon"
+              @click="dialogData.closeDialog"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-app-bar>
+
+          <v-card-text>
+            <Form
+              :value="dialogData.state.formValue"
+              @submit="submit"
+            />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn data-test="actionsCloseButton" @click="dialogData.closeDialog">
+              <v-icon left>
+                mdi-close
+              </v-icon>
+              閉じる
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              data-test="submitButton"
+              color="<%= locals.color ? locals.color : 'primary' %>"
+              :loading="state.loading"
+              @click="submit"
+            >
+              <v-icon left>
+                <%= locals.submitIcon ? locals.submitIcon : 'mdi-plus' %>
+              </v-icon>
+              <%= locals.actionText ? locals.actionText : '登録'  %>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </ValidationObserver>
+  </div>
+</template>
+
+<script>
+import {
+  defineComponent,
+  useContext,
+  inject
+} from '@nuxtjs/composition-api'
+export default defineComponent({
+  name: '<%= h.changeCase.pascal(locals.directory) + h.changeCase.pascal(locals.name) %>Component',
+  props: {},
+  components: {},
+  setup(props, context) {
+    const { app } = useContext()
+
+    const state = reactive({
+      loading: false
+    })
+
+    // ダイアログデータ
+    const dialogData = inject('<%= locals.name %>DialogData')
+
+    // フォームを送信
+    const submit = async () => {
+      if (!state.loading) {
+        state.loading = true
+        await dialogData.state.validate.validate().then(async result => {
+          if (result) {
+            await app.$axios
+              .<%= locals.apiMethod ? locals.apiMethod : "post" %>(`/api/<%= locals.name %><%= locals.formType === 'edit' ? "/${dialogData.id}" : "" %>`,
+                dialogData.state.formValue
+              )
+              .then(res => res)
+              .catch(err => err.response)
+
+            if (res.status !== 200) {
+              app.$snackbar.openSnackbar({
+                text: '<%= locals.title %>の<%= locals.actionText ? locals.actionText : "登録" %>に失敗しました。',
+                options: { color: 'error' }
+              })
+              state.loading = false
+              return false
+            }
+
+            app.$snackbar.openSnackbar({
+              text: '<%= locals.title %>を<%= locals.actionText ? locals.actionText : "登録" %>しました。',
+              options: { color: 'success' }
+            })
+            closeDialog()
+            dialogData.state.validate.reset()
+          }
+        })
+        state.loading = false
+      }
+    }
+
+    onMounted(() => {
+      // バリデーションデータをセット
+      dialogData.state.validate = context.refs.validate
+    })
+
+
+    return {
+      state,
+      dialogData,
+      submit
+    }
+  }
+})
+</script>

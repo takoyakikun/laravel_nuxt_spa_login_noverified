@@ -1,0 +1,25 @@
+import { reactive } from '@nuxtjs/composition-api'
+
+export default () => {
+  const state = reactive({
+    value: false,
+    formValue: {},
+    validate: {},
+    <%= locals.name %>: {}
+  })
+
+  // ダイアログを開く
+  const openDialog = item => {
+    state.formValue = item
+    state.<%= locals.name %> = item    
+    state.validate.reset()
+    state.value = true
+  }
+
+  // ダイアログを閉じる
+  const closeDialog = () => {
+    state.value = false
+  }
+
+  return { state, openDialog, closeDialog }
+}
