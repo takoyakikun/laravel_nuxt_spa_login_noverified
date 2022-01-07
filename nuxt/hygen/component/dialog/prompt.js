@@ -44,6 +44,7 @@ module.exports = {
       }
     ]
 
+    // formタイプの質問
     const formQuestions = [
       {
         type: 'select',
@@ -64,7 +65,6 @@ module.exports = {
     ]
 
     return inquirer.prompt(questions).then(answers => {
-      questions
       switch (answers.type) {
         case 'form': {
           return inquirer.prompt(formQuestions).then(formAnswers => {

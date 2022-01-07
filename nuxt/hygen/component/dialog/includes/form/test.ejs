@@ -6,7 +6,7 @@ import setApi from '~/test/setApi'
 import setPlugin from '~/test/setPlugin'
 import * as types from '~/store/mutation-types'
 import setConfigData from '~/test/setConfigData'
-import Component from '~/components/<%= directory %>/<%= name ? name : "index" %>'
+import Component from '~/components/<%= locals.directory %>/<%= locals.name ? locals.name : "index" %>'
 
 jest.useFakeTimers()
 jest.mock('vuex')

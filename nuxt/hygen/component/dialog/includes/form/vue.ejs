@@ -59,6 +59,8 @@ import {
   useContext,
   inject
 } from '@nuxtjs/composition-api'
+import axios from 'axios'
+
 export default defineComponent({
   name: '<%= h.changeCase.pascal(locals.directory) + h.changeCase.pascal(locals.name) %>Component',
   props: {},
@@ -79,8 +81,8 @@ export default defineComponent({
         state.loading = true
         await dialogData.state.validate.validate().then(async result => {
           if (result) {
-            await app.$axios
-              .<%= locals.apiMethod ? locals.apiMethod : "post" %>(`/api/<%= locals.name %><%= locals.formType === 'edit' ? "/${dialogData.id}" : "" %>`,
+            const res = await axios
+              .<%= locals.apiMethod ? locals.apiMethod : "post" %>(`/api/<%= locals.name %><%= locals.formType === 'edit' ? "/${dialogData.state." + locals.name + ".id}" : "" %>`,
                 dialogData.state.formValue
               )
               .then(res => res)
@@ -111,7 +113,6 @@ export default defineComponent({
       // バリデーションデータをセット
       dialogData.state.validate = context.refs.validate
     })
-
 
     return {
       state,
