@@ -1,0 +1,13 @@
+import { reactive, onMounted } from '@nuxtjs/composition-api'
+
+export default () => {
+  const state = reactive({
+    formValue: {},
+    validate: {}
+  })
+
+  onMounted(async () => {
+  })
+
+  return { state }
+}

@@ -1,0 +1,24 @@
+import { reactive, onMounted } from '@nuxtjs/composition-api'
+import axios from 'axios'
+
+export default () => {
+  const state = reactive({
+    list: []
+  })
+
+  // <%= locals.title %>データリストを取得
+  const getList = async () => {
+    return await axios
+      .get(`/api/<%= locals.name %>/}`)
+      .then(res => {
+        state.list = res.data
+      })
+      .catch(err => err.response)
+  }
+
+  onMounted(async () => {
+    await getList()
+  })
+
+  return { state }
+}

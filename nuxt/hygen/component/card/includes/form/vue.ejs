@@ -1,0 +1,96 @@
+<template>
+  <div>
+    <ValidationObserver ref="validate">
+      <v-card>
+        <v-app-bar dark color="<%= locals.color ? locals.color : 'primary' %>" class="headline">
+          <span><%= locals.title %><%= locals.actionText %></span>
+          <v-spacer />
+        </v-app-bar>
+
+        <v-card-text>
+          <Form
+            :value="state.formValue"
+            @submit="submit"
+          />
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            data-test="submitButton"
+            color="<%= locals.color ? locals.color : 'primary' %>"
+            :loading="state.loading"
+            @click="submit"
+          >
+            <v-icon left>
+              <%= locals.submitIcon ? locals.submitIcon : 'mdi-plus' %>
+            </v-icon>
+            <%= locals.actionText ? locals.actionText : '登録'  %>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </ValidationObserver>
+  </div>
+</template>
+
+<script>
+import {
+  defineComponent,
+  useContext,
+  reactive
+} from '@nuxtjs/composition-api'
+import axios from 'axios'
+
+export default defineComponent({
+  name: '<%= h.changeCase.pascal(locals.directory) + h.changeCase.pascal(locals.name) %>Component',
+  props: {},
+  components: {},
+  setup(props, context) {
+    const { app } = useContext()
+
+    const state = reactive({
+      formValue: {},
+      validate: context.refs.validate,
+      loading: false
+    })
+
+    // フォームを送信
+    const submit = async () => {
+      if (!state.loading) {
+        state.loading = true
+        await state.validate.validate().then(async result => {
+          if (result) {
+            const res = await axios
+              .<%= locals.apiMethod ? locals.apiMethod : "post" %>(`/api/<%= locals.name %>" : "" %>`,
+                state.formValue
+              )
+              .then(res => res)
+              .catch(err => err.response)
+
+            if (res.status !== 200) {
+              app.$snackbar.openSnackbar({
+                text: '<%= locals.title %>の<%= locals.actionText ? locals.actionText : "登録" %>に失敗しました。',
+                options: { color: 'error' }
+              })
+              state.loading = false
+              return false
+            }
+
+            app.$snackbar.openSnackbar({
+              text: '<%= locals.title %>を<%= locals.actionText ? locals.actionText : "登録" %>しました。',
+              options: { color: 'success' }
+            })
+            state.validate.reset()
+          }
+        })
+        state.loading = false
+      }
+    }
+
+    return {
+      state,
+      submit
+    }
+  }
+})
+</script>
